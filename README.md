@@ -33,3 +33,5 @@ Translation: https://www.deepl.com/docs-api <br>
 [//]: # (https://documentation.onesignal.com/docs/onesignal-api <br>)
 
 ## Screenshot of using a tool to try out the API
+
+![image](https://github.com/WildWindXY/Project207/screenshot.png)
