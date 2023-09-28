@@ -38,6 +38,6 @@ Translation: https://www.deepl.com/docs-api <br>
 
 ## Sample output of the current code
 
-Task :Main.main()<br>
+Task :IKunnect.main()<br>
 Response Code: 200<br>
 Response Data: {"translations":[{"detected_source_language":"EN","text":"Hallo, Welt!"}]}<br>

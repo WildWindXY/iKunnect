@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class Main {
+public class IKunnect {
 
     public static void main(String[] args) {
         try {
@@ -16,7 +16,7 @@ public class Main {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setDoOutput(true);
 
-            String requestBody = "text=Hello, world!&target_lang=DE";
+            String requestBody = "text=哟&target_lang=EN"; //TODO: Charset problem
             try (OutputStream os = connection.getOutputStream()) {
                 byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);

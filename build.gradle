@@ -12,7 +12,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'Main'
+        attributes 'Main-Class': 'IKunnect'
     }
     from sourceSets.main.output
 }
