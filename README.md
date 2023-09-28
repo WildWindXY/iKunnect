@@ -35,3 +35,9 @@ Translation: https://www.deepl.com/docs-api <br>
 ## Screenshot of using a tool to try out the API
 
 ![image](https://github.com/WildWindXY/Project207/blob/main/screenshot.png)
+
+## Sample output of the current code
+
+> Task :Main.main()
+Response Code: 200
+Response Data: {"translations":[{"detected_source_language":"EN","text":"Hallo, Welt!"}]}
