@@ -1,4 +1,4 @@
-# 207 Project
+# iKunnect
 
 ## Problem Domain: Chat System
 Communication and socializing are vital to us because they're how we connect with others and feel like we belong. 
