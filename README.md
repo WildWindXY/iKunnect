@@ -11,6 +11,7 @@ We aim to build a Chat System that will have the following features:
 - edit/delete messages
 - translation
 - group chat & one-to-one messaging
+- voice chat
 - contact list
 - chatbots
 
