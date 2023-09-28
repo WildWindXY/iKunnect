@@ -34,4 +34,4 @@ Translation: https://www.deepl.com/docs-api <br>
 
 ## Screenshot of using a tool to try out the API
 
-![image](https://github.com/WildWindXY/Project207/screenshot.png)
+![image](https://github.com/WildWindXY/Project207/blob/main/screenshot.PNG)
