@@ -16,7 +16,7 @@ public class IKunnect {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setDoOutput(true);
 
-            String requestBody = "text=哟&target_lang=EN"; //TODO: Charset problem
+            String requestBody = "text=哟&source_lang=ZH&target_lang=EN";
             try (OutputStream os = connection.getOutputStream()) {
                 byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
