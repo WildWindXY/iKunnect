@@ -40,4 +40,4 @@ Translation: https://www.deepl.com/docs-api <br>
 
 Task :IKunnect.main()<br>
 Response Code: 200<br>
-Response Data: {"translations":[{"detected_source_language":"ZH","text":"Oh! (interjection indicating slight surprise)"}]}<br>
+Response Data: {"translations":[{"detected_source_language":"ZH","text":"Hello world."}]}<br>

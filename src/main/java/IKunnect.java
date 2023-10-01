@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
         public static void main(String[] args) {
 
             try {
-                String text = "鸡你太美";
+                String text = "你好世界";
                 String sourceLang = "ZH";
                 String targetLang = "EN-US";
                 /*String encodedText = URLEncoder.encode(text, StandardCharsets.UTF_8.toString());
