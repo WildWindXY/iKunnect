@@ -1,0 +1,36 @@
+iKunnect
+│
+├── build.gradle       # Gradle build script
+├── settings.gradle    # Gradle settings file
+├── src                # Source code root
+│   ├── main           # Main source code
+│   │   ├── java       # Java source files
+│   │   │   └── com
+│   │   │       └── iKunnect
+│   │   │           ├── Main.java         # Main class (entry point of the application)
+│   │   │           ├── user
+│   │   │           │   ├── User.java     # User class
+│   │   │           │   └── UserRepository.java  # Interface for user data access
+│   │   │           ├── message
+│   │   │           │   ├── Message.java  # Message class
+│   │   │           │   └── MessageRepository.java # Interface for message data access
+│   │   │           └── chatroom
+│   │   │               ├── ChatRoom.java  # ChatRoom class
+│   │   │               └── ChatRoomRepository.java  # Interface for chat room data access
+│   │   ├── resources  # Resource files (configurations, templates, etc.)
+│   │   └── webapp     # Web application resources (if applicable)
+│   └── test           # Test source code
+│       ├── java       # Test source files
+│       │   └── com
+│       │       └── myapp
+│       │           ├── user
+│       │           │   └── UserTest.java # Unit tests for User class
+│       │           ├── message
+│       │           │   └── MessageTest.java # Unit tests for Message class
+│       │           └── chatroom
+│       │               └── ChatRoomTest.java # Unit tests for ChatRoom class
+│       └── resources  # Test resource files
+└── build              # Compiled output and build artifacts
+    ├── classes        # Compiled class files
+    ├── libs           # JAR files (if applicable)
+    └── reports        # Build reports (test reports, code coverage, etc.)
