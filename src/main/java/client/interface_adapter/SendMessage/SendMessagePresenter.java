@@ -1,4 +1,4 @@
-package interface_adapter.clear_users;
+package client.interface_adapter.SendMessage;
 
 // TODO Complete me
 
