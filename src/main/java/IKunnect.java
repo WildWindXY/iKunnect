@@ -1,5 +1,5 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,24 +13,13 @@ import java.nio.charset.StandardCharsets;
 
     public class IKunnect {
 
-        private static final Logger logger = LogManager.getLogger(IKunnect.class);
+       // private static final Logger logger = LogManager.getLogger(IKunnect.class);
         public static void main(String[] args) {
 
             try {
                 String text = "你好世界";
                 String sourceLang = "ZH";
                 String targetLang = "EN-US";
-                /*String encodedText = URLEncoder.encode(text, StandardCharsets.UTF_8.toString());
-                Using UTF-8 as directed by the DeepL API returned this for "鸡你太美"
-                Response Data: {"translations":[{"detected_source_language":"ZH","text":"Last name: ?"}]}
-                While GB18030 give the correct response:
-                Response Data: {"translations":[{"detected_source_language":"ZH","text":"Chicken, you're so beautiful."}]}
-                However, for single character requests it always returns
-                Response Data: {"translations":[{"detected_source_language":"ZH","text":"å1¤7"}]}
-                Somehow Chinese full-width punctuations also causes the entire thing to be unreadable.
-                String text = "你好世界";
-                Response Data: {"translations":[{"detected_source_language":"ZH","text":"ä½ å¥½ä¸çï¼1¤7"}]}
-                I blame DeepL API*/
                 String encodedText = URLEncoder.encode(text, Charset.forName("GB18030").toString());
                 String requestBody = String.format("text=%s&source_lang=%s&target_lang=%s", encodedText, sourceLang, targetLang);
 
@@ -48,7 +37,8 @@ import java.nio.charset.StandardCharsets;
                 System.out.println("Response Data: " + response);
                 connection.disconnect();
             } catch (Exception e) {
-                logger.error("An error occurred in the main method", e);
+                System.out.println("An error occurred in the main method");
+               // logger.error("An error occurred in the main method", e);
             }
         }
 
