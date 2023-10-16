@@ -3,7 +3,6 @@ package client.interface_adapter;
 import client.entity.TranslationRequest;
 import client.entity.TranslationResponse;
 
-import javax.print.DocFlavor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,13 +10,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
+import com.google.gson.Gson;
 
 public class DeeplAPI implements TranslationAPI {
 
@@ -29,7 +25,7 @@ public class DeeplAPI implements TranslationAPI {
         try {
             // original text
             System.out.println(request.getText());
-            String encodedText =  URLEncoder.encode(request.getText(), "UTF-8");
+            String encodedText = URLEncoder.encode(request.getText(), "UTF-8");
             String requestBody = String.format("text=%s&source_lang=%s&target_lang=%s",
                     encodedText, request.getSourceLang(), request.getTargetLang());
             // encoded request
@@ -81,11 +77,39 @@ public class DeeplAPI implements TranslationAPI {
         return connection;
     }
 
+    //    private String parseTranslatedText(String jsonResponse) {
+//        JSONObject jsonObject = new JSONObject(jsonResponse);
+//        JSONArray translationsArray = jsonObject.getJSONArray("translations");
+//        JSONObject translationObject = translationsArray.getJSONObject(0);
+//        return translationObject.getString("text");
+//    }
     private String parseTranslatedText(String jsonResponse) {
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONArray translationsArray = jsonObject.getJSONArray("translations");
-        JSONObject translationObject = translationsArray.getJSONObject(0);
-        return translationObject.getString("text");
+        Gson gson = new Gson();
+        DeeplJsonCallBackFormat response = gson.fromJson(jsonResponse, DeeplJsonCallBackFormat.class);
+        // detected original language
+        System.out.println("Deepl response: Detected original language is:"+response.getTranslations().get(0).getDetectedSourceLanguage());
+        return response.getTranslations().get(0).getText();
     }
 
+}
+
+class DeeplJsonCallBackFormat {
+    private List<DeeplJsonCallBackInstance> translations;
+
+    public List<DeeplJsonCallBackInstance> getTranslations() {
+        return translations;
+    }
+}
+
+class DeeplJsonCallBackInstance {
+    private String detected_source_language;
+    private String text;
+
+    public String getDetectedSourceLanguage() {
+        return detected_source_language;
+    }
+
+    public String getText() {
+        return text;
+    }
 }
