@@ -1,4 +1,4 @@
-package main.java;//import org.apache.logging.log4j.LogManager;
+
 //import org.apache.logging.log4j.Logger;
 
 import client.entity.TranslationRequest;
@@ -69,12 +69,11 @@ import java.nio.charset.StandardCharsets;
 
 
 public class IKunnect {
-
     public static void main(String[] args) {
         TranslationAPI deeplAPI = new DeeplAPI();
         TranslationService service = new DeeplTranslationService(deeplAPI);
 
-        TranslationRequest request = new TranslationRequest("ZH", "EN", "您好");
+        TranslationRequest request = new TranslationRequest("ZH", "EN", "我真的很讨厌干净架构!!!!!");
         TranslationResponse response = service.requestTranslate(request);
 
         System.out.println("Translated Text: " + response.getTranslatedText());
