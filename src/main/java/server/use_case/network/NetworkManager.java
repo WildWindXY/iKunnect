@@ -15,7 +15,6 @@ public class NetworkManager {
 
     public void packetHandler(Packet packet) {//TODO: This is temporary
         if (packet instanceof PacketDebug) {
-            System.out.println(packet);
             connectionPool.sendAll(packet);
         }
     }
