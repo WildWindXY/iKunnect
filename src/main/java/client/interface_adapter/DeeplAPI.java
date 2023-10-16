@@ -14,6 +14,9 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 
 public class DeeplAPI implements TranslationAPI {
@@ -76,7 +79,10 @@ public class DeeplAPI implements TranslationAPI {
     }
 
     private String parseTranslatedText(String jsonResponse) {
-        // Parse the JSON to get the translated text. This might use a library like Jackson or Gson.
-        return "1111"; // Placeholder
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+        JSONArray translationsArray = jsonObject.getJSONArray("translations");
+        JSONObject translationObject = translationsArray.getJSONObject(0);
+        return translationObject.getString("text");
     }
+
 }
