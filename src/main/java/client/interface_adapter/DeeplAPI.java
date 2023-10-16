@@ -27,10 +27,12 @@ public class DeeplAPI implements TranslationAPI {
     @Override
     public TranslationResponse translate(TranslationRequest request) {
         try {
+            // original text
             System.out.println(request.getText());
             String encodedText =  URLEncoder.encode(request.getText(), "UTF-8");
             String requestBody = String.format("text=%s&source_lang=%s&target_lang=%s",
                     encodedText, request.getSourceLang(), request.getTargetLang());
+            // encoded request
             System.out.println("Request Body:" + requestBody);
             HttpURLConnection connection = getHttpURLConnection(requestBody);
 
@@ -43,6 +45,7 @@ public class DeeplAPI implements TranslationAPI {
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
+                // original response
                 System.out.println(response.toString());
                 // Assuming the API returns JSON and we'd parse it to get the translated text
                 String translatedText = parseTranslatedText(response.toString());
