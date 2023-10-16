@@ -1,5 +1,12 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+//import org.apache.logging.log4j.Logger;
+
+import client.entity.TranslationRequest;
+import client.entity.TranslationResponse;
+import client.interface_adapter.DeeplAPI;
+import client.interface_adapter.TranslationAPI;
+import client.use_case.DeeplTranslationService;
+import client.use_case.TranslationService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,61 +18,30 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-    public class IKunnect {
+public class IKunnect {
+    public static void main(String[] args) {
+        // print default text encode mode
+        System.out.println(Charset.defaultCharset());
+        TranslationAPI deeplAPI = new DeeplAPI();
+        TranslationService service = new DeeplTranslationService(deeplAPI);
 
-        private static final Logger logger = LogManager.getLogger(IKunnect.class);
-        public static void main(String[] args) {
+        TranslationRequest request = new TranslationRequest("ZH", "EN", "关于全角和半角：\n" +
+                "\n" +
+                "中文字符，确切地说，CJK字符（中文、日文、韩文）主要是全角字符，而拉丁字母、数字和某些符号等主要是半角。但是，我们也有全角的拉丁字母、数字和符号，例如全角的空格、逗号、句号等。全角字符在显示时通常比半角字符宽，通常是它的两倍。\n" +
+                "\n" +
+                "关于输入法和编码问题：\n" +
+                "\n" +
+                "输入法之间可能存在差异，有时候，它们可能会生成并非标准UTF-8编码的字符，尤其是一些旧的或特定于平台的输入法。此外，某些字符可能存在于Unicode中，但不是UTF-8的一部分，或者它们可能不是所用系统的默认字符集的一部分。\n" +
+                "\n" +
+                "解决方法：\n" +
+                "\n" +
+                "确保你的系统和程序都支持UTF-8：这样，无论你的输入法产生什么样的字符，只要它们是有效的Unicode字符，它们就可以被正确地编码和解码。\n" +
+                "更新输入法：如果你的输入法是导致问题的原因，尝试更新到最新版本，或更换到一个更加标准和流行的输入法。\n" +
+                "字符检查和转换：可以使用代码来检查字符串中的每个字符，确保它们都是有效的UTF-8字符。对于那些不是的字符，你可以尝试转换它们，或者用其他字符替换它们。\n" +
+                "使用Java中的Charset：例如，如果你知道输入是特定的字符集，例如GB2312，但你想将其转换为UTF-8，你可以使用Java中的Charset和ByteBuffer类来转换编码。");
+        TranslationResponse response = service.requestTranslate(request);
 
-            try {
-                String text = "你好世界";
-                String sourceLang = "ZH";
-                String targetLang = "EN-US";
-                /*String encodedText = URLEncoder.encode(text, StandardCharsets.UTF_8.toString());
-                Using UTF-8 as directed by the DeepL API returned this for "鸡你太美"
-                Response Data: {"translations":[{"detected_source_language":"ZH","text":"Last name: ?"}]}
-                While GB18030 give the correct response:
-                Response Data: {"translations":[{"detected_source_language":"ZH","text":"Chicken, you're so beautiful."}]}
-                However, for single character requests it always returns
-                Response Data: {"translations":[{"detected_source_language":"ZH","text":"å1¤7"}]}
-                Somehow Chinese full-width punctuations also causes the entire thing to be unreadable.
-                String text = "你好世界";
-                Response Data: {"translations":[{"detected_source_language":"ZH","text":"ä½ å¥½ä¸çï¼1¤7"}]}
-                I blame DeepL API*/
-                String encodedText = URLEncoder.encode(text, Charset.forName("GB18030").toString());
-                String requestBody = String.format("text=%s&source_lang=%s&target_lang=%s", encodedText, sourceLang, targetLang);
 
-                HttpURLConnection connection = getHttpURLConnection(requestBody);
-
-                int responseCode = connection.getResponseCode();
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                System.out.println("Response Code: " + responseCode);
-                System.out.println("Response Data: " + response);
-                connection.disconnect();
-            } catch (Exception e) {
-                logger.error("An error occurred in the main method", e);
-            }
-        }
-
-        private static HttpURLConnection getHttpURLConnection(String requestBody) throws IOException {
-            URL url = new URL("https://api-free.deepl.com/v2/translate");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Authorization", "DeepL-Auth-Key ce7a4edb-7949-68cb-4f80-49104d53fe70:fx");
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setDoOutput(true);
-
-            // Specify the UTF-8 character encoding for the request body
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
-                os.write(input);
-            }
-
-            return connection;
-        }
+        System.out.println("Translated Text: " + response.getTranslatedText());
     }
+}
