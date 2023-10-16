@@ -27,3 +27,11 @@ task serverJar(type: Jar) {
     }
     from sourceSets.main.output
 }
+
+task testClientJar(type: Jar) {
+    archiveFileName = 'iKunnectTestClient.jar'
+    manifest {
+        attributes 'Main-Class': 'TempClient'
+    }
+    from sourceSets.main.output
+}
