@@ -12,7 +12,7 @@ find iKunnect Project, and set "Build and run using" to "IntelliJ IDEA";
   "Run tests" using "IntelliJ IDEA"
 - Note: if iKunnect is not found, then click on the drop-down bar to the left of the run button in the upper right corner, \
 Edit Configuration-> "+" sign on the left upper side ->Application, the rest is as following:
-![img.png](img.png)
+![Oct16debug1.png](Oct16debug1.png)
 - Click Setting->Editor->File Encodings, set the settings as below:
-![img_1.png](img_1.png)
+![Oct16debug2.png](Oct16debug2.png)
 - Run the code again and then succeeded.
