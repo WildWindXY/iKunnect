@@ -1,4 +1,6 @@
-package client.interface_adapter;
+package client.interface_adapter.Login;
+
+import client.interface_adapter.ViewModel;
 
 import java.beans.PropertyChangeListener;
 
