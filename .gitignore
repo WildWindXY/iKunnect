@@ -12,3 +12,6 @@ build
 # other
 eclipse
 run
+/src/main/java/client/view/test.java
+/src/main/java/client/view/test.form
+/src/main/java/client/view/test.jfd

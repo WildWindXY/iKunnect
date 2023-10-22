@@ -7,13 +7,18 @@ import java.beans.PropertyChangeSupport;
 
 public class SignupViewModel extends ViewModel {
 
-    public static final String TITLE_LABEL = "Sign Up";
+    public static final String TITLE_LABEL = "iKunnect - Sign Up";
     public static final String USERNAME_LABEL = "Choose username";
     public static final String PASSWORD_LABEL = "Choose password";
-    public static final String REPEAT_PASSWORD_LABEL = "Enter password again";
+    public static final String REPEAT_PASSWORD_LABEL = "Repeat password";
 
-    public final String SIGNUP_BUTTON_LABEL = "Sign up";
-    public final String CANCEL_BUTTON_LABEL = "Cancel";
+    public static final String SIGNUP_BUTTON_LABEL = "Sign up";
+    public static final String SIGNUP_BUTTON_TOOLTIPS = "Create new user";
+
+    public static final String LOGIN_BUTTON_LABEL = "Log in";
+    public static final String LOGIN_BUTTON_TOOLTIPS = "Switch to login";
+    public static final String EXIT_BUTTON_LABEL = "Exit";
+    public static final String EXIT_BUTTON_TOOLTIPS = "Exit the application";
 
     private SignupState state = new SignupState();
 

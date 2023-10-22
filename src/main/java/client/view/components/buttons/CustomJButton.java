@@ -8,7 +8,7 @@ public class CustomJButton extends JButton {
         super();
         Font buttonFont = new Font("Helvetica",Font.PLAIN,20);
         setFont(buttonFont);
-        Dimension prefSize = new Dimension(200, 30);
+        Dimension prefSize = new Dimension(100, 50);
         setPreferredSize(prefSize);
     }
 }
