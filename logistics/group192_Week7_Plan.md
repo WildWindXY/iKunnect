@@ -1,8 +1,8 @@
 ﻿Group 192 Plan for Week 7
 =========================
 Fangshi Du:
-- [ ] Finish the Translation Use_Case.
-- [ ] Inplement Client Data Access Interface.
+- [ ] Finish the Translation Use Case.
+- [ ] Implement Client Data Access Interface.
 
 Tylor Meng:
 - [ ] Implement Service Database.
