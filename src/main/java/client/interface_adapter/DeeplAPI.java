@@ -20,14 +20,20 @@ public class DeeplAPI implements TranslationAPI {
     private static final String API_URL = "https://api-free.deepl.com/v2/translate";
     private static final String AUTH_KEY = "DeepL-Auth-Key ce7a4edb-7949-68cb-4f80-49104d53fe70:fx";
 
+    private final String target_lang;
+
+    public DeeplAPI(String target_lang) {
+        this.target_lang = target_lang;
+    }
+
     @Override
     public TranslationResponse translate(TranslationRequest request) {
         try {
             // original text
             System.out.println(request.getText());
             String encodedText = URLEncoder.encode(request.getText(), "UTF-8");
-            String requestBody = String.format("text=%s&source_lang=%s&target_lang=%s",
-                    encodedText, request.getSourceLang(), request.getTargetLang());
+            String requestBody = String.format("text=%s&target_lang=%s",
+                    encodedText, this.target_lang);
             // encoded request
             System.out.println("Request Body:" + requestBody);
             HttpURLConnection connection = getHttpURLConnection(requestBody);
@@ -44,10 +50,9 @@ public class DeeplAPI implements TranslationAPI {
                 // original response
                 System.out.println(response.toString());
                 // Assuming the API returns JSON and we'd parse it to get the translated text
-                String translatedText = parseTranslatedText(response.toString());
 
                 connection.disconnect();
-                return new TranslationResponse(translatedText);
+                return parseTranslatedText(response.toString());
             } else {
                 // Handle non-200 responses if necessary
             }
@@ -56,7 +61,7 @@ public class DeeplAPI implements TranslationAPI {
             System.out.println("An error occurred in the translation process");
             // Handle exceptions
         }
-        return new TranslationResponse("");
+        return null; // TODO: raise exception
     }
 
     private HttpURLConnection getHttpURLConnection(String requestBody) throws IOException {
@@ -83,33 +88,33 @@ public class DeeplAPI implements TranslationAPI {
 //        JSONObject translationObject = translationsArray.getJSONObject(0);
 //        return translationObject.getString("text");
 //    }
-    private String parseTranslatedText(String jsonResponse) {
+    private TranslationResponse parseTranslatedText(String jsonResponse) {
         Gson gson = new Gson();
         DeeplJsonCallBackFormat response = gson.fromJson(jsonResponse, DeeplJsonCallBackFormat.class);
-        // detected original language
-        System.out.println("Deepl response: Detected original language is:"+response.getTranslations().get(0).getDetectedSourceLanguage());
-        return response.getTranslations().get(0).getText();
+        return new TranslationResponse(response.getTranslations().get(0).getText(), response.getTranslations().get(0).getDetectedSourceLanguage());
+    }
+
+    private static class DeeplJsonCallBackFormat {
+        private List<DeeplJsonCallBackInstance> translations;
+
+        public List<DeeplJsonCallBackInstance> getTranslations() {
+            return translations;
+        }
+    }
+
+    private static class DeeplJsonCallBackInstance {
+        private String detected_source_language;
+        private String text;
+
+        public String getDetectedSourceLanguage() {
+            return detected_source_language;
+        }
+
+        public String getText() {
+            return text;
+        }
     }
 
 }
 
-class DeeplJsonCallBackFormat {
-    private List<DeeplJsonCallBackInstance> translations;
 
-    public List<DeeplJsonCallBackInstance> getTranslations() {
-        return translations;
-    }
-}
-
-class DeeplJsonCallBackInstance {
-    private String detected_source_language;
-    private String text;
-
-    public String getDetectedSourceLanguage() {
-        return detected_source_language;
-    }
-
-    public String getText() {
-        return text;
-    }
-}
