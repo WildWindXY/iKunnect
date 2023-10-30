@@ -1,66 +1,70 @@
-﻿import client.entity.TranslationRequest;
-import client.entity.TranslationResponse;
-import client.usecase.TranslationService;
-import org.junit.Before;
+﻿package view;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
+import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 
-public class ChatSystemTest {
-
-    @Mock
-    private TranslationService translationService;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
+public class MySwingComponentTest {
 
     @Test
-    public void testSendMessageWithoutTranslation() {
-        ChatSystem chatSystem = new ChatSystem(translationService);
+    public void testMySwingComponent() {
 
-        String message = "Hello, how are you?";
-        TranslationResponse translationResponse = new TranslationResponse(message);
+        // Create the UI component
+        MySwingComponent component = new MySwingComponent();
+        JFrame frame = new JFrame();
+        frame.setContentPane(component);
+        frame.pack();
+        frame.setVisible(true);
 
-        Mockito.when(translationService.translate(any(TranslationRequest.class)))
-                .thenReturn(translationResponse);
+        // Simulate user interaction
+        JTextField textField = component.getTextField();
 
-        String sentMessage = chatSystem.sendMessage("User1", "User2", message);
-        assertEquals(message, sentMessage);
-    }
+        // Create and dispatch KeyEvents to the UI
+        KeyEvent event = new KeyEvent(
+                textField,
+                KeyEvent.KEY_TYPED,
+                System.currentTimeMillis(),
+                0,
+                KeyEvent.VK_UNDEFINED,
+                'A'); // Simulate typing 'A'
 
-    @Test
-    public void testSendMessageWithTranslation() {
-        ChatSystem chatSystem = new ChatSystem(translationService);
+        textField.dispatchEvent(event);
 
-        String originalMessage = "Hello, how are you?";
-        String translatedMessage = "Bonjour, comment ça va?";
-        TranslationResponse translationResponse = new TranslationResponse(translatedMessage);
+        // Pause execution for a second
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-        Mockito.when(translationService.translate(any(TranslationRequest.class)))
-                .thenReturn(translationResponse);
+        // Perform assertions or validations
+        String text = textField.getText();
+        System.out.println("Text in the text field: " + text);
+        assertEquals("A", text);
 
-        String sentMessage = chatSystem.sendMessage("User1", "User2", originalMessage);
-        assertEquals(translatedMessage, sentMessage);
-    }
+        // Simulate more user interaction
+        KeyEvent event2 = new KeyEvent(
+                textField,
+                KeyEvent.KEY_TYPED,
+                System.currentTimeMillis(),
+                0,
+                KeyEvent.VK_UNDEFINED,
+                'B'); // Simulate typing 'B'
 
-    @Test
-    public void testReceiveMessage() {
-        ChatSystem chatSystem = new ChatSystem(translationService);
+        textField.dispatchEvent(event2);
 
-        String message = "Hello, how are you?";
-        TranslationResponse translationResponse = new TranslationResponse(message);
+        // Pause execution for 3 seconds
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-        Mockito.when(translationService.translate(any(TranslationRequest.class)))
-                .thenReturn(translationResponse);
-
-        chatSystem.sendMessage("User1", "User2", message);
-        String receivedMessage = chatSystem.receiveMessage("User2", "User1");
-        assertEquals(message, receivedMessage);
+        // Perform additional assertions or validations
+        String updatedText = textField.getText();
+        System.out.println("Updated text in the text field: " + updatedText);
+        assertEquals("AB", updatedText);
     }
 }
