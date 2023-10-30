@@ -1,70 +1,45 @@
 ﻿package view;
 
-import javax.swing.*;
-import java.awt.event.KeyEvent;
+import org.junit.Before;
 import org.junit.Test;
-import static java.lang.Thread.sleep;
+
 import static org.junit.Assert.assertEquals;
 
-public class MySwingComponentTest {
+public class ChatSystemTest {
+
+    private ChatSystem chatSystem;
+
+    @Before
+    public void setUp() {
+        // Initialize the ChatSystem with your TranslationService implementation
+        TranslationService translationService = new TranslationServiceImpl();
+        chatSystem = new ChatSystem(translationService);
+    }
 
     @Test
-    public void testMySwingComponent() {
+    public void testSendMessageWithoutTranslation() {
+        String message = "Hello, how are you?";
+        String receivedMessage = chatSystem.sendMessage("User1", "User2", message);
+        assertEquals(message, receivedMessage);
+    }
 
-        // Create the UI component
-        MySwingComponent component = new MySwingComponent();
-        JFrame frame = new JFrame();
-        frame.setContentPane(component);
-        frame.pack();
-        frame.setVisible(true);
+    @Test
+    public void testSendMessageWithTranslation() {
+        String originalMessage = "Hello, how are you?";
+        String translatedMessage = "Bonjour, comment ça va?";
 
-        // Simulate user interaction
-        JTextField textField = component.getTextField();
+        // Mock the TranslationService to return the translated message
+        TranslationService translationService = new MockTranslationService(translatedMessage);
+        ChatSystem chatSystem = new ChatSystem(translationService);
 
-        // Create and dispatch KeyEvents to the UI
-        KeyEvent event = new KeyEvent(
-                textField,
-                KeyEvent.KEY_TYPED,
-                System.currentTimeMillis(),
-                0,
-                KeyEvent.VK_UNDEFINED,
-                'A'); // Simulate typing 'A'
+        String receivedMessage = chatSystem.sendMessage("User1", "User2", originalMessage);
+        assertEquals(translatedMessage, receivedMessage);
+    }
 
-        textField.dispatchEvent(event);
-
-        // Pause execution for a second
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Perform assertions or validations
-        String text = textField.getText();
-        System.out.println("Text in the text field: " + text);
-        assertEquals("A", text);
-
-        // Simulate more user interaction
-        KeyEvent event2 = new KeyEvent(
-                textField,
-                KeyEvent.KEY_TYPED,
-                System.currentTimeMillis(),
-                0,
-                KeyEvent.VK_UNDEFINED,
-                'B'); // Simulate typing 'B'
-
-        textField.dispatchEvent(event2);
-
-        // Pause execution for 3 seconds
-        try {
-            sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Perform additional assertions or validations
-        String updatedText = textField.getText();
-        System.out.println("Updated text in the text field: " + updatedText);
-        assertEquals("AB", updatedText);
+    @Test
+    public void testReceiveMessage() {
+        String message = "Hello, how are you?";
+        String receivedMessage = chatSystem.receiveMessage("User2", "User1");
+        assertEquals(message, receivedMessage);
     }
 }
