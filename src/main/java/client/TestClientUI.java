@@ -1,37 +1,68 @@
 package client;
 
-import client.entity.User;
-import client.interface_adapter.Signup.SignupController;
-import client.interface_adapter.Signup.SignupState;
-import client.interface_adapter.Signup.SignupViewModel;
-import client.interface_adapter.Signup.UserSignupDataAccessInterface;
-import client.use_case.Signup.SignupInputBoundary;
-import client.use_case.Signup.SignupInteractor;
-import client.view.SignupView;
+import client.entity.*;
+import client.interface_adapter.Login.*;
+import client.interface_adapter.Signup.*;
+import client.interface_adapter.ViewManagerModel;
+import client.use_case.Login.LoginInputBoundary;
+import client.use_case.Login.LoginInteractor;
+import client.use_case.Signup.*;
+import client.view.*;
 import client.view.components.frames.SmallJFrame;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TestClientUI {
 
     public static void main(String[] args) {
-        SignupState state;
-        SignupInputBoundary userSignupUseCaseInteractor = new SignupInteractor();
-        SignupController controller = new SignupController(userSignupUseCaseInteractor);
-        SignupViewModel signupviewModel = new SignupViewModel();
-        new SmallJFrame("iKunnect - Sign up (SignupView)", new SignupView(controller, signupviewModel));
-        while (true) {
-            state = signupviewModel.getState();
+        SignupDataAccessInterface userDataAccessObject = new SignupDataAccessInterface() {
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void save(User user) {
+            }
+        };
+        SignupOutputBoundary outputBoundary = new SignupPresenter();
+        UserFactory factory = new CommonUserFactory();
+        SignupState signupState;
+        SignupInputBoundary userSignupUseCaseInteractor = new SignupInteractor(userDataAccessObject, outputBoundary, factory);
+        SignupController signupController = new SignupController(userSignupUseCaseInteractor);
+
+        LoginInputBoundary userLoginUseCaseInteractor = new LoginInteractor();
+        LoginController loginController = new LoginController(userLoginUseCaseInteractor);
+
+        SmallJFrame app = new SmallJFrame("iKunnect Client");
+        CardLayout cardLayout = new CardLayout();
+        JPanel views = new JPanel(cardLayout);
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+        new ViewManager(views, cardLayout, viewManagerModel);
+
+        LoginViewModel loginViewModel = new LoginViewModel();
+        SignupViewModel signupViewModel = new SignupViewModel();
+        //LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
+
+        //SignupView signupView = new SignupView(signupController, signupViewModel);
+        LoginView loginView = new LoginView(loginController, loginViewModel);
+        //views.add(signupView);
+        views.add(loginView);
+        app.add(views);
+        app.prepare();
+        app.setSize(new Dimension(550, 500));
+        /*while (true) {
+            signupState = signupviewModel.getState();
             System.out.println("-------------------------------------------");
-            System.out.println("username = " + state.getUsername());
-            System.out.println("password = " + state.getPassword());
-            System.out.println("passwordR = " + state.getRepeatPassword());
+            System.out.println("username = " + signupState.getUsername());
+            System.out.println("password = " + signupState.getPassword());
+            System.out.println("passwordR = " + signupState.getRepeatPassword());
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            } catch (InterruptedException ignored) {
             }
-        }
+        }*/
     }
 
 }
