@@ -6,8 +6,6 @@ public interface User {
 
     String getName();
 
-    String getUUID();
-
     String getPassword();
 
     LocalDateTime getCreationTime();
