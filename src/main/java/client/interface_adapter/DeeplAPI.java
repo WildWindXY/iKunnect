@@ -35,7 +35,7 @@ public class DeeplAPI implements TranslationAPI {
             String requestBody = String.format("text=%s&target_lang=%s",
                     encodedText, this.target_lang);
             // encoded request
-            System.out.println("Request Body:" + requestBody);
+//            System.out.println("Request Body:" + requestBody);
             HttpURLConnection connection = getHttpURLConnection(requestBody);
 
             int responseCode = connection.getResponseCode();
@@ -48,7 +48,7 @@ public class DeeplAPI implements TranslationAPI {
                     response.append(inputLine);
                 }
                 // original response
-                System.out.println(response.toString());
+//                System.out.println(response.toString());
                 // Assuming the API returns JSON and we'd parse it to get the translated text
 
                 connection.disconnect();

@@ -1,24 +1,21 @@
 package client.data_access.translate;
 
-import client.data_access.TranslateDataAccessInterface;
+import client.interface_adapter.TranslationAPI;
+import client.use_case.Translate.TranslateDataAccessInterface;
 import client.entity.TranslationRequest;
 import client.entity.TranslationResponse;
 import client.interface_adapter.DeeplAPI;
-import client.interface_adapter.TranslationAPI;
-import client.use_case.DeeplTranslationService;
-import client.use_case.TranslationService;
-
-import java.nio.charset.Charset;
+import client.use_case.Translate.TranslationOutputData;
 
 public class TranslateDataAccess implements TranslateDataAccessInterface {
-    private final TranslationService translationService;
+    private final TranslationAPI deeplAPI;
     public TranslateDataAccess() {
-        this.translationService = new DeeplTranslationService( new DeeplAPI("EN")); //TODO: initialize with different language
+        this.deeplAPI = new DeeplAPI("EN"); //TODO: initialize with different language
     }
     @Override
-    public String translate(String text) {
+    public TranslationOutputData translate(String text) {
         TranslationRequest request = new TranslationRequest(text);
-        TranslationResponse response = translationService.requestTranslate(request);
-        return response.getTranslatedText();
+        TranslationResponse response = deeplAPI.translate(request);
+        return new TranslationOutputData(response.getTranslatedText(), response.getDetectedLanguage());
     }
 }
