@@ -50,7 +50,7 @@ class ConnectionPool extends Thread implements IConnectionPool {
         }
     }
 
-    private void close() {
+    public void close() {
         try {
             serverSocket.close();
         } catch (IOException ignored) {//TODO: Handle it later
@@ -69,6 +69,7 @@ class ConnectionPool extends Thread implements IConnectionPool {
     public void sendAll(Packet packet) {
         for (Connection connection : connections) {
             connection.toSend.add(packet);
+            System.out.println("Send packet to clientL " + packet);
         }
     }
 
@@ -89,7 +90,6 @@ class ConnectionPool extends Thread implements IConnectionPool {
                 while (!socket.isClosed() && !serverSocket.isClosed()) {
                     try {
                         Object object = in.readObject();
-                        System.out.println(object);
                         if (object instanceof Packet) {
                             packetHandler((Packet) object);
                         }//TODO: else throws Unknown Packet Exception.
