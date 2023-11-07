@@ -4,15 +4,18 @@ import common.packet.Packet;
 import common.packet.PacketClientLogin;
 import common.packet.PacketDebug;
 import common.packet.PacketServerLoginResponse;
+import server.data_access.DataAccess;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class NetworkManager {
-    private final ConnectionPool connectionPool;
-    private final LinkedBlockingQueue<String> terminalMessage = new LinkedBlockingQueue<>();
+    private final IConnectionPool connectionPool;
+    private final DataAccess dataAccess;
 
-    public NetworkManager() throws IOException {//TODO: Catch it
+
+    public NetworkManager(DataAccess dataAccess) throws IOException {//TODO: Catch it
+        this.dataAccess = dataAccess;
         this.connectionPool = new ConnectionPool(this, 8964);
         this.connectionPool.start();
     }
@@ -21,21 +24,17 @@ public class NetworkManager {
         if (packet instanceof PacketDebug) {
             connectionPool.sendAll(packet);
         } else if (packet instanceof PacketClientLogin) {
-            terminalMessage.add(((PacketClientLogin) packet).getUsername());
+            addMessageToTerminal(((PacketClientLogin) packet).getUsername());
             Packet response = new PacketServerLoginResponse(666000111, true);
             connectionPool.sendAll(response);
         }
     }
 
-    public void addMessageToTerminal(){
-
+    public void addMessageToTerminal(String message) {
+        dataAccess.addTerminalMessage(message);
     }
 
-    public String getMessageToTerminal() {
-        try {
-            return terminalMessage.take();
-        } catch (InterruptedException e) {
-            return e.getMessage();
-        }
+    public void shutdown(){
+        connectionPool.close();
     }
 }

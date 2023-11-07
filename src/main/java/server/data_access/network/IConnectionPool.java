@@ -4,6 +4,7 @@ import common.packet.Packet;
 
 interface IConnectionPool {
     void sendAll(Packet packet);
+    void start();
 
     void close();
 }

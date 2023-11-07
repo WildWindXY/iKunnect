@@ -1,4 +1,4 @@
-package server.interface_adapter;
+package server.interface_adapter.terminal_message;
 
 import server.use_case.terminal_message.TerminalMessageOutputBoundary;
 

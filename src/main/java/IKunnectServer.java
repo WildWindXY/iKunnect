@@ -1,8 +1,8 @@
 import server.data_access.DataAccess;
 import server.data_access.TerminalMessageDataAccessInterface;
-import server.interface_adapter.TerminalController;
-import server.interface_adapter.TerminalPresenter;
-import server.interface_adapter.TerminalViewModel;
+import server.interface_adapter.terminal_message.TerminalController;
+import server.interface_adapter.terminal_message.TerminalPresenter;
+import server.interface_adapter.terminal_message.TerminalViewModel;
 import server.use_case.terminal_message.TerminalMessageInteractor;
 import server.view.TerminalView;
 

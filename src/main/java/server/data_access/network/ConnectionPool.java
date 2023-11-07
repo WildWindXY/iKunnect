@@ -69,7 +69,7 @@ class ConnectionPool extends Thread implements IConnectionPool {
     public void sendAll(Packet packet) {
         for (Connection connection : connections) {
             connection.toSend.add(packet);
-            System.out.println("Send packet to clientL " + packet);
+            networkManager.addMessageToTerminal("Send packet to client: " + packet);
         }
     }
 
