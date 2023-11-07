@@ -1,16 +1,20 @@
 import common.packet.Packet;
+import common.packet.PacketClientLogin;
 import common.packet.PacketDebug;
 import client.data_access.ServerDataAccessObject;
 
 import java.io.*;
 import java.net.Socket;
 
+import static utils.MessageEncryptionUtils.md5Java;
+
 public class TempClient {
     public static void main(String[] args) {
         String serverAddress = "localhost";
         int serverPort = 8964;
         ServerDataAccessObject dao = new ServerDataAccessObject(serverAddress, serverPort);
-        dao.sendPacket("Hello!!");
+        Packet msg = new PacketClientLogin("myuser1", md5Java("pwd123"));
+        dao.sendPacket(msg);
 
 
 //        try {

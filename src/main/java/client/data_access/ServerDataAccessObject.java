@@ -2,11 +2,18 @@ package client.data_access;
 
 import common.packet.Packet;
 import common.packet.PacketDebug;
+import common.packet.PacketServerLoginResponse;
+import common.packet.PacketServerMessage;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerDataAccessObject {
+
+    private final LinkedBlockingQueue<Packet> receivedPacket = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<PacketServerLoginResponse> loginResponses = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<PacketServerMessage> serverMessages = new LinkedBlockingQueue<>();
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -21,7 +28,7 @@ public class ServerDataAccessObject {
 
             receivePacket();
 
-
+            packetClassification();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,8 +38,12 @@ public class ServerDataAccessObject {
         Thread receiveThread = new Thread(() -> {
             try {
                 while (true) {
-                    PacketDebug receivedPacket = (PacketDebug) in.readObject();
-                    System.out.println("Received from server: " + receivedPacket);
+                    Object obj = in.readObject();
+                    if (obj instanceof Packet) {
+                        receivedPacket.add((Packet) obj);
+                    } else {
+                        throw new IOException("Received object is not a packet");
+                    }
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -41,16 +52,33 @@ public class ServerDataAccessObject {
         receiveThread.start();
     }
 
-    public void sendPacket(String message) {
-        System.out.print("Message to send to server: " + message.toString());
-        Packet packet = new PacketDebug(message);
+    private void packetClassification() {
+        Thread receiveThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Packet packet = receivedPacket.take();
+                    if (packet instanceof PacketDebug) {
+                        System.out.println("Received from server (debug message): " + packet);
+                    } else if (packet instanceof PacketServerMessage) {
+                        serverMessages.add((PacketServerMessage) packet);
+                    } else if (packet instanceof PacketServerLoginResponse) {
+                        loginResponses.add((PacketServerLoginResponse) packet);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        receiveThread.start();
+    }
+
+    public void sendPacket(Packet msg) {
+        System.out.println("Message to send to server: " + msg.toString());
         try {
-            out.writeObject(packet);
+            out.writeObject(msg);
             out.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-
 }
