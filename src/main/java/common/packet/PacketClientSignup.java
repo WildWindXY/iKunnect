@@ -1,6 +1,6 @@
 package common.packet;
 
-public class PacketClientSignup {
+public class PacketClientSignup implements Packet{
     private final String username;
     private final String hashedPassword;
 
