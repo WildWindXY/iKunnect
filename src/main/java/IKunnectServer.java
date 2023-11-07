@@ -1,4 +1,4 @@
-import server.use_case.network.NetworkManager;
+import server.data_access.network.NetworkManager;
 
 import java.io.IOException;
 
