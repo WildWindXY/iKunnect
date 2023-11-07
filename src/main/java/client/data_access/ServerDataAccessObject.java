@@ -81,4 +81,20 @@ public class ServerDataAccessObject {
             throw new RuntimeException(e);
         }
     }
+
+    public PacketServerLoginResponse getLoginResponse() {
+        try {
+            return loginResponses.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public PacketServerMessage getServerMessage() {
+        try {
+            return serverMessages.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
