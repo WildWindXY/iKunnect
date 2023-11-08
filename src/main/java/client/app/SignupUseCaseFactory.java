@@ -1,13 +1,11 @@
-package client.use_case.Signup;
+package client.app;
 
+import client.interface_adapter.Login.LoginViewModel;
+import client.use_case.Signup.SignupDataAccessInterface;
 import client.view.SignupView;
 
 import client.interface_adapter.ViewManagerModel;
 import client.interface_adapter.Signup.*;
-
-
-import javax.swing.*;
-import java.io.IOException;
 
 public class SignupUseCaseFactory {
 
@@ -15,7 +13,7 @@ public class SignupUseCaseFactory {
     private SignupUseCaseFactory() {}
 
     //create SignupView
-    public static SignupView create(ViewManagerModel viewManagerModel, SignupViewModel signupViewModel) {
+    public static SignupView create(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel, SignupViewModel signupViewModel, SignupDataAccessInterface userDataAccessObject) {
         return null;
     }
 

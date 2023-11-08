@@ -1,4 +1,4 @@
-package server.use_case.network;
+package server.data_access.network;
 
 import common.packet.Packet;
 

@@ -21,6 +21,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
+    public static final String VIEW_NAME = "iKunnect - Sign Up";
     //private JPanel SignupMain;
     JPanel topPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
