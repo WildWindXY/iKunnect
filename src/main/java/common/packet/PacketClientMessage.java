@@ -2,10 +2,10 @@ package common.packet;
 
 public class PacketClientMessage implements Packet {
     private final String message;
-    private final long recipientID;
-
+    private final String recipientID;
 
     public PacketClientMessage(long recipientID, String message) {
+
         this.recipientID = recipientID;
         this.message = message;
     }
@@ -14,7 +14,12 @@ public class PacketClientMessage implements Packet {
         return message;
     }
 
-    public long getRecipient() {
+    public String getRecipient() {
         return this.recipientID;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(recipientID) + " " + message;
     }
 }

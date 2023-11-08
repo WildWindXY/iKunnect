@@ -12,6 +12,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
     implementation 'org.jline:jline:3.24.1'
     implementation files('lib/intellij_forms_rt.jar')
+    testImplementation 'junit:junit:4.13.1'
 }
 
 application {

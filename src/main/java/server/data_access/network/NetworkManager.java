@@ -6,7 +6,10 @@ import common.packet.PacketDebug;
 import common.packet.PacketServerLoginResponse;
 import server.data_access.DataAccess;
 
+
 import java.io.IOException;
+
+import static utils.MessageEncryptionUtils.AES_decrypt;
 
 public class NetworkManager {
     private final ConnectionPool connectionPool;
@@ -24,6 +27,15 @@ public class NetworkManager {
         } else if (packet instanceof PacketClientLogin) {
             addMessageToTerminal(((PacketClientLogin) packet).getUsername());
             Packet response = new PacketServerLoginResponse(666000111, true);
+            connectionPool.sendAll(response);
+        } else if(packet instanceof PacketClientMessage){
+            System.out.println(((PacketClientMessage) packet));
+            try {
+                System.out.println("Message After Decryption: " + AES_decrypt(((PacketClientMessage) packet).getEncryptedMessage()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            Packet response = new PacketServerSendMessageResponse(System.currentTimeMillis(), true);
             connectionPool.sendAll(response);
         }
     }
