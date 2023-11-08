@@ -5,7 +5,7 @@ import server.data_access.network.NetworkManager;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class DataAccess implements TerminalMessageDataAccessInterface {
+public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface {
 
     private final NetworkManager networkManager;
     private final LinkedBlockingQueue<String> terminalMessage = new LinkedBlockingQueue<>();

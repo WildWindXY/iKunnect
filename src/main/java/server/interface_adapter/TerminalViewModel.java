@@ -1,4 +1,4 @@
-package server.interface_adapter.terminal_message;
+package server.interface_adapter;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

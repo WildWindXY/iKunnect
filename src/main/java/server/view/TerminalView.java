@@ -4,8 +4,8 @@ import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import server.interface_adapter.terminal_message.TerminalController;
-import server.interface_adapter.terminal_message.TerminalViewModel;
+import server.interface_adapter.TerminalController;
+import server.interface_adapter.TerminalViewModel;
 
 import java.io.IOException;
 
@@ -40,6 +40,8 @@ public class TerminalView {
         while (true) {
             line = reader.readLine("> ");
             if (line.equalsIgnoreCase(COMMAND_EXIT)) {
+                terminalController.shutdown();
+                System.exit(0);
                 break;
             } else if (line.equalsIgnoreCase(COMMAND_SHOW_CONNECTIONS)) {
                 //TODO: add use case
