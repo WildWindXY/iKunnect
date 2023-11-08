@@ -7,6 +7,8 @@ import client.use_case.SendMessage.SendMessageOutputData;
 import common.packet.PacketClientMessage;
 import common.packet.PacketServerSendMessageResponse;
 
+import static utils.MessageEncryptionUtils.AES_encrypt;
+
 public class SendMessageDataAccess implements SendMessageDataAccessInterface{
     private final ServerDataAccessObject serverDataAccessObject;
 
@@ -16,7 +18,12 @@ public class SendMessageDataAccess implements SendMessageDataAccessInterface{
 
     @Override
     public SendMessageOutputData sendMessage(SendMessageInputData input) {
-        PacketClientMessage packet = new PacketClientMessage(input.getReceiver(), input.getMessage());
+        PacketClientMessage packet = null;
+        try {
+            packet = new PacketClientMessage(input.getReceiver(), AES_encrypt(input.getMessage()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         serverDataAccessObject.sendPacket(packet);
         PacketServerSendMessageResponse response = serverDataAccessObject.getSendMessageResponse();
         return new SendMessageOutputData(response.isSuccess(), response.getTimestamp());
