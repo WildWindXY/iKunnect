@@ -1,8 +1,6 @@
 package client.interface_adapter.Login;
 
-import client.interface_adapter.Signup.SignupState;
 import client.interface_adapter.ViewModel;
-import sun.rmi.runtime.Log;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -20,18 +18,12 @@ public class LoginViewModel extends ViewModel {
     public static final String LOGIN_BUTTON_TOOLTIPS = "Log in";
     public static final String EXIT_BUTTON_LABEL = "Exit";
     public static final String EXIT_BUTTON_TOOLTIPS = "Exit the application";
-
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private LoginState state = new LoginState();
 
     public LoginViewModel() {
         super("sign up");
     }
-
-    public void setState(LoginState state) {
-        this.state = state;
-    }
-
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     // This is what the Login Presenter will call to let the ViewModel know
     // to alert the View
@@ -45,6 +37,10 @@ public class LoginViewModel extends ViewModel {
 
     public LoginState getState() {
         return state;
+    }
+
+    public void setState(LoginState state) {
+        this.state = state;
     }
 
 }

@@ -1,10 +1,11 @@
 package common.packet;
 
-public class PacketClientMessage implements Packet{
+public class PacketClientMessage implements Packet {
     private final String message;
     private final String recipientID;
 
-    public PacketClientMessage(String recipientID, String message) {
+    public PacketClientMessage(long recipientID, String message) {
+
         this.recipientID = recipientID;
         this.message = message;
     }

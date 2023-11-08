@@ -1,39 +1,54 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 repositories {
     jcenter()
-    mavenCentral()
 }
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+    implementation 'org.jline:jline:3.24.1'
     implementation files('lib/intellij_forms_rt.jar')
     testImplementation 'junit:junit:4.13.1'
 }
 
+application {
+    mainClassName = 'IKunnect'
+}
+
 jar {
-    archiveFileName = 'iKunnect.jar'
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+
     manifest {
         attributes 'Main-Class': 'IKunnect'
     }
-    from sourceSets.main.output
+    archiveBaseName = 'IKunnect'
+    duplicatesStrategy = 'exclude'
 }
 
-task serverJar(type: Jar) {
-    archiveFileName = 'iKunnectServer.jar'
+task createJarServer(type: Jar, dependsOn: classes) {
+    from sourceSets.main.output
+    from sourceSets.main.resources
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+
     manifest {
         attributes 'Main-Class': 'IKunnectServer'
     }
-    from sourceSets.main.output
+    archiveBaseName = 'IKunnectServer'
+    duplicatesStrategy = 'exclude'
 }
 
-task testClientJar(type: Jar) {
-    archiveFileName = 'iKunnectTestClient.jar'
+task createJarClient(type: Jar, dependsOn: classes) {
+    from sourceSets.main.output
+    from sourceSets.main.resources
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+
     manifest {
         attributes 'Main-Class': 'TempClient'
     }
-    from sourceSets.main.output
+    archiveBaseName = 'TempClient'
+    duplicatesStrategy = 'exclude'
 }
