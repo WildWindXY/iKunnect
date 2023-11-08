@@ -41,8 +41,6 @@ public class TerminalView {
             line = reader.readLine("> ");
             if (line.equalsIgnoreCase(COMMAND_EXIT)) {
                 terminalController.shutdown();
-                System.exit(0);
-                break;
             } else if (line.equalsIgnoreCase(COMMAND_SHOW_CONNECTIONS)) {
                 //TODO: add use case
             }

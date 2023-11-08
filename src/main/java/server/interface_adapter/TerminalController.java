@@ -13,7 +13,10 @@ public class TerminalController {
         this.serverShutdownInputBoundary = serverShutdownInputBoundary;
     }
 
-    public void shutdown(){
+    /**
+     * Initiates a graceful shutdown of the server or service.
+     */
+    public void shutdown() {
         serverShutdownInputBoundary.shutdown();
     }
 }
