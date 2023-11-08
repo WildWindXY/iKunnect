@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import server.data_access.DataAccess;
 import server.data_access.TerminalMessageDataAccessInterface;
 import server.interface_adapter.terminal_message.TerminalController;
@@ -15,7 +16,7 @@ public class IKunnectServer {
         initTerminalMessage(dataAccess);
     }
 
-    private static void initTerminalMessage(TerminalMessageDataAccessInterface terminalMessageDataAccess){
+    private static void initTerminalMessage(TerminalMessageDataAccessInterface terminalMessageDataAccess) throws IOException {
         TerminalViewModel terminalViewModel = new TerminalViewModel();
         TerminalPresenter terminalPresenter = new TerminalPresenter(terminalViewModel);
         TerminalMessageInteractor terminalMessageInteractor = new TerminalMessageInteractor(terminalMessageDataAccess, terminalPresenter);

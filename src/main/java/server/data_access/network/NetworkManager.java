@@ -7,17 +7,15 @@ import common.packet.PacketServerLoginResponse;
 import server.data_access.DataAccess;
 
 import java.io.IOException;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class NetworkManager {
-    private final IConnectionPool connectionPool;
+    private final ConnectionPool connectionPool;
     private final DataAccess dataAccess;
 
 
     public NetworkManager(DataAccess dataAccess) throws IOException {//TODO: Catch it
         this.dataAccess = dataAccess;
         this.connectionPool = new ConnectionPool(this, 8964);
-        this.connectionPool.start();
     }
 
     public void packetHandler(Packet packet) {//TODO: This is temporary
@@ -30,11 +28,25 @@ public class NetworkManager {
         }
     }
 
-    public void addMessageToTerminal(String message) {
+    /**
+     * Adds a message to the terminal output.
+     * <p>
+     * This method is used to add a message to the terminal output, which is typically displayed
+     * to provide information or status updates.
+     *
+     * @param message The message to be added to the terminal output.
+     */
+    void addMessageToTerminal(String message) {
         dataAccess.addTerminalMessage(message);
     }
 
-    public void shutdown(){
+    /**
+     * Shuts down the connection pool when called.
+     * <p>
+     * This method is used to gracefully shut down the connection pool, typically
+     * involving the closing of connections and releasing associated resources.
+     */
+    public void shutdown() {
         connectionPool.close();
     }
 }

@@ -12,7 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
-class ConnectionPool extends Thread implements IConnectionPool {
+class ConnectionPool {
     private final ArrayList<Connection> connections = new ArrayList<>();
     private final ServerSocket serverSocket;
     private final NetworkManager networkManager;
@@ -21,7 +21,7 @@ class ConnectionPool extends Thread implements IConnectionPool {
     ConnectionPool(NetworkManager networkManager, int port) throws IOException {
         this.networkManager = networkManager;
         serverSocket = new ServerSocket(port);
-
+        new Thread(this::handleConnections).start();
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -33,15 +33,13 @@ class ConnectionPool extends Thread implements IConnectionPool {
                 }
             }
         }, 0, 1000);// execute every second
-
     }
 
-    @Override
-    public void run() {
+    private void handleConnections() {
         while (!serverSocket.isClosed()) {
             try {
                 Socket socket = serverSocket.accept();
-                System.out.println("Some client connected");
+                networkManager.addMessageToTerminal("Some client connected");
                 Connection connection = new Connection(socket);
                 connections.add(connection);
             } catch (Exception ignored) {//TODO: Log it later
@@ -50,6 +48,14 @@ class ConnectionPool extends Thread implements IConnectionPool {
         }
     }
 
+    /**
+     * Closes the resources associated with the server.
+     * <p>
+     * This method is used to close the server's resources, including the server socket
+     * and all active connections. It is typically called to gracefully terminate the
+     * server. Any IOExceptions that occur during the closing process are caught and
+     * ignored for later handling.
+     */
     public void close() {
         try {
             serverSocket.close();
@@ -65,7 +71,15 @@ class ConnectionPool extends Thread implements IConnectionPool {
         }
     }
 
-    @Override
+    /**
+     * Sends a packet to all connected clients.
+     * <p>
+     * This method sends the specified packet to all connected clients by adding it to
+     * each client's send queue. Additionally, it logs the action in the network manager's
+     * terminal output.
+     *
+     * @param packet The packet to be sent to all connected clients.
+     */
     public void sendAll(Packet packet) {
         for (Connection connection : connections) {
             connection.toSend.add(packet);
