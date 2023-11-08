@@ -1,9 +1,6 @@
 package client.data_access;
 
-import common.packet.Packet;
-import common.packet.PacketDebug;
-import common.packet.PacketServerLoginResponse;
-import common.packet.PacketServerMessage;
+import common.packet.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -14,6 +11,8 @@ public class ServerDataAccessObject {
     private final LinkedBlockingQueue<Packet> receivedPacket = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketServerLoginResponse> loginResponses = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketServerMessage> serverMessages = new LinkedBlockingQueue<>();
+
+    private final LinkedBlockingQueue<PacketServerSendMessageResponse> sendMessageResponses = new LinkedBlockingQueue<>();
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -63,6 +62,10 @@ public class ServerDataAccessObject {
                         serverMessages.add((PacketServerMessage) packet);
                     } else if (packet instanceof PacketServerLoginResponse) {
                         loginResponses.add((PacketServerLoginResponse) packet);
+                    } else if (packet instanceof PacketServerSendMessageResponse) {
+                        sendMessageResponses.add((PacketServerSendMessageResponse) packet);
+                    } else {
+
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -90,11 +93,12 @@ public class ServerDataAccessObject {
         }
     }
 
-    public PacketServerMessage getServerMessage() {
+    public PacketServerSendMessageResponse getSendMessageResponse() {
         try {
-            return serverMessages.take();
+            return sendMessageResponses.take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

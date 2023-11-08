@@ -1,9 +1,6 @@
 package server.use_case.network;
 
-import common.packet.Packet;
-import common.packet.PacketClientLogin;
-import common.packet.PacketDebug;
-import common.packet.PacketServerLoginResponse;
+import common.packet.*;
 
 import java.io.IOException;
 
@@ -21,6 +18,10 @@ public class NetworkManager {
         } else if(packet instanceof PacketClientLogin){
             System.out.println(((PacketClientLogin) packet).getUsername());
             Packet response = new PacketServerLoginResponse(666000111, true);
+            connectionPool.sendAll(response);
+        } else if(packet instanceof PacketClientMessage){
+            System.out.println(((PacketClientMessage) packet));
+            Packet response = new PacketServerSendMessageResponse(System.currentTimeMillis(), true);
             connectionPool.sendAll(response);
         }
     }
