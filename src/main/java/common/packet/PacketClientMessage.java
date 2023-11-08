@@ -16,4 +16,9 @@ public class PacketClientMessage implements Packet{
     public String getRecipient() {
         return this.recipientID;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(recipientID) + " " + message;
+    }
 }
