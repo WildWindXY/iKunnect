@@ -4,7 +4,7 @@ public class PacketClientMessage implements Packet {
     private final String message;
     private final String recipientID;
 
-    public PacketClientMessage(long recipientID, String message) {
+    public PacketClientMessage(String recipientID, String message) {
 
         this.recipientID = recipientID;
         this.message = message;
