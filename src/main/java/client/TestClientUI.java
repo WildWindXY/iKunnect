@@ -4,8 +4,10 @@ import client.entity.*;
 import client.interface_adapter.Login.*;
 import client.interface_adapter.Signup.*;
 import client.interface_adapter.ViewManagerModel;
+import client.use_case.Login.LoginDataAccessInterface;
 import client.use_case.Login.LoginInputBoundary;
 import client.use_case.Login.LoginInteractor;
+import client.use_case.Login.LoginOutputBoundary;
 import client.use_case.Signup.*;
 import client.view.*;
 import client.view.components.frames.SmallJFrame;
@@ -32,7 +34,23 @@ public class TestClientUI {
         SignupInputBoundary userSignupUseCaseInteractor = new SignupInteractor(userDataAccessObject, outputBoundary, factory);
         SignupController signupController = new SignupController(userSignupUseCaseInteractor);
 
-        LoginInputBoundary userLoginUseCaseInteractor = new LoginInteractor();
+        LoginDataAccessInterface loginDataAccessInterface = new LoginDataAccessInterface() {
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void save(User user) {
+            }
+
+            @Override
+            public User get(String username) {
+                return null;
+            }
+        };
+        LoginOutputBoundary loginOutputBoundary = new LoginPresenter();
+        LoginInputBoundary userLoginUseCaseInteractor = new LoginInteractor(loginDataAccessInterface, loginOutputBoundary);
         LoginController loginController = new LoginController(userLoginUseCaseInteractor);
 
         SmallJFrame app = new SmallJFrame("iKunnect Client");

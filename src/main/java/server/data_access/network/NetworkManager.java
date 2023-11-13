@@ -1,9 +1,6 @@
 package server.data_access.network;
 
-import common.packet.Packet;
-import common.packet.PacketClientLogin;
-import common.packet.PacketDebug;
-import common.packet.PacketServerLoginResponse;
+import common.packet.*;
 import server.data_access.DataAccess;
 
 
