@@ -1,8 +1,6 @@
 package client.interface_adapter.Login;
 
-import client.interface_adapter.Signup.SignupState;
 import client.interface_adapter.ViewModel;
-import sun.rmi.runtime.Log;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
