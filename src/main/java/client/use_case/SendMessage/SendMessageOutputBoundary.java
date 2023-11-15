@@ -13,5 +13,5 @@ public interface SendMessageOutputBoundary {
      *
      * @param outputData The output data containing the result of the message send operation.
      */
-    void presentSendMessageResult(SendMessageOutputData outputData);
+    void presentSendMessageResult(SendMessageOutputData outputData, String message);
 }

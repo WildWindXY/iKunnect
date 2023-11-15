@@ -1,7 +1,13 @@
 package client.view;
 
+import client.data_access.ServerDataAccessObject;
+import client.data_access.send_message.SendMessageDataAccess;
+import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Main.MainController;
 import client.interface_adapter.Main.MainViewModel;
+import client.interface_adapter.SendMessage.SendMessagePresenter;
+import client.use_case.SendMessage.SendMessageDataAccessInterface;
+import client.use_case.SendMessage.SendMessageInteractor;
 import client.view.components.frames.SmallJFrame;
 import client.view.components.jlist.ChannelsListCellRenderer;
 import client.view.components.panels.PlainTextMessage;
@@ -15,6 +21,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static utils.MessageEncryptionUtils.initKey;
 
 public class MainView extends JPanel implements ActionListener, PropertyChangeListener {
 
@@ -65,13 +73,14 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     private final JButton moreOptions2 = new JButton("Button 2");
     private final JButton moreOptions3 = new JButton("Button 3");
 
-    //--------------------- Other Stuff needed to initiate MainView ---------------------
-    MainViewModel mainViewModel = new MainViewModel();
-
+    private final MainController mainController;
+    private final MainViewModel mainViewModel;
 
     public MainView(MainController controller, MainViewModel viewModel) {
+        this.mainController = controller;
+        this.mainViewModel = viewModel;
+        this.mainViewModel.addPropertyChangeListener(this);
         initComponents();
-
     }
 
     public void initComponents() {
@@ -186,7 +195,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         channels.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3){
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     int index = channels.locationToIndex(e.getPoint());
                     channels.setSelectedIndex(index);
                     ChannelPopup channelPopup = new ChannelPopup();
@@ -346,7 +355,18 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     public static void main(String[] args) {
         SmallJFrame frame = new SmallJFrame("Main");
-        frame.add(new MainView(new MainController(), new MainViewModel()));
+        try {
+            initKey("1111222233334444");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        MainViewModel mainViewModel = new MainViewModel();
+        SendMessagePresenter sendMessagePresenter = new SendMessagePresenter(mainViewModel);
+        ServerDataAccessObject serverDAO = new ServerDataAccessObject("localhost", 8964);
+        SendMessageDataAccessInterface sendMessageDataAccess = new SendMessageDataAccess(serverDAO);
+        SendMessageInteractor sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccess, sendMessagePresenter);
+
+        frame.add(new MainView(new MainController("CAIXUKUN", sendMessageInteractor), mainViewModel));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.prepare();
         frame.setSize(new Dimension(1200, 800));
