@@ -8,9 +8,17 @@ import server.view.TerminalView;
 
 import java.io.IOException;
 
+import static utils.MessageEncryptionUtils.initKey;
+
 public class IKunnectServer {
 
     public static void main(String[] args) throws IOException {
+        System.out.println("server on!");
+                try {
+            initKey("1111222233334444");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         DataAccess dataAccess = new DataAccess();
 
         TerminalViewModel terminalViewModel = new TerminalViewModel();

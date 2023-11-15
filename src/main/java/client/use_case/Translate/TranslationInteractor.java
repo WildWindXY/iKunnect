@@ -1,18 +1,16 @@
 package client.use_case.Translate;
 
 public class TranslationInteractor implements TranslationInputBoundary{
-    private final TranslationOutputBoundary translationPresenter;
     private final TranslateDataAccessInterface translationDataAccessObject;
 
-    public TranslationInteractor(TranslateDataAccessInterface translationDataAccessObject, TranslationOutputBoundary translationPresenter) {
+    public TranslationInteractor(TranslateDataAccessInterface translationDataAccessObject) {
         this.translationDataAccessObject = translationDataAccessObject;
-        this.translationPresenter = translationPresenter;
     }
 
     @Override
-    public void execute(TranslationInputData translationInputData) {
+    public String execute(TranslationInputData translationInputData) {
         TranslationOutputData outputData = translationDataAccessObject.translate(translationInputData.getTextToTranslate());
 
-        translationPresenter.presentTranslationResult(outputData);
+        return outputData.getTranslatedText();
     }
 }

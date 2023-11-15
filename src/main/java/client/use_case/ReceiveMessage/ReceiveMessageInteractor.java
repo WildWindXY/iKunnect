@@ -1,8 +1,8 @@
-package client.use_case.SendMessage;
+package client.use_case.ReceiveMessage;
 
-public class SendMessageInteractor implements SendMessageInputBoundary {
-    private final SendMessageDataAccessInterface dataAccess;
-    private final SendMessageOutputBoundary outputBoundary;
+public class ReceiveMessageInteractor implements ReceiveMessageInputBoundary {
+    private final ReceiveMessageDataAccessInterface dataAccess;
+    private final ReceiveMessageOutputBoundary outputBoundary;
 
     /**
      * Constructs a SendMessageInteractor with the provided data access and output boundary.
@@ -10,7 +10,7 @@ public class SendMessageInteractor implements SendMessageInputBoundary {
      * @param dataAccess     The data access interface for sending messages.
      * @param outputBoundary The output boundary for presenting message result.
      */
-    public SendMessageInteractor(SendMessageDataAccessInterface dataAccess, SendMessageOutputBoundary outputBoundary) {
+    public ReceiveMessageInteractor(ReceiveMessageDataAccessInterface dataAccess, ReceiveMessageOutputBoundary outputBoundary) {
         this.dataAccess = dataAccess;
         this.outputBoundary = outputBoundary;
     }
@@ -22,8 +22,8 @@ public class SendMessageInteractor implements SendMessageInputBoundary {
      * @param sendMessageInputData The input data for sending the message, including message content, sender, and receiver.
      */
     @Override
-    public void execute(SendMessageInputData sendMessageInputData) {
-        SendMessageOutputData outputData = dataAccess.sendMessage(sendMessageInputData);
-        outputBoundary.presentSendMessageResult(outputData, sendMessageInputData.getMessage());
+    public void execute() {
+        ReceiveMessageOutputData outputData = dataAccess.receiveMessage();
+        outputBoundary.presentSendMessageResult(outputData);
     }
 }

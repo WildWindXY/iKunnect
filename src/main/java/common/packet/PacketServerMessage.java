@@ -2,18 +2,25 @@ package common.packet;
 
 public class PacketServerMessage implements Packet{
     private final String message;
-    private final long recipientID;
+    private final String senderID;
 
-    public PacketServerMessage(long recipientID, String message) {
-        this.recipientID = recipientID;
+    private final long timestamp;
+
+    public PacketServerMessage(String senderID, String message, long timestamp) {
+        this.senderID = senderID;
         this.message = message;
+        this.timestamp = timestamp;
     }
 
     public String getEncryptedMessage() {
         return message;
     }
 
-    public long getRecipient() {
-        return this.recipientID;
+    public String getSender() {
+        return this.senderID;
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
     }
 }

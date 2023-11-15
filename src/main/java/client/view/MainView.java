@@ -1,20 +1,46 @@
 package client.view;
 
+import client.data_access.ServerDataAccessObject;
+import client.data_access.receive_message.ReceiveMessageDataAccess;
+import client.data_access.send_message.SendMessageDataAccess;
+import client.data_access.translate.TranslateDataAccess;
+import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Main.MainController;
 import client.interface_adapter.Main.MainViewModel;
+import client.interface_adapter.ReceiveMessage.ReceiveMessagePresenter;
+import client.interface_adapter.SendMessage.SendMessagePresenter;
+import client.interface_adapter.SendMessage.SendMessageState;
+import client.interface_adapter.Translation.TranslationPresenter;
+import client.use_case.ReceiveMessage.ReceiveMessageDataAccessInterface;
+import client.use_case.ReceiveMessage.ReceiveMessageInteractor;
+import client.use_case.ReceiveMessage.ReceiveMessageOutputBoundary;
+import client.use_case.SendMessage.SendMessageDataAccessInterface;
+import client.use_case.SendMessage.SendMessageInteractor;
+import client.use_case.Translate.TranslateDataAccessInterface;
+import client.use_case.Translate.TranslationInputBoundary;
+import client.use_case.Translate.TranslationInteractor;
 import client.view.components.frames.SmallJFrame;
 import client.view.components.jlist.ChannelsListCellRenderer;
-import client.view.components.panels.PlainTextMessage;
+import client.view.components.panels.MessagesJPanel;
 import client.view.components.popupMenu.ChannelPopup;
+import client.view.components.popupMenu.UserIconPopup;
 import utils.InputUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineMetrics;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static utils.MessageEncryptionUtils.initKey;
 
 public class MainView extends JPanel implements ActionListener, PropertyChangeListener {
 
@@ -65,13 +91,24 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     private final JButton moreOptions2 = new JButton("Button 2");
     private final JButton moreOptions3 = new JButton("Button 3");
 
-    //--------------------- Other Stuff needed to initiate MainView ---------------------
-    MainViewModel mainViewModel = new MainViewModel();
-
+    private final MainController mainController;
+    private final MainViewModel mainViewModel;
+    private PropertyChangeEvent evt;
 
     public MainView(MainController controller, MainViewModel viewModel) {
-        initComponents();
+        this.mainController = controller;
+        this.mainViewModel = viewModel;
+        this.mainViewModel.addPropertyChangeListener(this);
 
+        initComponents();
+        Runnable receive = () -> {
+            while (true) {
+                mainController.getMessage();
+            }
+        };
+
+        Thread thread = new Thread(receive);
+        thread.start();
     }
 
     public void initComponents() {
@@ -186,7 +223,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         channels.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3){
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     int index = channels.locationToIndex(e.getPoint());
                     channels.setSelectedIndex(index);
                     ChannelPopup channelPopup = new ChannelPopup();
@@ -209,13 +246,8 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                         System.out.println("Send message with content, channel name, etc.");
                         System.out.println(content);
                         inputField.setText(null);
-                        PlainTextMessage m = new PlainTextMessage(content);
-                        messagesPanel.add(m);
-                        messagesPanel.revalidate();
-                        SwingUtilities.invokeLater(() -> {
-                            JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
-                            verticalScrollBar.setValue(verticalScrollBar.getMaximum());
-                        });
+                        mainController.sendMessage(content, channelLabel.getText());
+
 
                     }
                 }
@@ -346,7 +378,24 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     public static void main(String[] args) {
         SmallJFrame frame = new SmallJFrame("Main");
-        frame.add(new MainView(new MainController(), new MainViewModel()));
+        try {
+            initKey("1111222233334444");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        MainViewModel mainViewModel = new MainViewModel();
+        SendMessagePresenter sendMessagePresenter = new SendMessagePresenter(mainViewModel);
+        ReceiveMessagePresenter receiveMessagePresenter = new ReceiveMessagePresenter(mainViewModel);
+        ServerDataAccessObject serverDAO = new ServerDataAccessObject("localhost", 8964);
+        SendMessageDataAccessInterface sendMessageDataAccess = new SendMessageDataAccess(serverDAO);
+        ReceiveMessageDataAccessInterface receiveMessageDataAccess = new ReceiveMessageDataAccess(serverDAO);
+        SendMessageInteractor sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccess, sendMessagePresenter);
+        ReceiveMessageInteractor receiveMessageInteractor = new ReceiveMessageInteractor(receiveMessageDataAccess, receiveMessagePresenter);
+
+        TranslateDataAccessInterface translationDataAccessObject = new TranslateDataAccess();
+        TranslationInputBoundary translationInteractor = new TranslationInteractor(translationDataAccessObject);
+
+        frame.add(new MainView(new MainController("CAIXUKUN", sendMessageInteractor, receiveMessageInteractor, translationInteractor), mainViewModel));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.prepare();
         frame.setSize(new Dimension(1200, 800));
@@ -362,6 +411,239 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         });
     }
 
+    class PlainTextMessage extends MessagesJPanel {
+
+        JPanel userIconWrapper;
+        String username;
+        JComponent userIcon;
+        JPanel labelWrapper = new JPanel();
+        JLabel usernameLabel;
+        JTextArea contentTextArea;
+
+        JPanel contentWrapper;
+
+        public PlainTextMessage(String username, String content, int orientation) {
+            super();
+            this.username = username;
+            boolean isLeft;
+
+            if (orientation != MessagesJPanel.LEFT && orientation != MessagesJPanel.RIGHT) {
+                isLeft = true;
+                System.out.println("Invalid component orientation.");
+            } else {
+                isLeft = orientation == MessagesJPanel.LEFT;
+            }
+
+            //User Icon
+            userIcon = renderUserIcon(username);
+            userIcon.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getButton() == MouseEvent.BUTTON3) {
+                        System.out.println("right click");
+                        UserIconPopup iconPopup = new UserIconPopup();
+                        iconPopup.show(userIcon, e.getX(), e.getY());
+                    }
+                }
+            });
+            userIconWrapper = new JPanel();
+            userIconWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
+            userIconWrapper.add(userIcon);
+            userIconWrapper.setBackground(leftColor);
+
+            //Username Label
+            if (isLeft) {
+                usernameLabel = new JLabel(username);
+                labelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
+                labelWrapper.setBackground(leftColor);
+            } else {
+                usernameLabel = new JLabel("You");
+                labelWrapper.setLayout(new FlowLayout(FlowLayout.RIGHT));
+                labelWrapper.setBackground(rightColor);
+            }
+            int WIDTH = Math.min(getTextWidth(content), 450);
+
+            labelWrapper.add(usernameLabel);
+            labelWrapper.setPreferredSize(new Dimension(WIDTH, 30));
+            labelWrapper.setBorder(mainBorder);
+            usernameLabel.setFont(labelFont);
+
+            //Text
+            contentTextArea = new JTextArea(content);
+            contentTextArea.setEditable(false);
+            contentTextArea.setLineWrap(true);
+            contentTextArea.setWrapStyleWord(true);
+            contentTextArea.setBorder(mainBorder);
+            contentTextArea.setFont(messagesFont);
+            if (!isLeft) {
+                contentTextArea.setBackground(rightColor);
+            } else {
+                contentTextArea.setBackground(leftColor);
+            }
+            contentTextArea.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getButton() == MouseEvent.BUTTON3) {
+                        System.out.println("right click");
+                        if (contentTextArea.getSelectionStart() != contentTextArea.getSelectionEnd()) {
+                            String selection = contentTextArea.getSelectedText();
+                            System.out.println(selection);
+                            PlainTextMessagePopup messagePopup = new PlainTextMessagePopup(true, selection);
+                            messagePopup.show(contentTextArea, e.getX(), e.getY());
+                        } else {
+                            PlainTextMessagePopup messagePopup = new PlainTextMessagePopup(false, contentTextArea.getText());
+                            messagePopup.show(contentTextArea, e.getX(), e.getY());
+                        }
+                    }
+                }
+            });
+
+            //Text Padding
+            contentTextArea.setBorder(new EmptyBorder(10, 10, 10, 10));
+            //Text Wrapper
+            JPanel textWrapper = new JPanel(new BorderLayout());
+            textWrapper.setBorder(mainBorder);
+            textWrapper.add(contentTextArea);
+
+            //Setting height
+            int prefHeight = getHeight(content);
+            contentTextArea.setPreferredSize(new Dimension(WIDTH, prefHeight));
+            userIconWrapper.setPreferredSize(new Dimension(userIconWrapper.getPreferredSize().width, prefHeight + 30));
+
+            //Wrapping username label and text message together into a large panel
+            contentWrapper = new JPanel();
+            contentWrapper.setLayout(new BoxLayout(contentWrapper, BoxLayout.Y_AXIS));
+            contentWrapper.add(labelWrapper);
+            contentWrapper.add(textWrapper);
+            Dimension d = contentTextArea.getPreferredSize();
+            contentWrapper.setPreferredSize(new Dimension(d.width, prefHeight + 70));
+
+            if (isLeft) {
+                setLayout(new FlowLayout(FlowLayout.LEFT));
+                add(userIconWrapper);
+                add(contentWrapper);
+            } else {
+                setLayout(new FlowLayout(FlowLayout.RIGHT));
+                add(contentWrapper);
+                add(userIconWrapper);
+            }
+            setBackground(leftColor);
+            setBorder(null);
+        }
+
+        public PlainTextMessage(String content) {
+            this("self", content, MessagesJPanel.RIGHT);
+        }
+
+
+        private int getHeight(String text) {
+            if (text.contains("\n")) {
+                String[] subs = text.split("\n");
+                int sum = 0;
+                for (String sub : subs) {
+                    sum += getHeight(sub);
+                }
+                return sum;
+            }
+            FontRenderContext frc = new FontRenderContext(null, true, true);
+            LineMetrics lineMetrics = messagesFont.getLineMetrics("Sample Text", frc);
+            float rowHeight = lineMetrics.getHeight() + lineMetrics.getLeading();
+
+            int prefHeight;
+            int textLength = text.length();
+            int numRows = textLength / 46 + 1;
+
+            prefHeight = (int) (rowHeight * numRows);
+            return prefHeight;
+        }
+
+        private int getTextWidth(String text) {
+
+            // Create a temporary graphics object to obtain FontMetrics
+            BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+            Graphics g = img.getGraphics();
+            g.setFont(messagesFont);
+            FontMetrics fontMetrics = g.getFontMetrics();
+
+            // Calculate the width of the text in pixels
+
+            if (text.contains("\n")) {
+                String[] subs = text.split("\n");
+                int max = 0;
+                for (String sub : subs) {
+                    max = Math.max(max, getTextWidth(sub));
+                }
+            }
+
+            return fontMetrics.stringWidth(text) + 30;
+
+        }
+
+        private void updateContentSize() {
+            int newHeight = getHeight(contentTextArea.getText());
+            contentTextArea.setPreferredSize(new Dimension(contentTextArea.getWidth(), newHeight));
+
+            Dimension d = contentTextArea.getPreferredSize();
+            contentWrapper.setPreferredSize(new Dimension(d.width, newHeight + 70));
+
+            userIconWrapper.setPreferredSize(new Dimension(userIconWrapper.getPreferredSize().width, newHeight + 30));
+
+            contentWrapper.revalidate();
+            contentWrapper.repaint();
+        }
+
+        private void addText(String content) {
+            contentTextArea.setText(contentTextArea.getText() + "\n\n" + content);
+            updateContentSize();
+        }
+
+        class PlainTextMessagePopup extends JPopupMenu {
+
+            public PlainTextMessagePopup(boolean textSelected) {
+                this(textSelected, "");
+            }
+
+
+            public PlainTextMessagePopup(boolean textSelected, String selectedText) {
+                super();
+
+                if (textSelected) {
+                    if (selectedText.isEmpty()) {
+                        System.out.println("No Text Selected");
+                    }
+                    JMenuItem copyText = new JMenuItem("Copy");
+                    copyText.addActionListener(e -> {
+                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        StringSelection stringSelection = new StringSelection(selectedText);
+                        clipboard.setContents(stringSelection, null);
+                        System.out.println("Text copied to clipboard");
+                    });
+                    add(copyText);
+                } else {
+                    JMenuItem forward = new JMenuItem("Forward");
+                    JMenuItem copyMessage = new JMenuItem("Copy Message");
+
+                    copyMessage.addActionListener(e -> {
+                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        StringSelection stringSelection = new StringSelection(selectedText);
+                        clipboard.setContents(stringSelection, null);
+                        System.out.println("Text copied to clipboard");
+                    });
+                    JMenuItem translate = new JMenuItem("Translate");
+                    translate.addActionListener(e -> {
+                        addText(mainController.translateMessage(selectedText));
+                    });
+                    add(forward);
+                    add(copyMessage);
+                    add(translate);
+                }
+            }
+
+        }
+
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -369,6 +651,18 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
+        SendMessageState state = (SendMessageState) evt.getNewValue();
+        PlainTextMessage m = null;
+        if (state.getSender().isEmpty()) {
+            m = new PlainTextMessage("You", state.getMessage(), 1);
+        } else {
+            m = new PlainTextMessage(state.getSender(), state.getMessage(), 0);
+        }
+        messagesPanel.add(m);
+        messagesPanel.revalidate();
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
+            verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+        });
     }
 }

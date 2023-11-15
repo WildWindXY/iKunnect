@@ -1,4 +1,4 @@
-package client.use_case.SendMessage;
+package client.use_case.ReceiveMessage;
 
 /**
  * The SendMessageOutputBoundary represents an interface for presenting the result
@@ -7,11 +7,11 @@ package client.use_case.SendMessage;
  * Implementations of this interface are expected to provide a method for presenting
  * the output data resulting from a message send operation.
  */
-public interface SendMessageOutputBoundary {
+public interface ReceiveMessageOutputBoundary {
     /**
      * Presents the result of sending a message to an external entity.
      *
      * @param outputData The output data containing the result of the message send operation.
      */
-    void presentSendMessageResult(SendMessageOutputData outputData, String message);
+    void presentSendMessageResult(ReceiveMessageOutputData outputData);
 }

@@ -101,4 +101,12 @@ public class ServerDataAccessObject {
         }
     }
 
+    public PacketServerMessage getReceiveMessage() {
+        try {
+            return serverMessages.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
