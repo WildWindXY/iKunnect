@@ -5,8 +5,6 @@ package client.interface_adapter.SendMessage;
 import client.interface_adapter.Main.MainViewModel;
 import client.use_case.SendMessage.SendMessageOutputBoundary;
 import client.use_case.SendMessage.SendMessageOutputData;
-import client.view.components.panels.PlainTextMessage;
-
 import javax.swing.*;
 
 public class SendMessagePresenter implements SendMessageOutputBoundary {
