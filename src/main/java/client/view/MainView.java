@@ -420,6 +420,8 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         JLabel usernameLabel;
         JTextArea contentTextArea;
 
+        JPanel contentWrapper;
+
         public PlainTextMessage(String username, String content, int orientation) {
             super();
             this.username = username;
@@ -474,7 +476,6 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             contentTextArea.setBorder(mainBorder);
             contentTextArea.setFont(messagesFont);
             if (!isLeft) {
-                contentTextArea.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
                 contentTextArea.setBackground(rightColor);
             } else {
                 contentTextArea.setBackground(leftColor);
@@ -510,7 +511,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             userIconWrapper.setPreferredSize(new Dimension(userIconWrapper.getPreferredSize().width, prefHeight + 30));
 
             //Wrapping username label and text message together into a large panel
-            JPanel contentWrapper = new JPanel();
+            contentWrapper = new JPanel();
             contentWrapper.setLayout(new BoxLayout(contentWrapper, BoxLayout.Y_AXIS));
             contentWrapper.add(labelWrapper);
             contentWrapper.add(textWrapper);
@@ -578,11 +579,30 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
         }
 
+        private void updateContentSize() {
+            int newHeight = getHeight(contentTextArea.getText());
+            contentTextArea.setPreferredSize(new Dimension(contentTextArea.getWidth(), newHeight));
+
+            Dimension d = contentTextArea.getPreferredSize();
+            contentWrapper.setPreferredSize(new Dimension(d.width, newHeight + 70));
+
+            userIconWrapper.setPreferredSize(new Dimension(userIconWrapper.getPreferredSize().width, newHeight + 30));
+
+            contentWrapper.revalidate();
+            contentWrapper.repaint();
+        }
+
+        private void addText(String content) {
+            contentTextArea.setText(contentTextArea.getText() + "\n\n" + content);
+            updateContentSize();
+        }
+
         class PlainTextMessagePopup extends JPopupMenu {
 
             public PlainTextMessagePopup(boolean textSelected) {
                 this(textSelected, "");
             }
+
 
             public PlainTextMessagePopup(boolean textSelected, String selectedText) {
                 super();
@@ -607,9 +627,12 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                         StringSelection stringSelection = new StringSelection(selectedText);
                         clipboard.setContents(stringSelection, null);
-                        System.out.println(mainController.translateMessage(selectedText));
+                        System.out.println("Text copied to clipboard");
                     });
                     JMenuItem translate = new JMenuItem("Translate");
+                    translate.addActionListener(e -> {
+                        addText(mainController.translateMessage(selectedText));
+                    });
                     add(forward);
                     add(copyMessage);
                     add(translate);
