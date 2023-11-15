@@ -6,6 +6,7 @@ import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Main.MainController;
 import client.interface_adapter.Main.MainViewModel;
 import client.interface_adapter.SendMessage.SendMessagePresenter;
+import client.interface_adapter.SendMessage.SendMessageState;
 import client.use_case.SendMessage.SendMessageDataAccessInterface;
 import client.use_case.SendMessage.SendMessageInteractor;
 import client.view.components.frames.SmallJFrame;
@@ -75,6 +76,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     private final MainController mainController;
     private final MainViewModel mainViewModel;
+    private PropertyChangeEvent evt;
 
     public MainView(MainController controller, MainViewModel viewModel) {
         this.mainController = controller;
@@ -218,20 +220,14 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                         System.out.println("Send message with content, channel name, etc.");
                         System.out.println(content);
                         inputField.setText(null);
-                        PlainTextMessage m = new PlainTextMessage(content);
-                        messagesPanel.add(m);
-                        messagesPanel.revalidate();
-                        SwingUtilities.invokeLater(() -> {
-                            JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
-                            verticalScrollBar.setValue(verticalScrollBar.getMaximum());
-                        });
+                        mainController.sendMessage(content, channelLabel.getText());
+
 
                     }
                 }
             }
         });
     }
-
     private void initInputFieldScrollPane() {
         inputFieldScrollPane.setViewportView(inputField);
         inputFieldScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -389,6 +385,13 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
+        SendMessageState state = (SendMessageState) evt.getNewValue();
+        PlainTextMessage m = new PlainTextMessage(state.getMessage());
+        messagesPanel.add(m);
+        messagesPanel.revalidate();
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
+            verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+        });
     }
 }

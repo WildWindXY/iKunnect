@@ -28,7 +28,7 @@ public class NetworkManager {
         } else if(packet instanceof PacketClientMessage){
             System.out.println(((PacketClientMessage) packet));
             try {
-                System.out.println("Message After Decryption: " + AES_decrypt(((PacketClientMessage) packet).getEncryptedMessage()));
+                System.out.println("Sender:"+ "Send To"+((PacketClientMessage) packet).getRecipient()+ "Message After Decryption: " + AES_decrypt(((PacketClientMessage) packet).getEncryptedMessage()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
