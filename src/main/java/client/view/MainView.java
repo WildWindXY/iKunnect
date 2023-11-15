@@ -1,12 +1,17 @@
 package client.view;
 
 import client.data_access.ServerDataAccessObject;
+import client.data_access.receive_message.ReceiveMessageDataAccess;
 import client.data_access.send_message.SendMessageDataAccess;
 import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Main.MainController;
 import client.interface_adapter.Main.MainViewModel;
+import client.interface_adapter.ReceiveMessage.ReceiveMessagePresenter;
 import client.interface_adapter.SendMessage.SendMessagePresenter;
 import client.interface_adapter.SendMessage.SendMessageState;
+import client.use_case.ReceiveMessage.ReceiveMessageDataAccessInterface;
+import client.use_case.ReceiveMessage.ReceiveMessageInteractor;
+import client.use_case.ReceiveMessage.ReceiveMessageOutputBoundary;
 import client.use_case.SendMessage.SendMessageDataAccessInterface;
 import client.use_case.SendMessage.SendMessageInteractor;
 import client.view.components.frames.SmallJFrame;
@@ -82,7 +87,16 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         this.mainController = controller;
         this.mainViewModel = viewModel;
         this.mainViewModel.addPropertyChangeListener(this);
+
         initComponents();
+        Runnable receive = () -> {
+            while (true) {
+                mainController.getMessage();
+            }
+        };
+
+        Thread thread = new Thread(receive);
+        thread.start();
     }
 
     public void initComponents() {
@@ -358,11 +372,14 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         }
         MainViewModel mainViewModel = new MainViewModel();
         SendMessagePresenter sendMessagePresenter = new SendMessagePresenter(mainViewModel);
+        ReceiveMessagePresenter receiveMessagePresenter = new ReceiveMessagePresenter(mainViewModel);
         ServerDataAccessObject serverDAO = new ServerDataAccessObject("localhost", 8964);
         SendMessageDataAccessInterface sendMessageDataAccess = new SendMessageDataAccess(serverDAO);
+        ReceiveMessageDataAccessInterface receiveMessageDataAccess = new ReceiveMessageDataAccess(serverDAO);
         SendMessageInteractor sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccess, sendMessagePresenter);
+        ReceiveMessageInteractor receiveMessageInteractor = new ReceiveMessageInteractor(receiveMessageDataAccess, receiveMessagePresenter);
 
-        frame.add(new MainView(new MainController("CAIXUKUN", sendMessageInteractor), mainViewModel));
+        frame.add(new MainView(new MainController("CAIXUKUN", sendMessageInteractor, receiveMessageInteractor), mainViewModel));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.prepare();
         frame.setSize(new Dimension(1200, 800));
@@ -386,7 +403,12 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         SendMessageState state = (SendMessageState) evt.getNewValue();
-        PlainTextMessage m = new PlainTextMessage(state.getMessage());
+        PlainTextMessage m = null;
+        if(state.getSender().isEmpty()){
+            m = new PlainTextMessage("You",state.getMessage(),1);
+        }else{
+            m = new PlainTextMessage(state.getSender(),state.getMessage(),0);
+        }
         messagesPanel.add(m);
         messagesPanel.revalidate();
         SwingUtilities.invokeLater(() -> {

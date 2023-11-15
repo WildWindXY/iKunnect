@@ -24,6 +24,7 @@ public class SendMessagePresenter implements SendMessageOutputBoundary {
         state.setMessage(message);
         state.setTimestamp(outputData.getTimestamp());
         state.setSuccess(outputData.getSuccess());
+        state.setSender("");
         mainViewModel.setState(state);
         mainViewModel.firePropertyChanged();
         System.out.println(outputData.getTimestamp()+" "+outputData.getSuccess());
