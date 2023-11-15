@@ -63,7 +63,7 @@ public class TestClientUI {
         SignupViewModel signupViewModel = new SignupViewModel();
         //LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
 
-        //SignupView signupView = new SignupView(signupController, signupViewModel);
+        SignupView signupView = new SignupView(signupController, signupViewModel);
         LoginView loginView = new LoginView(loginController, loginViewModel);
         //views.add(signupView);
         views.add(loginView);
