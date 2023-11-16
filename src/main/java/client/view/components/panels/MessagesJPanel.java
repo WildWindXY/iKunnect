@@ -15,7 +15,7 @@ public abstract class MessagesJPanel extends JPanel {
 
     public final Color leftColor = Color.decode("#F6F9FC");
     public final Color rightColor = Color.decode("#F6FBF6");
-    public final Font labelFont = new Font("Helvetica", Font.ITALIC, 20);
+    public final Font labelFont = new Font("Helvetica", Font.ITALIC, 16);
 
     public final Font messagesFont = new Font("Helvetica", Font.PLAIN, 20);
     public final Border mainBorder = new LineBorder(Color.decode("#A4C1DB"));

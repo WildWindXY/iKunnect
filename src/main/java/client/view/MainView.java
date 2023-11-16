@@ -39,6 +39,8 @@ import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static utils.MessageEncryptionUtils.initKey;
 
@@ -304,8 +306,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         listOfMessages[0] = catIpsum;
         int i = 0;
         for (String listOfMessage : listOfMessages) {
-            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, i++ % 2));
+            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, 0,  i++ % 2));
         }
+        messagesPanel.add(new PlainTextMessage("cxk", "测试插入", 0,0),2);
+        messagesPanel.add(new PlainTextMessage("You", "测试插入", 0, 1),2);
     }
 
     private void initMessagesPanel() {
@@ -422,10 +426,17 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
         JPanel contentWrapper;
 
-        public PlainTextMessage(String username, String content, int orientation) {
+        public PlainTextMessage(String username, String content, long timestamp, int orientation) {
+
             super();
             this.username = username;
             boolean isLeft;
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm");
+
+            Date date = new Date(timestamp);
+
+            String formattedDate = dateFormat.format(date);
 
             if (orientation != MessagesJPanel.LEFT && orientation != MessagesJPanel.RIGHT) {
                 isLeft = true;
@@ -453,24 +464,29 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
             //Username Label
             if (isLeft) {
+                username=username+" "+formattedDate + " ";
                 usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
                 labelWrapper.setBackground(leftColor);
             } else {
-                usernameLabel = new JLabel("You");
+                username = formattedDate+" You" +" ";
+                usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.RIGHT));
                 labelWrapper.setBackground(rightColor);
             }
-            int WIDTH = Math.min(getTextWidth(content), 450);
+            int WIDTH = Math.min(Math.max(getTextWidth(content),getTextWidth(username)), 450);
 
             labelWrapper.add(usernameLabel);
-            labelWrapper.setPreferredSize(new Dimension(WIDTH, 30));
+            labelWrapper.setPreferredSize(new Dimension(WIDTH, 25));
             labelWrapper.setBorder(mainBorder);
             usernameLabel.setFont(labelFont);
+
+
 
             //Text
             contentTextArea = new JTextArea(content);
             contentTextArea.setEditable(false);
+
             contentTextArea.setLineWrap(true);
             contentTextArea.setWrapStyleWord(true);
             contentTextArea.setBorder(mainBorder);
@@ -531,10 +547,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             setBorder(null);
         }
 
-        public PlainTextMessage(String content) {
-            this("self", content, MessagesJPanel.RIGHT);
-        }
-
+//        public PlainTextMessage(String content) {
+//            this("self", content,0, MessagesJPanel.RIGHT);
+//        }
+//
 
         private int getHeight(String text) {
             if (text.contains("\n")) {
@@ -654,9 +670,9 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         SendMessageState state = (SendMessageState) evt.getNewValue();
         PlainTextMessage m = null;
         if (state.getSender().isEmpty()) {
-            m = new PlainTextMessage("You", state.getMessage(), 1);
+            m = new PlainTextMessage("You", state.getMessage(), state.getTimestamp(), 1);
         } else {
-            m = new PlainTextMessage(state.getSender(), state.getMessage(), 0);
+            m = new PlainTextMessage(state.getSender(), state.getMessage(), state.getTimestamp(), 0);
         }
         messagesPanel.add(m);
         messagesPanel.revalidate();
