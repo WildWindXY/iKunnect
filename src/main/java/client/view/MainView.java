@@ -111,6 +111,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
         Thread thread = new Thread(receive);
         thread.start();
+
     }
 
     public void initComponents() {
@@ -380,40 +381,40 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         basePanel.setBorder(mainBorder);
     }
 
-    public static void main(String[] args) {
-        SmallJFrame frame = new SmallJFrame("Main");
-        try {
-            initKey("1111222233334444");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        MainViewModel mainViewModel = new MainViewModel();
-        SendMessagePresenter sendMessagePresenter = new SendMessagePresenter(mainViewModel);
-        ReceiveMessagePresenter receiveMessagePresenter = new ReceiveMessagePresenter(mainViewModel);
-        ServerDataAccessObject serverDAO = new ServerDataAccessObject("localhost", 8964);
-        SendMessageDataAccessInterface sendMessageDataAccess = new SendMessageDataAccess(serverDAO);
-        ReceiveMessageDataAccessInterface receiveMessageDataAccess = new ReceiveMessageDataAccess(serverDAO);
-        SendMessageInteractor sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccess, sendMessagePresenter);
-        ReceiveMessageInteractor receiveMessageInteractor = new ReceiveMessageInteractor(receiveMessageDataAccess, receiveMessagePresenter);
-
-        TranslateDataAccessInterface translationDataAccessObject = new TranslateDataAccess();
-        TranslationInputBoundary translationInteractor = new TranslationInteractor(translationDataAccessObject);
-
-        frame.add(new MainView(new MainController("CAIXUKUN", sendMessageInteractor, receiveMessageInteractor, translationInteractor), mainViewModel));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.prepare();
-        frame.setSize(new Dimension(1200, 800));
-        frame.setLocationRelativeTo(null);
-        frame.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    frame.dispose();
-                }
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SmallJFrame frame = new SmallJFrame("Main");
+//        try {
+//            initKey("1111222233334444");
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        MainViewModel mainViewModel = new MainViewModel();
+//        SendMessagePresenter sendMessagePresenter = new SendMessagePresenter(mainViewModel);
+//        ReceiveMessagePresenter receiveMessagePresenter = new ReceiveMessagePresenter(mainViewModel);
+//        ServerDataAccessObject serverDAO = new ServerDataAccessObject("localhost", 8964);
+//        SendMessageDataAccessInterface sendMessageDataAccess = new SendMessageDataAccess(serverDAO);
+//        ReceiveMessageDataAccessInterface receiveMessageDataAccess = new ReceiveMessageDataAccess(serverDAO);
+//        SendMessageInteractor sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccess, sendMessagePresenter);
+//        ReceiveMessageInteractor receiveMessageInteractor = new ReceiveMessageInteractor(receiveMessageDataAccess, receiveMessagePresenter);
+//
+//        TranslateDataAccessInterface translationDataAccessObject = new TranslateDataAccess();
+//        TranslationInputBoundary translationInteractor = new TranslationInteractor(translationDataAccessObject);
+//
+//        frame.add(new MainView(new MainController("CAIXUKUN", sendMessageInteractor, receiveMessageInteractor, translationInteractor), mainViewModel));
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.prepare();
+//        frame.setSize(new Dimension(1200, 800));
+//        frame.setLocationRelativeTo(null);
+//        frame.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyPressed(KeyEvent e) {
+//                super.keyPressed(e);
+//                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+//                    frame.dispose();
+//                }
+//            }
+//        });
+//    }
 
     class PlainTextMessage extends MessagesJPanel {
 
