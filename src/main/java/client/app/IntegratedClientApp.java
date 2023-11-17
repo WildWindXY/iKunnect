@@ -23,6 +23,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
+import static utils.MessageEncryptionUtils.initKey;
+
 public class IntegratedClientApp {
 
     public static void main(String[] args) {
@@ -48,6 +50,11 @@ public class IntegratedClientApp {
 
         String serverAddress = "localhost";
         int serverPort = 8964;
+        try {
+            initKey("1111222233334444");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         ServerDataAccessObject serverDataAccessObject = new ServerDataAccessObject(serverAddress, serverPort);
         SendMessageDataAccess sendDataAccessObject = new SendMessageDataAccess(serverDataAccessObject);
         ReceiveMessageDataAccess receiveDataAccessObject = new ReceiveMessageDataAccess(serverDataAccessObject);
