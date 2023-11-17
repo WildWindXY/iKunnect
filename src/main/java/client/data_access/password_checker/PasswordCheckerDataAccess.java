@@ -36,7 +36,6 @@ public class PasswordCheckerDataAccess implements PasswordCheckerDataAccessInter
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        System.out.println(response);
         if (response.toUpperCase().contains(sha1Hash.substring(5).toUpperCase())) {
             return false;
 

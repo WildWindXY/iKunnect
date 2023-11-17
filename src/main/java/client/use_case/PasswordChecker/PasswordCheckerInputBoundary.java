@@ -1,5 +1,5 @@
 package client.use_case.PasswordChecker;
 
 public interface PasswordCheckerInputBoundary {
-    void execute(PasswordCheckerInputData in);
+    boolean execute(PasswordCheckerInputData in);
 }

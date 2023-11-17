@@ -1,5 +1,6 @@
 package client;
 
+import client.data_access.password_checker.PasswordCheckerDataAccess;
 import client.entity.*;
 import client.interface_adapter.Login.*;
 import client.interface_adapter.Signup.*;
@@ -8,6 +9,8 @@ import client.use_case.Login.LoginDataAccessInterface;
 import client.use_case.Login.LoginInputBoundary;
 import client.use_case.Login.LoginInteractor;
 import client.use_case.Login.LoginOutputBoundary;
+import client.use_case.PasswordChecker.PasswordCheckerInputBoundary;
+import client.use_case.PasswordChecker.PasswordCheckerInteractor;
 import client.use_case.Signup.*;
 import client.view.*;
 import client.view.components.frames.SmallJFrame;
@@ -32,7 +35,9 @@ public class TestClientUI {
         UserFactory factory = new CommonUserFactory();
         SignupState signupState;
         SignupInputBoundary userSignupUseCaseInteractor = new SignupInteractor(userDataAccessObject, outputBoundary, factory);
-        SignupController signupController = new SignupController(userSignupUseCaseInteractor);
+
+        PasswordCheckerInputBoundary passwordCheckerUseCaseInteractor = new PasswordCheckerInteractor(new PasswordCheckerDataAccess());
+        SignupController signupController = new SignupController(userSignupUseCaseInteractor,passwordCheckerUseCaseInteractor);
 
         LoginDataAccessInterface loginDataAccessInterface = new LoginDataAccessInterface() {
             @Override
@@ -53,6 +58,7 @@ public class TestClientUI {
         LoginInputBoundary userLoginUseCaseInteractor = new LoginInteractor(loginDataAccessInterface, loginOutputBoundary);
         LoginController loginController = new LoginController(userLoginUseCaseInteractor);
 
+
         SmallJFrame app = new SmallJFrame("iKunnect Client");
         CardLayout cardLayout = new CardLayout();
         JPanel views = new JPanel(cardLayout);
@@ -64,7 +70,7 @@ public class TestClientUI {
         //LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
 
         SignupView signupView = new SignupView(signupController, signupViewModel);
-        LoginView loginView = new LoginView(loginController, loginViewModel);
+        LoginView loginView = new LoginView(loginController,signupController, loginViewModel);
         //views.add(signupView);
         views.add(loginView);
         app.add(views);

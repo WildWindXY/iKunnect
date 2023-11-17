@@ -4,6 +4,7 @@ import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Login.LoginPresenter;
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.Login.LoginViewModel;
+import client.interface_adapter.Signup.SignupController;
 import client.view.components.buttons.CustomJButton;
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;
@@ -36,9 +37,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     CustomJButton loginButton = new CustomJButton();
     CustomJButton exitButton = new CustomJButton();
 
+    private final StringBuilder passwordBuilder = new StringBuilder();
+
+    LoginController loginController;
+
+    SignupController signupController;
+
     LoginViewModel loginViewModel = new LoginViewModel();
 
-    public LoginView(LoginController controller, LoginViewModel LoginViewModel) {
+    public LoginView(LoginController loginController, SignupController signupController, LoginViewModel LoginViewModel) {
+        this.loginController = loginController;
+        this.signupController = signupController;
         initComponents();
 
         usernameField.addKeyListener(new KeyAdapter() {
@@ -89,7 +98,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         passwordField.addKeyListener(new KeyAdapter() {
-            private final StringBuilder passwordBuilder = new StringBuilder();
+
             private boolean deleteFirstChar = false;
 
             @Override
@@ -136,12 +145,15 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         signupButton.addActionListener(e -> {
-            System.out.println("SignupButton Clicked");
+            passwordBuilder.delete(0, passwordBuilder.length());
+            passwordField.setText("");
+            String password = LoginViewModel.getState().getPassword();
+            System.out.println("Sign up:"+password+" Is password valid? :"+signupController.checkPassword(password));
         });
 
         loginButton.addActionListener(e -> {
             final LoginState currentState = LoginViewModel.getState();
-            controller.execute(currentState.getUsername(), currentState.getPassword());
+            loginController.execute(currentState.getUsername(), currentState.getPassword());
 
         });
 
