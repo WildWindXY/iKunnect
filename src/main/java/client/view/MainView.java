@@ -46,7 +46,7 @@ import static utils.MessageEncryptionUtils.initKey;
 
 public class MainView extends JPanel implements ActionListener, PropertyChangeListener {
 
-    public static final String VIEW_NAME = "iKunnect - Main";
+    public static final String VIEW_NAME = "Main Window";
 
     //--------------------- Styles ---------------------
 

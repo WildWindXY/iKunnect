@@ -67,4 +67,5 @@ public class SignupState {
     public void setRepeatPasswordError(String repeatPasswordError) {
         this.repeatPasswordError = repeatPasswordError;
     }
+
 }

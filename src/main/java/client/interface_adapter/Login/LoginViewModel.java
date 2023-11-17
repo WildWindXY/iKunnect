@@ -22,7 +22,7 @@ public class LoginViewModel extends ViewModel {
     private LoginState state = new LoginState();
 
     public LoginViewModel() {
-        super("sign up");
+        super("log in");
     }
 
     // This is what the Login Presenter will call to let the ViewModel know
