@@ -245,12 +245,9 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                     if (content.isEmpty()) {
                         Toolkit.getDefaultToolkit().beep();
                     } else {
-                        System.out.println("Send message with content, channel name, etc.");
                         System.out.println(content);
                         inputField.setText(null);
                         mainController.sendMessage(content, channelLabel.getText());
-
-
                     }
                 }
             }
