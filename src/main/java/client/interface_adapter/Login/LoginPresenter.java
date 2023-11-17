@@ -4,6 +4,7 @@ import client.interface_adapter.Logged_in.LoggedInState;
 import client.interface_adapter.Logged_in.LoggedInViewModel;
 import client.interface_adapter.Main.MainViewModel;
 import client.interface_adapter.SendMessage.SendMessageState;
+import client.interface_adapter.Signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
 import client.use_case.Login.LoginOutputBoundary;
 import client.use_case.Login.LoginOutputData;
@@ -28,13 +29,16 @@ import client.use_case.Signup.SignupOutputData;
 public class LoginPresenter implements LoginOutputBoundary {
 
     private final LoginViewModel loginViewModel;
+    private final SignupViewModel signupViewModel;
     private final MainViewModel mainViewModel;
     private ViewManagerModel viewManagerModel;
 
     public LoginPresenter(ViewManagerModel viewManagerModel,
+                          SignupViewModel signupViewModel,
                           MainViewModel mainViewModel,
                           LoginViewModel loginViewModel) {
         this.viewManagerModel = viewManagerModel;
+        this.signupViewModel = signupViewModel;
         this.mainViewModel = mainViewModel;
         this.loginViewModel = loginViewModel;
     }
@@ -61,5 +65,10 @@ public class LoginPresenter implements LoginOutputBoundary {
             loginState.setUsernameError(error);
         }
         loginViewModel.firePropertyChanged();
+    }
+    @Override
+    public void prepareSignupView() {
+        this.viewManagerModel.setActiveView(signupViewModel.getViewName());
+        this.viewManagerModel.firePropertyChanged();
     }
 }

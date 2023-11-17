@@ -58,7 +58,7 @@ public class IntegratedClientApp {
         signupView.setPreferredSize(new Dimension(550,500));
         views.add(signupView, signupView.VIEW_NAME);
 
-        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, mainViewModel, fileUserDataAccessObject);
+        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, fileUserDataAccessObject);
         loginView.setPreferredSize(new Dimension(550,500));
         views.add(loginView, loginView.VIEW_NAME);
 
@@ -71,7 +71,7 @@ public class IntegratedClientApp {
 
 
         // Set the initial active view
-        viewManagerModel.setActiveView(signupView.VIEW_NAME);
+        viewManagerModel.setActiveView(loginView.VIEW_NAME);
         viewManagerModel.firePropertyChanged();
 
         // Add the views to your JFrame and configure the JFrame

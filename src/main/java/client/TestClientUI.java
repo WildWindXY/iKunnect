@@ -55,7 +55,7 @@ public class TestClientUI {
         SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, fileUserDataAccessObject);
         views.add(signupView, signupView.VIEW_NAME);
 
-        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, mainViewModel, fileUserDataAccessObject);
+        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, fileUserDataAccessObject);
         views.add(loginView, loginView.VIEW_NAME);
 
         LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
