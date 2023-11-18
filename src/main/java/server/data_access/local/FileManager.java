@@ -18,6 +18,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * The FileManager class handles file-related operations and manages user data on the server.
+ */
 public class FileManager {
     private final DataAccess dataAccess;
     private final ServerUsers serverUsers;
@@ -38,19 +41,37 @@ public class FileManager {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                saveModifiedConfigs();
+                saveModifiedFiles();
             }
         }, 1000, 1000);// execute every second
     }
 
+    /**
+     * Gets a server user by user ID.
+     *
+     * @param userId The user ID.
+     * @return The ServerUser with the specified user ID.
+     */
     public ServerUser getUserById(int userId) {
         return serverUsers.getUser(userId);
     }
 
+    /**
+     * Gets a server user by username.
+     *
+     * @param username The username.
+     * @return The ServerUser with the specified username.
+     */
     public ServerUser getUserByUsername(int username) {
         return serverUsers.getUser(username);
     }
 
+    /**
+     * Registers a modified file to the queue.
+     *
+     * @param file The file to be registered.
+     * @return The registered file.
+     */
     public static <T extends IFile<T>> T registerModifiedFile(T file) {
         if (!modifiedFiles.contains(file)) {
             modifiedFiles.add(file);
@@ -58,7 +79,7 @@ public class FileManager {
         return file;
     }
 
-    private void saveModifiedConfigs() {
+    private void saveModifiedFiles() {
         for (IFile<?> file : modifiedFiles) {
             try (FileWriter fileWriter = new FileWriter(TEST_PATH + file.getPath())) {
                 Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -89,6 +110,9 @@ public class FileManager {
         }
     }
 
+    /**
+     * Initiates a graceful shutdown of the FileManager.
+     */
     public void shutdown() {
         timer.cancel();
     }
