@@ -1,5 +1,6 @@
 package server.data_access;
 
+import server.data_access.local.FileManager;
 import server.data_access.network.NetworkManager;
 
 import java.io.IOException;
@@ -8,9 +9,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface {
 
     private final NetworkManager networkManager;
+    private final FileManager fileManager;
     private final LinkedBlockingQueue<String> terminalMessage = new LinkedBlockingQueue<>();
 
     public DataAccess() throws IOException {
+        fileManager = new FileManager(this);
         networkManager = new NetworkManager(this);
     }
 

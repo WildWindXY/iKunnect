@@ -5,7 +5,9 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerUsers {
+public class ServerUsers implements IFile<ServerUsers> {
+
+    public static final String PATH = "user.json";
     @Expose
     private List<User> users = new ArrayList<>();
 
@@ -24,6 +26,14 @@ public class ServerUsers {
 
     public ServerUser getUser(int userId) {
         return users.get(userId);
+    }
+
+    public String getPath() {
+        return PATH;
+    }
+
+    public static ServerUsers getDefault() {
+        return new ServerUsers();
     }
 
     public static class User implements ServerUser {
@@ -51,7 +61,7 @@ public class ServerUsers {
             return false;
         }
 
-        public void makeupFriend(int friendId){
+        public void makeupFriend(int friendId) {
             for (Friend friend : friends) {
                 if (friend.friendId == friendId) {
                     friend.isFriend = true;
