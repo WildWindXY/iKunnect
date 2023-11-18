@@ -5,20 +5,23 @@ import server.interface_adapter.TerminalViewModel;
 import server.use_case.server_shutdown.ServerShutdownInteractor;
 import server.use_case.terminal_message.TerminalMessageInteractor;
 import server.view.TerminalView;
+import utils.MessageEncryptionUtils;
 
 import java.io.IOException;
-
-import static utils.MessageEncryptionUtils.initKey;
 
 public class IKunnectServer {
 
     public static void main(String[] args) throws IOException {
         System.out.println("server on!");
-                try {
-            initKey("1111222233334444");
+        try {
+            MessageEncryptionUtils.initKey("1111222233334444");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        start();
+    }
+
+    public static void start() throws IOException { // No temporary code here
         DataAccess dataAccess = new DataAccess();
 
         TerminalViewModel terminalViewModel = new TerminalViewModel();
@@ -29,6 +32,5 @@ public class IKunnectServer {
 
         TerminalView terminalView = new TerminalView(new TerminalController(terminalMessageInteractor, serverShutdownInteractor), terminalViewModel);
     }
-
 }
 
