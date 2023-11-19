@@ -45,13 +45,13 @@ public class PacketServerSignupResponse implements Packet {
      */
     @Override
     public String toString() {
-        return userID + " " + status;
+        return "[PacketServerSignupResponse] userID: " + userID + ", status: " + status;
     }
 
     /**
      * Enum representing possible statuses for a signup response.
      */
     public enum Status {
-        SUCCESS, USERNAME_EXISTS, TOO_SHORT, TOO_LONG, INVALID_CHARACTERS, NULL_ATTRIBUTE
+        SUCCESS, ALREADY_LOGGED_IN, USERNAME_EXISTS, TOO_SHORT, TOO_LONG, INVALID_CHARACTERS, NULL_ATTRIBUTE
     }
 }

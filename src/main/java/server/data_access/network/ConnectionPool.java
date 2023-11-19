@@ -94,9 +94,9 @@ class ConnectionPool {
 
     }
 
-    public void sendTo(Packet packet, int id) {
+    public void sendTo(Packet packet, ConnectionInfo info) {
         for (Connection connection : connections) {
-            if (connection.id == id) {
+            if (connection.info.getConnectionId() == info.getConnectionId()) {
                 connection.toSend.add(packet);
                 return;
             }
@@ -104,8 +104,12 @@ class ConnectionPool {
         networkManager.addMessageToTerminal("Unsent packet since connection id expired, packet: " + packet);
     }
 
+    public void signupPreformed(ServerUser user, Packet packet, int id) {
+
+    }
+
     private class Connection {
-        private final int id;
+        private final ConnectionInfo info;
         private final Socket socket;
         private final ExecutorService executorService;
         private final ObjectInputStream in;
@@ -116,7 +120,7 @@ class ConnectionPool {
         Connection(Socket socket, final int id) throws IOException {
             executorService = Executors.newFixedThreadPool(2, r -> new Thread(r, "TCP connection thread: " + socket));
             this.socket = socket;
-            this.id = id;
+            this.info = new ConnectionInfo(id);
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
             executorService.submit(() -> {
@@ -147,7 +151,7 @@ class ConnectionPool {
         }
 
         private void packetHandler(Packet packet) {
-            networkManager.packetHandler(packet, id);
+            networkManager.packetHandler(packet, info);
         }
 
         private void destroy() {

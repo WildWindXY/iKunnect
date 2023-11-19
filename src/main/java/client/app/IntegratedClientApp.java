@@ -49,7 +49,7 @@ public class IntegratedClientApp {
         }
 
         String serverAddress = "localhost";
-        int serverPort = 8964;
+        int serverPort = 0x2304;
         try {
             initKey("1111222233334444");
         } catch (Exception e) {

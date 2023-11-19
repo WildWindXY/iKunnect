@@ -3,7 +3,6 @@ package server.data_access.network;
 import common.packet.*;
 import server.data_access.DataAccess;
 import server.entity.PacketIn;
-import server.entity.ServerUser;
 
 import java.io.IOException;
 
@@ -17,14 +16,14 @@ public class NetworkManager {
 
     public NetworkManager(DataAccess dataAccess) throws IOException {//TODO: Catch it
         this.dataAccess = dataAccess;
-        this.connectionPool = new ConnectionPool(this, 8964);
+        this.connectionPool = new ConnectionPool(this, 0x2304);
     }
 
-    public void packetHandler(Packet packet, int id) {//TODO: This is temporary
+    public void packetHandler(Packet packet, ConnectionInfo info) {//TODO: This is temporary
         if (packet instanceof PacketDebug) {
             connectionPool.sendAll(packet);
         } else if (packet instanceof PacketClientSignup) {
-            dataAccess.addPacketClientSignup(new PacketIn<>(id, (PacketClientSignup) packet));
+            dataAccess.addPacketClientSignup(new PacketIn<>(info, (PacketClientSignup) packet));
         } else if (packet instanceof PacketClientLogin) {
             addMessageToTerminal(((PacketClientLogin) packet).getUsername());
             Packet response = new PacketServerLoginResponse(666000111, true);
@@ -48,12 +47,8 @@ public class NetworkManager {
         }
     }
 
-    public void sendTo(Packet packet, ServerUser user) {
-        connectionPool.sendTo(packet, user);
-    }
-
-    public void sendTo(Packet packet, int id) {
-        connectionPool.sendTo(packet, id);
+    public void sendTo(Packet packet, ConnectionInfo info) {
+        connectionPool.sendTo(packet, info);
     }
 
     /**

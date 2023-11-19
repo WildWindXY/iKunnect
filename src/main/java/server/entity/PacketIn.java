@@ -1,19 +1,20 @@
 package server.entity;
 
 import common.packet.Packet;
+import server.data_access.network.ConnectionInfo;
 
 @SuppressWarnings("record")
 public class PacketIn<T extends Packet> {
-    private final int connectionId;
+    private final ConnectionInfo info;
     private final T packet;
 
-    public PacketIn(int connectionId, T packet) {
-        this.connectionId = connectionId;
+    public PacketIn(ConnectionInfo info, T packet) {
+        this.info = info;
         this.packet = packet;
     }
 
-    public int getConnectionId() {
-        return connectionId;
+    public ConnectionInfo getConnectionInfo() {
+        return info;
     }
 
     public T getPacket() {

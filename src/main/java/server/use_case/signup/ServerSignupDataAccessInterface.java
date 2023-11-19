@@ -2,6 +2,7 @@ package server.use_case.signup;
 
 import common.packet.Packet;
 import common.packet.PacketClientSignup;
+import server.data_access.network.ConnectionInfo;
 import server.entity.PacketIn;
 import server.entity.ServerUser;
 
@@ -28,13 +29,8 @@ public interface ServerSignupDataAccessInterface {
      */
     boolean usernameExists(String name);
 
-    /**
-     * Sends a packet to a client with the specified connection ID.
-     *
-     * @param packet The packet to send to the client.
-     * @param id     The connection ID of the client.
-     */
-    void sendTo(Packet packet, int id);
+    //TODO: Doc
+    void sendTo(Packet packet, ConnectionInfo info);
 
     /**
      * Adds a new user with the provided username and password to the data source.

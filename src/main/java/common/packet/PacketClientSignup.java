@@ -36,4 +36,9 @@ public class PacketClientSignup implements Packet {
     public String getPassword() {
         return this.hashedPassword;
     }
+
+    @Override
+    public String toString() {
+        return "[PacketClientSignup] username: " + username + ", hashedPassword: " + hashedPassword;
+    }
 }

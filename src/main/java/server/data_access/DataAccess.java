@@ -3,6 +3,7 @@ package server.data_access;
 import common.packet.Packet;
 import common.packet.PacketClientSignup;
 import server.data_access.local.FileManager;
+import server.data_access.network.ConnectionInfo;
 import server.data_access.network.NetworkManager;
 import server.entity.PacketIn;
 import server.entity.ServerUser;
@@ -50,14 +51,9 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
         return fileManager.addUser(username, password);
     }
 
-    //@Override
-    public void sendTo(Packet packet, ServerUser user) {
-        networkManager.sendTo(packet, user);
-    }
-
     @Override
-    public void sendTo(Packet packet, int id) {
-        networkManager.sendTo(packet, id);
+    public void sendTo(Packet packet, ConnectionInfo info) {
+        networkManager.sendTo(packet, info);
     }
 
     @Override
