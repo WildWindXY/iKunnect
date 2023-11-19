@@ -1,6 +1,6 @@
 package common.packet;
 
-public class PacketClientLogin implements Packet{
+public class PacketClientLogin implements Packet {
     final private String username;
     final private String hashedPassword;
 
@@ -18,8 +18,8 @@ public class PacketClientLogin implements Packet{
     }
 
     @Override
-    public String toString(){
-        return "username:" +username + " hashedPassword:" + hashedPassword;
+    public String toString() {
+        return "[PacketClientLogin] username: " + username + ", hashedPassword: " + hashedPassword;
     }
 
 }

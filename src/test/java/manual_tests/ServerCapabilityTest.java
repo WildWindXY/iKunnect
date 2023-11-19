@@ -13,7 +13,7 @@ public class ServerCapabilityTest {
             int finalI = i;
             new Thread(() -> {
                 String serverAddress = "localhost";
-                int serverPort = 8964;
+                int serverPort = 0x2304;
                 try (Socket clientSocket = new Socket(serverAddress, serverPort)) {
                     ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
                     out.writeObject(new PacketDebug("Client Number " + finalI));

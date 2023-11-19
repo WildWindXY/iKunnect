@@ -1,10 +1,11 @@
 package server.interface_adapter;
 
+import server.use_case.login.ServerLoginOutputBoundary;
 import server.use_case.server_shutdown.ServerShutdownOutputBoundary;
 import server.use_case.signup.ServerSignupOutputBoundary;
 import server.use_case.terminal_message.TerminalMessageOutputBoundary;
 
-public class TerminalPresenter implements TerminalMessageOutputBoundary, ServerShutdownOutputBoundary, ServerSignupOutputBoundary {
+public class TerminalPresenter implements TerminalMessageOutputBoundary, ServerShutdownOutputBoundary, ServerSignupOutputBoundary, ServerLoginOutputBoundary {
 
     private final TerminalViewModel terminalViewModel;
 

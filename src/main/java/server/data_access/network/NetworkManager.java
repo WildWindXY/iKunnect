@@ -3,7 +3,6 @@ package server.data_access.network;
 import common.packet.*;
 import server.data_access.DataAccess;
 import server.entity.PacketIn;
-import server.entity.ServerUser;
 
 import java.io.IOException;
 
@@ -17,19 +16,18 @@ public class NetworkManager {
 
     public NetworkManager(DataAccess dataAccess) throws IOException {//TODO: Catch it
         this.dataAccess = dataAccess;
-        this.connectionPool = new ConnectionPool(this, 8964);
+        this.connectionPool = new ConnectionPool(this, 0x2304);
     }
 
-    public void packetHandler(Packet packet, int id) {//TODO: This is temporary
+    public void packetHandler(Packet packet, ConnectionInfo info) {
         if (packet instanceof PacketDebug) {
             connectionPool.sendAll(packet);
         } else if (packet instanceof PacketClientSignup) {
-            dataAccess.addPacketClientSignup(new PacketIn<>(id, (PacketClientSignup) packet));
+            dataAccess.addPacketClientSignup(new PacketIn<>(info, (PacketClientSignup) packet));
         } else if (packet instanceof PacketClientLogin) {
+            dataAccess.addPacketClientLogin(new PacketIn<>(info, (PacketClientLogin) packet));
             addMessageToTerminal(((PacketClientLogin) packet).getUsername());
-            Packet response = new PacketServerLoginResponse(666000111, true);
-            connectionPool.sendAll(response);
-        } else if (packet instanceof PacketClientMessage) {
+        } else if (packet instanceof PacketClientMessage) {//TODO: This is temporary
             System.out.println(((PacketClientMessage) packet));
             try {
                 System.out.println("Sender:" + "Send To" + ((PacketClientMessage) packet).getRecipient() + "Message After Decryption: " + AES_decrypt(((PacketClientMessage) packet).getEncryptedMessage()));
@@ -48,12 +46,16 @@ public class NetworkManager {
         }
     }
 
-    public void sendTo(Packet packet, ServerUser user) {
-        connectionPool.sendTo(packet, user);
-    }
-
-    public void sendTo(Packet packet, int id) {
-        connectionPool.sendTo(packet, id);
+    /**
+     * Sends a packet to the specified connection using the ConnectionInfo.
+     * If the connection with the given ConnectionInfo is found, the packet is added to the connection's send queue.
+     * If the connection is not found, a message is added to the network manager's terminal indicating the unsent packet.
+     *
+     * @param packet The packet to be sent.
+     * @param info   The ConnectionInfo of the target connection.
+     */
+    public void sendTo(Packet packet, ConnectionInfo info) {
+        connectionPool.sendTo(packet, info);
     }
 
     /**

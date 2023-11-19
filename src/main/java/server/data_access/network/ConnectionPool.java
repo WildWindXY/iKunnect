@@ -1,7 +1,6 @@
 package server.data_access.network;
 
 import common.packet.Packet;
-import server.entity.ServerUser;
 import server.use_case.ServerThreadPool;
 import utils.TextUtils;
 
@@ -90,13 +89,17 @@ class ConnectionPool {
         }
     }
 
-    public void sendTo(Packet packet, ServerUser user) {
-
-    }
-
-    public void sendTo(Packet packet, int id) {
+    /**
+     * Sends a packet to the specified connection using the ConnectionInfo.
+     * If the connection with the given ConnectionInfo is found, the packet is added to the connection's send queue.
+     * If the connection is not found, a message is added to the network manager's terminal indicating the unsent packet.
+     *
+     * @param packet The packet to be sent.
+     * @param info   The ConnectionInfo of the target connection.
+     */
+    public void sendTo(Packet packet, ConnectionInfo info) { //TODO: add different send methods
         for (Connection connection : connections) {
-            if (connection.id == id) {
+            if (connection.info.getConnectionId() == info.getConnectionId()) {
                 connection.toSend.add(packet);
                 return;
             }
@@ -105,7 +108,7 @@ class ConnectionPool {
     }
 
     private class Connection {
-        private final int id;
+        private final ConnectionInfo info;
         private final Socket socket;
         private final ExecutorService executorService;
         private final ObjectInputStream in;
@@ -116,7 +119,7 @@ class ConnectionPool {
         Connection(Socket socket, final int id) throws IOException {
             executorService = Executors.newFixedThreadPool(2, r -> new Thread(r, "TCP connection thread: " + socket));
             this.socket = socket;
-            this.id = id;
+            this.info = new ConnectionInfo(id);
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
             executorService.submit(() -> {
@@ -147,7 +150,7 @@ class ConnectionPool {
         }
 
         private void packetHandler(Packet packet) {
-            networkManager.packetHandler(packet, id);
+            networkManager.packetHandler(packet, info);
         }
 
         private void destroy() {

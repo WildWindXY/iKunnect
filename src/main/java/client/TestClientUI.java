@@ -45,7 +45,7 @@ public class TestClientUI {
         }
 
         String serverAddress = "localhost";
-        int serverPort = 8964;
+        int serverPort = 0x2304;
         ServerDataAccessObject serverDataAccessObject = new ServerDataAccessObject(serverAddress, serverPort);
         SendMessageDataAccess sendDataAccessObject = new SendMessageDataAccess(serverDataAccessObject);
         ReceiveMessageDataAccess receiveDataAccessObject = new ReceiveMessageDataAccess(serverDataAccessObject);

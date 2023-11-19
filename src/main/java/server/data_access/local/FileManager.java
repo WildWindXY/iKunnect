@@ -9,6 +9,7 @@ import server.entity.IFile;
 import server.entity.ServerUser;
 import server.entity.ServerUsers;
 import utils.TextUtils;
+import utils.Tuple;
 
 import java.io.File;
 import java.io.FileReader;
@@ -87,6 +88,20 @@ public class FileManager {
      */
     public ServerUser addUser(String username, String password) {
         return serverUsers.addUser(username, password);
+    }
+
+    /**
+     * Checks the password for a given username in the server user database.
+     *
+     * @param username The username to check for.
+     * @param password The password to validate against the stored password.
+     * @return A Tuple representing the result of the password check.
+     * - If the username and password match, returns Tuple with integer 0 and the corresponding ServerUser.
+     * - If the username exists but the password does not match, returns Tuple with integer -1 and null.
+     * - If the username does not exist, returns Tuple with integer -2 and null.
+     */
+    public Tuple<Integer, ServerUser> checkPassword(String username, String password) {
+        return serverUsers.checkPassword(username, password);
     }
 
     /**
