@@ -46,7 +46,7 @@ public class ServerLoginInteractor implements ServerLoginInputBoundary {
                 serverLoginPresenter.addMessage("Login Failed: username " + username + " not found.");
                 serverLoginDataAccessInterface.sendTo(new PacketServerLoginResponse(-1, PacketServerLoginResponse.Status.NO_SUCH_USERNAME), info);
             } else {
-                serverLoginPresenter.addMessage("Signup Success: [username: " + username + ", password: " + password + ", id: " + tuple.second().getUserId());
+                serverLoginPresenter.addMessage("Signup Success: [username: " + username + ", password: " + password + ", id: " + tuple.second().getUserId() + "]");
                 info.login(tuple.second());
                 serverLoginDataAccessInterface.sendTo(new PacketServerLoginResponse(tuple.second().getUserId(), PacketServerLoginResponse.Status.SUCCESS), info);
             }
