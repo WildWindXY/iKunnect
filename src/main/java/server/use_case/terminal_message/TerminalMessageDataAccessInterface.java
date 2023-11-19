@@ -1,4 +1,4 @@
-package server.data_access;
+package server.use_case.terminal_message;
 
 /**
  * The TerminalMessageDataAccessInterface represents an interface for retrieving terminal messages.
@@ -12,5 +12,5 @@ public interface TerminalMessageDataAccessInterface {
      *
      * @return The terminal message to be displayed on the terminal view.
      */
-    String getTerminalMessage();
+    String getTerminalMessage() throws InterruptedException;
 }

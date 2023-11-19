@@ -1,6 +1,7 @@
 package server.entity;
 
 import com.google.gson.annotations.Expose;
+import server.data_access.local.FileManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,15 @@ public class ServerUsers implements IFile<ServerUsers> {
     private List<User> users = new ArrayList<>();
 
     /**
+     * Gets the default instance of the ServerUsers class.
+     *
+     * @return The default instance of ServerUsers.
+     */
+    public static ServerUsers getDefault() {
+        return new ServerUsers();
+    }
+
+    /**
      * Adds a new user to the server with the specified username and password.
      *
      * @param username The username of the new user.
@@ -31,6 +41,7 @@ public class ServerUsers implements IFile<ServerUsers> {
     public ServerUser addUser(String username, String password) {
         User user = new User(users.size(), username, password);
         users.add(user);
+        FileManager.registerModifiedFile(this);
         return user;
     }
 
@@ -66,15 +77,6 @@ public class ServerUsers implements IFile<ServerUsers> {
      */
     public String getPath() {
         return PATH;
-    }
-
-    /**
-     * Gets the default instance of the ServerUsers class.
-     *
-     * @return The default instance of ServerUsers.
-     */
-    public static ServerUsers getDefault() {
-        return new ServerUsers();
     }
 
     public static class User implements ServerUser {

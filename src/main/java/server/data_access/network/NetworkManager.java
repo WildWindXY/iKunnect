@@ -2,7 +2,8 @@ package server.data_access.network;
 
 import common.packet.*;
 import server.data_access.DataAccess;
-
+import server.entity.PacketIn;
+import server.entity.ServerUser;
 
 import java.io.IOException;
 
@@ -19,17 +20,19 @@ public class NetworkManager {
         this.connectionPool = new ConnectionPool(this, 8964);
     }
 
-    public void packetHandler(Packet packet) {//TODO: This is temporary
+    public void packetHandler(Packet packet, int id) {//TODO: This is temporary
         if (packet instanceof PacketDebug) {
             connectionPool.sendAll(packet);
+        } else if (packet instanceof PacketClientSignup) {
+            dataAccess.addPacketClientSignup(new PacketIn<>(id, (PacketClientSignup) packet));
         } else if (packet instanceof PacketClientLogin) {
             addMessageToTerminal(((PacketClientLogin) packet).getUsername());
             Packet response = new PacketServerLoginResponse(666000111, true);
             connectionPool.sendAll(response);
-        } else if(packet instanceof PacketClientMessage){
+        } else if (packet instanceof PacketClientMessage) {
             System.out.println(((PacketClientMessage) packet));
             try {
-                System.out.println("Sender:"+ "Send To"+((PacketClientMessage) packet).getRecipient()+ "Message After Decryption: " + AES_decrypt(((PacketClientMessage) packet).getEncryptedMessage()));
+                System.out.println("Sender:" + "Send To" + ((PacketClientMessage) packet).getRecipient() + "Message After Decryption: " + AES_decrypt(((PacketClientMessage) packet).getEncryptedMessage()));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -43,6 +46,14 @@ public class NetworkManager {
             }
             connectionPool.sendAll(response1);
         }
+    }
+
+    public void sendTo(Packet packet, ServerUser user) {
+        connectionPool.sendTo(packet, user);
+    }
+
+    public void sendTo(Packet packet, int id) {
+        connectionPool.sendTo(packet, id);
     }
 
     /**

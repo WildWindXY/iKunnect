@@ -22,11 +22,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * The FileManager class handles file-related operations and manages user data on the server.
  */
 public class FileManager {
-    private final DataAccess dataAccess;
-    private final ServerUsers serverUsers;
-
     private static final ConcurrentLinkedQueue<IFile<?>> modifiedFiles = new ConcurrentLinkedQueue<>();
     private static final String TEST_PATH = "E:\\Desktop\\data\\";
+    private final DataAccess dataAccess;
+    private final ServerUsers serverUsers;
     private final Timer timer;
 
     public FileManager(DataAccess dataAccess) {
@@ -47,6 +46,19 @@ public class FileManager {
     }
 
     /**
+     * Registers a modified file to the queue.
+     *
+     * @param file The file to be registered.
+     * @return The registered file.
+     */
+    public static <T extends IFile<T>> T registerModifiedFile(T file) {
+        if (!modifiedFiles.contains(file)) {
+            modifiedFiles.add(file);
+        }
+        return file;
+    }
+
+    /**
      * Gets a server user by user ID.
      *
      * @param userId The user ID.
@@ -62,21 +74,26 @@ public class FileManager {
      * @param username The username.
      * @return The ServerUser with the specified username.
      */
-    public ServerUser getUserByUsername(int username) {
+    public ServerUser getUserByUsername(String username) {
         return serverUsers.getUser(username);
     }
 
     /**
-     * Registers a modified file to the queue.
+     * Adds a new user with the specified username and password to the server user database.
      *
-     * @param file The file to be registered.
-     * @return The registered file.
+     * @param username The username of the new user.
+     * @param password The password of the new user.
+     * @return The ServerUser representing the newly added user.
      */
-    public static <T extends IFile<T>> T registerModifiedFile(T file) {
-        if (!modifiedFiles.contains(file)) {
-            modifiedFiles.add(file);
-        }
-        return file;
+    public ServerUser addUser(String username, String password) {
+        return serverUsers.addUser(username, password);
+    }
+
+    /**
+     * Initiates a graceful shutdown of the FileManager.
+     */
+    public void shutdown() {
+        timer.cancel();
     }
 
     private void saveModifiedFiles() {
@@ -110,16 +127,4 @@ public class FileManager {
         }
     }
 
-    /**
-     * Initiates a graceful shutdown of the FileManager.
-     */
-    public void shutdown() {
-        timer.cancel();
-    }
-
-    public static void main(String[] args) throws InterruptedException { //TODO: For temp testing, delete later
-        FileManager fileManager = new FileManager(null);
-        Thread.sleep(5000);
-        fileManager.shutdown();
-    }
 }

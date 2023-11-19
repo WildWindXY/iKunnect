@@ -1,16 +1,25 @@
 package server.data_access;
 
+import common.packet.Packet;
+import common.packet.PacketClientSignup;
 import server.data_access.local.FileManager;
 import server.data_access.network.NetworkManager;
+import server.entity.PacketIn;
+import server.entity.ServerUser;
+import server.use_case.server_shutdown.ServerShutdownDataAccessInterface;
+import server.use_case.signup.ServerSignupDataAccessInterface;
+import server.use_case.terminal_message.TerminalMessageDataAccessInterface;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface {
+public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface {
 
     private final NetworkManager networkManager;
     private final FileManager fileManager;
     private final LinkedBlockingQueue<String> terminalMessage = new LinkedBlockingQueue<>();
+
+    private final LinkedBlockingQueue<PacketIn<PacketClientSignup>> signups = new LinkedBlockingQueue<>();
 
     public DataAccess() throws IOException {
         fileManager = new FileManager(this);
@@ -25,12 +34,35 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
      * @return The String to be displayed in the terminal.
      */
     @Override
-    public String getTerminalMessage() {
-        try {
-            return terminalMessage.take();
-        } catch (InterruptedException e) {
-            return e.getMessage();
-        }
+    public String getTerminalMessage() throws InterruptedException {
+        return terminalMessage.take();
+    }
+
+    public void addPacketClientSignup(PacketIn<PacketClientSignup> packet) {
+        signups.add(packet);
+    }
+
+    public boolean usernameExists(String name) {
+        return fileManager.getUserByUsername(name) != null;
+    }
+
+    public ServerUser addUser(String username, String password) {
+        return fileManager.addUser(username, password);
+    }
+
+    //@Override
+    public void sendTo(Packet packet, ServerUser user) {
+        networkManager.sendTo(packet, user);
+    }
+
+    @Override
+    public void sendTo(Packet packet, int id) {
+        networkManager.sendTo(packet, id);
+    }
+
+    @Override
+    public PacketIn<PacketClientSignup> getPacketClientSignup() throws InterruptedException {
+        return signups.take();
     }
 
     /**
@@ -52,5 +84,7 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
      */
     public void shutdown() {
         networkManager.shutdown();
+        fileManager.shutdown();
     }
+
 }

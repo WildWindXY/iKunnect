@@ -1,10 +1,7 @@
-import common.packet.Packet;
-import common.packet.PacketClientLogin;
-import common.packet.PacketDebug;
 import client.data_access.ServerDataAccessObject;
-
-import java.io.*;
-import java.net.Socket;
+import common.packet.Packet;
+import common.packet.PacketClientSignup;
+import common.packet.PacketServerSignupResponse;
 
 import static utils.MessageEncryptionUtils.md5Java;
 
@@ -13,9 +10,23 @@ public class TempClient {
         String serverAddress = "localhost";
         int serverPort = 8964;
         ServerDataAccessObject dao = new ServerDataAccessObject(serverAddress, serverPort);
-        Packet msg = new PacketClientLogin("myuser1", md5Java("pwd123"));
+//        Packet msg = new PacketClientLogin("myuser1", md5Java("pwd123"));
+        Packet msg = new PacketClientSignup("myuser1", md5Java("pwd123"));
         dao.sendPacket(msg);
-
+        Packet msg1 = new PacketClientSignup("myuser1", md5Java("pwd123"));
+        dao.sendPacket(msg1);
+        Packet msg2 = new PacketClientSignup("m", md5Java("pwd123"));
+        dao.sendPacket(msg2);
+        Packet msg3 = new PacketClientSignup("myufdsafdhsauifdhsahudfshafdfsa", md5Java("pwd123"));
+        dao.sendPacket(msg3);
+        Packet msg4 = new PacketClientSignup(null, md5Java("pwd123"));
+        dao.sendPacket(msg4);
+        Packet msg5 = new PacketClientSignup("myuser", null);
+        dao.sendPacket(msg5);
+        Packet msg6 = new PacketClientSignup(null, null);
+        dao.sendPacket(msg6);
+        Packet msg7 = new PacketClientSignup("myuser1.", md5Java("pwd123"));
+        dao.sendPacket(msg7);
 
 //        try {
 //            Socket clientSocket = new Socket(serverAddress, serverPort);

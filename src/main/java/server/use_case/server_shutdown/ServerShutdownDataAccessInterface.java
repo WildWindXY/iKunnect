@@ -1,4 +1,4 @@
-package server.data_access;
+package server.use_case.server_shutdown;
 
 public interface ServerShutdownDataAccessInterface {
     /**

@@ -1,6 +1,6 @@
 package server.use_case.server_shutdown;
 
-import server.data_access.ServerShutdownDataAccessInterface;
+import server.use_case.ServerThreadPool;
 
 public class ServerShutdownInteractor implements ServerShutdownInputBoundary {
     private final ServerShutdownDataAccessInterface serverShutdownDataAccessInterface;
@@ -21,6 +21,9 @@ public class ServerShutdownInteractor implements ServerShutdownInputBoundary {
         serverShutdownOutputBoundary.addMessage("Closing DataAccess...");
         serverShutdownDataAccessInterface.shutdown();
         serverShutdownOutputBoundary.addMessage("DataAccess closed successfully.");
+        serverShutdownOutputBoundary.addMessage("Closing ServerThreadPool...");
+        ServerThreadPool.shutdown();
+        serverShutdownOutputBoundary.addMessage("ServerThreadPool closed successfully.");
         System.exit(0);
     }
 }
