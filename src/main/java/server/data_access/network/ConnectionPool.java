@@ -1,6 +1,7 @@
 package server.data_access.network;
 
 import common.packet.Packet;
+import server.use_case.ServerThreadPool;
 import utils.TextUtils;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ class ConnectionPool {
     ConnectionPool(NetworkManager networkManager, int port) throws IOException {
         this.networkManager = networkManager;
         serverSocket = new ServerSocket(port);
-        new Thread(this::handleConnections).start();
+        ServerThreadPool.submit(this::handleConnections, "ThreadPool");
         timer = new Timer("Timer clear dead connections");
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -93,12 +94,12 @@ class ConnectionPool {
     //TODO: public void sendTo(Packet packet, User user){}
 
     private class Connection {
-        private boolean dead = false;
         private final Socket socket;
         private final ExecutorService executorService;
         private final ObjectInputStream in;
         private final ObjectOutputStream out;
         private final LinkedBlockingQueue<Packet> toSend = new LinkedBlockingQueue<>();
+        private boolean dead = false;
 
         Connection(Socket socket) throws IOException {
             executorService = Executors.newFixedThreadPool(2, r -> new Thread(r, "TCP connection thread: " + socket));

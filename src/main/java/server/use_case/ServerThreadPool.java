@@ -32,7 +32,7 @@ public class ServerThreadPool {
             }
         }, name);
         thread.start();
-        threads.add(thread);
+        threads.addLast(thread);
     }
 
     /**
@@ -51,5 +51,15 @@ public class ServerThreadPool {
                 Thread.currentThread().interrupt();
             }
         }
+    }
+
+    public static String getString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("List of active threads:\n");
+        for (Thread thread : threads) {
+            stringBuilder.append(thread.getName()).append("\n");
+        }
+
+        return stringBuilder.toString();
     }
 }

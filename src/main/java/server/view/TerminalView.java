@@ -6,13 +6,14 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import server.interface_adapter.TerminalController;
 import server.interface_adapter.TerminalViewModel;
+import server.use_case.ServerThreadPool;
 
 import java.io.IOException;
 
 public class TerminalView {
 
     private static final String COMMAND_EXIT = "exit";
-    private static final String COMMAND_SHOW_CONNECTIONS = "connection";
+    private static final String COMMAND_SHOW_THREADS = "thread";
     private final TerminalController terminalController;
     private final TerminalViewModel terminalViewModel;
 
@@ -41,8 +42,8 @@ public class TerminalView {
             line = reader.readLine("> ");
             if (line.equalsIgnoreCase(COMMAND_EXIT)) {
                 terminalController.shutdown();
-            } else if (line.equalsIgnoreCase(COMMAND_SHOW_CONNECTIONS)) {
-                //TODO: add use case
+            } else if (line.equalsIgnoreCase(COMMAND_SHOW_THREADS)) {
+                System.out.println(ServerThreadPool.getString());
             }
         }
     }

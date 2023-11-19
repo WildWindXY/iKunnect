@@ -51,5 +51,6 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
      */
     public void shutdown() {
         networkManager.shutdown();
+        fileManager.shutdown();
     }
 }
