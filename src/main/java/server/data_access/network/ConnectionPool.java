@@ -1,6 +1,7 @@
 package server.data_access.network;
 
 import common.packet.Packet;
+import utils.TextUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,24 +11,28 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 
 class ConnectionPool {
     private final ArrayList<Connection> connections = new ArrayList<>();
     private final ServerSocket serverSocket;
     private final NetworkManager networkManager;
+    private final Timer timer;
 
 
     ConnectionPool(NetworkManager networkManager, int port) throws IOException {
         this.networkManager = networkManager;
         serverSocket = new ServerSocket(port);
         new Thread(this::handleConnections).start();
-        Timer timer = new Timer();
+        timer = new Timer("Timer clear dead connections");
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (!serverSocket.isClosed()) {
-                    connections.removeIf(connection -> connection.socket.isClosed());
+                    connections.removeIf(connection -> connection.dead);
                 } else {
                     timer.cancel();
                 }
@@ -59,15 +64,12 @@ class ConnectionPool {
     public void close() {
         try {
             serverSocket.close();
-        } catch (IOException ignored) {//TODO: Handle it later
-
+        } catch (IOException e) {
+            networkManager.addMessageToTerminal(TextUtils.error(e.getMessage()));
         }
+        timer.cancel();
         for (Connection connection : connections) {
-            try {
-                connection.destroy();
-            } catch (IOException ignored) {//TODO: Handle it later
-
-            }
+            connection.destroy();
         }
     }
 
@@ -90,49 +92,68 @@ class ConnectionPool {
     //TODO: public void sendTo(Packet packet, User user){}
 
     private class Connection {
+        private boolean dead = false;
         private final Socket socket;
+        private final ExecutorService executorService;
         private final ObjectInputStream in;
         private final ObjectOutputStream out;
         private final LinkedBlockingQueue<Packet> toSend = new LinkedBlockingQueue<>();
 
         Connection(Socket socket) throws IOException {
+            executorService = Executors.newFixedThreadPool(2, r -> new Thread(r, "TCP connection thread: " + socket));
             this.socket = socket;
-            this.in = new ObjectInputStream(socket.getInputStream());
-            this.out = new ObjectOutputStream(socket.getOutputStream());
-
-            new Thread(() -> {
-                while (!socket.isClosed() && !serverSocket.isClosed()) {
-                    try {
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            executorService.submit(() -> {
+                try {
+                    while (!dead) {
                         Object object = in.readObject();
                         if (object instanceof Packet) {
                             packetHandler((Packet) object);
-                        }//TODO: else throws Unknown Packet Exception.
-                    } catch (IOException | ClassNotFoundException ignored) {
-                        //TODO: Do something at least
+                        }
                     }
+                } catch (IOException | ClassNotFoundException e) {
+                    networkManager.addMessageToTerminal(TextUtils.error(e.getMessage()));
+                    destroy();
                 }
-            }).start();
-
-            new Thread(() -> {
-                while (!socket.isClosed() && !serverSocket.isClosed()) {
-                    try {
+            });
+            executorService.submit(() -> {
+                try {
+                    while (!dead) {
                         Object obj = toSend.take();
                         out.writeObject(obj);
                         out.flush();
-                    } catch (IOException | InterruptedException ignored) {
-                        //TODO: Do something at least
                     }
+                } catch (IOException | InterruptedException e) {
+                    networkManager.addMessageToTerminal(TextUtils.error(e.getMessage()));
+                    destroy();
                 }
-            }).start();
+            });
         }
 
         private void packetHandler(Packet packet) {
             networkManager.packetHandler(packet);
         }
 
-        private void destroy() throws IOException {
+        private void destroy() {
+            dead = true;
+            executorService.shutdownNow();
             if (socket != null && !socket.isClosed()) {
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    networkManager.addMessageToTerminal(TextUtils.error(e.getMessage()));
+                }
+            }
+            try {
+                in.close();
+            } catch (IOException e) {
+                networkManager.addMessageToTerminal(TextUtils.error(e.getMessage()));
+            }
+            try {
+                out.close();
+            } catch (IOException e) {
+                networkManager.addMessageToTerminal(TextUtils.error(e.getMessage()));
             }
         }
     }
