@@ -22,11 +22,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * The FileManager class handles file-related operations and manages user data on the server.
  */
 public class FileManager {
-    private final DataAccess dataAccess;
-    private final ServerUsers serverUsers;
-
     private static final ConcurrentLinkedQueue<IFile<?>> modifiedFiles = new ConcurrentLinkedQueue<>();
     private static final String TEST_PATH = "E:\\Desktop\\data\\";
+    private final DataAccess dataAccess;
+    private final ServerUsers serverUsers;
     private final Timer timer;
 
     public FileManager(DataAccess dataAccess) {
@@ -46,6 +45,19 @@ public class FileManager {
         }, 1000, 1000);// execute every second
     }
 
+    public static <T extends IFile<T>> T registerModifiedFile(T file) {
+        if (!modifiedFiles.contains(file)) {
+            modifiedFiles.add(file);
+        }
+        return file;
+    }
+
+    public static void main(String[] args) throws InterruptedException { //TODO: For temp testing, delete later
+        FileManager fileManager = new FileManager(null);
+        Thread.sleep(5000);
+        fileManager.shutdown();
+    }
+
     /**
      * Gets a server user by user ID.
      *
@@ -62,7 +74,7 @@ public class FileManager {
      * @param username The username.
      * @return The ServerUser with the specified username.
      */
-    public ServerUser getUserByUsername(int username) {
+    public ServerUser getUserByUsername(String username) {
         return serverUsers.getUser(username);
     }
 
@@ -72,11 +84,10 @@ public class FileManager {
      * @param file The file to be registered.
      * @return The registered file.
      */
-    public static <T extends IFile<T>> T registerModifiedFile(T file) {
-        if (!modifiedFiles.contains(file)) {
-            modifiedFiles.add(file);
-        }
-        return file;
+
+
+    public ServerUser addUser(String username, String password) {
+        return serverUsers.addUser(username, password);
     }
 
     private void saveModifiedFiles() {
@@ -115,11 +126,5 @@ public class FileManager {
      */
     public void shutdown() {
         timer.cancel();
-    }
-
-    public static void main(String[] args) throws InterruptedException { //TODO: For temp testing, delete later
-        FileManager fileManager = new FileManager(null);
-        Thread.sleep(5000);
-        fileManager.shutdown();
     }
 }

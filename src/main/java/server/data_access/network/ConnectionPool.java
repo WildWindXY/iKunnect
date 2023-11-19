@@ -1,6 +1,7 @@
 package server.data_access.network;
 
 import common.packet.Packet;
+import server.entity.ServerUser;
 import server.use_case.ServerThreadPool;
 import utils.TextUtils;
 
@@ -9,14 +10,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 
 class ConnectionPool {
     private final LinkedList<Connection> connections = new LinkedList<>();
@@ -43,11 +42,11 @@ class ConnectionPool {
     }
 
     private void handleConnections() {
-        while (!serverSocket.isClosed()) {
+        for (int i = 0; !serverSocket.isClosed(); i++) {
             try {
                 Socket socket = serverSocket.accept();
                 networkManager.addMessageToTerminal("Some client connected");
-                Connection connection = new Connection(socket);
+                Connection connection = new Connection(socket, i);
                 connections.add(connection);
             } catch (Exception ignored) {//TODO: Log it later
 
@@ -91,9 +90,16 @@ class ConnectionPool {
         }
     }
 
-    //TODO: public void sendTo(Packet packet, User user){}
+    public void sendTo(Packet packet, ServerUser user) {
+
+    }
+
+    public void sendTo(Packet packet, int id) {
+
+    }
 
     private class Connection {
+        private final int id;
         private final Socket socket;
         private final ExecutorService executorService;
         private final ObjectInputStream in;
@@ -101,9 +107,10 @@ class ConnectionPool {
         private final LinkedBlockingQueue<Packet> toSend = new LinkedBlockingQueue<>();
         private boolean dead = false;
 
-        Connection(Socket socket) throws IOException {
+        Connection(Socket socket, final int id) throws IOException {
             executorService = Executors.newFixedThreadPool(2, r -> new Thread(r, "TCP connection thread: " + socket));
             this.socket = socket;
+            this.id = id;
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
             executorService.submit(() -> {
@@ -134,7 +141,7 @@ class ConnectionPool {
         }
 
         private void packetHandler(Packet packet) {
-            networkManager.packetHandler(packet);
+            networkManager.packetHandler(packet, id);
         }
 
         private void destroy() {

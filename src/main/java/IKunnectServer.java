@@ -3,6 +3,7 @@ import server.interface_adapter.TerminalController;
 import server.interface_adapter.TerminalPresenter;
 import server.interface_adapter.TerminalViewModel;
 import server.use_case.server_shutdown.ServerShutdownInteractor;
+import server.use_case.signup.ServerSignupInteractor;
 import server.use_case.terminal_message.TerminalMessageInteractor;
 import server.view.TerminalView;
 import utils.MessageEncryptionUtils;
@@ -29,8 +30,9 @@ public class IKunnectServer {
 
         TerminalMessageInteractor terminalMessageInteractor = new TerminalMessageInteractor(dataAccess, terminalPresenter);
         ServerShutdownInteractor serverShutdownInteractor = new ServerShutdownInteractor(dataAccess, terminalPresenter);
+        ServerSignupInteractor serverSignupInteractor = new ServerSignupInteractor(dataAccess, terminalPresenter);
 
-        TerminalView terminalView = new TerminalView(new TerminalController(terminalMessageInteractor, serverShutdownInteractor), terminalViewModel);
+        TerminalView terminalView = new TerminalView(new TerminalController(terminalMessageInteractor, serverShutdownInteractor, serverSignupInteractor), terminalViewModel);
     }
 }
 
