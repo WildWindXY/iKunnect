@@ -1,7 +1,6 @@
 package server.data_access.network;
 
 import common.packet.Packet;
-import server.entity.ServerUser;
 import server.use_case.ServerThreadPool;
 import utils.TextUtils;
 
@@ -90,10 +89,14 @@ class ConnectionPool {
         }
     }
 
-    public void sendTo(Packet packet, ServerUser user) {
-
-    }
-
+    /**
+     * Sends a packet to the specified connection using the ConnectionInfo.
+     * If the connection with the given ConnectionInfo is found, the packet is added to the connection's send queue.
+     * If the connection is not found, a message is added to the network manager's terminal indicating the unsent packet.
+     *
+     * @param packet The packet to be sent.
+     * @param info   The ConnectionInfo of the target connection.
+     */
     public void sendTo(Packet packet, ConnectionInfo info) { //TODO: add different send methods
         for (Connection connection : connections) {
             if (connection.info.getConnectionId() == info.getConnectionId()) {

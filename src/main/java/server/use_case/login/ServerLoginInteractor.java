@@ -8,10 +8,21 @@ import server.entity.ServerUser;
 import server.use_case.ServerThreadPool;
 import utils.Tuple;
 
+/**
+ * The ServerLoginInteractor class handles login packets received from clients and processes them accordingly.
+ * It interacts with the ServerLoginDataAccessInterface to perform login-related operations and communicates
+ * with the ServerLoginOutputBoundary to present messages related to the login process.
+ */
 public class ServerLoginInteractor implements ServerLoginInputBoundary {
     private final ServerLoginOutputBoundary serverLoginPresenter;
     private final ServerLoginDataAccessInterface serverLoginDataAccessInterface;
 
+    /**
+     * Constructs a ServerLoginInteractor with the specified data access interface and output boundary.
+     *
+     * @param serverLoginDataAccessInterface The data access interface for login operations.
+     * @param serverLoginPresenter           The output boundary for presenting login-related messages.
+     */
     public ServerLoginInteractor(ServerLoginDataAccessInterface serverLoginDataAccessInterface, ServerLoginOutputBoundary serverLoginPresenter) {
         this.serverLoginPresenter = serverLoginPresenter;
         this.serverLoginDataAccessInterface = serverLoginDataAccessInterface;
@@ -27,6 +38,11 @@ public class ServerLoginInteractor implements ServerLoginInputBoundary {
         }, "ServerLoginInteractor");
     }
 
+    /**
+     * Handles a login packet received from a client, processing the login request and responding accordingly.
+     *
+     * @param packetIn The login packet to be handled.
+     */
     private void handlePacket(PacketIn<PacketClientLogin> packetIn) {
         String username = packetIn.getPacket().getUsername();
         String password = packetIn.getPacket().getHashedPassword();
