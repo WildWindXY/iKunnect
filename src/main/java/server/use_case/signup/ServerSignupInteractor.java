@@ -43,7 +43,7 @@ public class ServerSignupInteractor implements ServerSignupInputBoundary {
 
     private void handlePacket(PacketIn<PacketClientSignup> packetIn) {
         String username = packetIn.getPacket().getUsername();
-        String password = packetIn.getPacket().getPassword();
+        String password = packetIn.getPacket().getHashedPassword();
         ConnectionInfo info = packetIn.getConnectionInfo();
         if (info.getStatus() == ConnectionInfo.Status.LOGGED) {
             serverSignupPresenter.addMessage("Signup Failed: client " + info.getUser().getUsername() + "already logged in");

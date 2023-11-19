@@ -25,9 +25,8 @@ public class NetworkManager {
         } else if (packet instanceof PacketClientSignup) {
             dataAccess.addPacketClientSignup(new PacketIn<>(info, (PacketClientSignup) packet));
         } else if (packet instanceof PacketClientLogin) {
+            dataAccess.addPacketClientLogin(new PacketIn<>(info, (PacketClientLogin) packet));
             addMessageToTerminal(((PacketClientLogin) packet).getUsername());
-            Packet response = new PacketServerLoginResponse(666000111, true);
-            connectionPool.sendAll(response);
         } else if (packet instanceof PacketClientMessage) {
             System.out.println(((PacketClientMessage) packet));
             try {

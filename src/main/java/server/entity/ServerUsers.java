@@ -2,6 +2,7 @@ package server.entity;
 
 import com.google.gson.annotations.Expose;
 import server.data_access.local.FileManager;
+import utils.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,11 +71,25 @@ public class ServerUsers implements IFile<ServerUsers> {
         return users.get(userId);
     }
 
+    public Tuple<Integer, ServerUser> checkPassword(String username, String password) {
+        for (User user : users) {
+            if (user.username.equals(username)) {
+                if (user.password.equals(password)) {
+                    return new Tuple<>(0, user);
+                } else {
+                    return new Tuple<>(-1, null);
+                }
+            }
+        }
+        return new Tuple<>(-2, null);
+    }
+
     /**
      * Gets the file path for storing user data.
      *
      * @return The file path for storing user data.
      */
+    @Override
     public String getPath() {
         return PATH;
     }

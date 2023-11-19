@@ -94,7 +94,7 @@ class ConnectionPool {
 
     }
 
-    public void sendTo(Packet packet, ConnectionInfo info) {
+    public void sendTo(Packet packet, ConnectionInfo info) { //TODO: add different send methods
         for (Connection connection : connections) {
             if (connection.info.getConnectionId() == info.getConnectionId()) {
                 connection.toSend.add(packet);
@@ -102,10 +102,6 @@ class ConnectionPool {
             }
         }
         networkManager.addMessageToTerminal("Unsent packet since connection id expired, packet: " + packet);
-    }
-
-    public void signupPreformed(ServerUser user, Packet packet, int id) {
-
     }
 
     private class Connection {

@@ -1,26 +1,31 @@
 package server.data_access;
 
 import common.packet.Packet;
+import common.packet.PacketClientLogin;
 import common.packet.PacketClientSignup;
 import server.data_access.local.FileManager;
 import server.data_access.network.ConnectionInfo;
 import server.data_access.network.NetworkManager;
 import server.entity.PacketIn;
 import server.entity.ServerUser;
+import server.use_case.login.ServerLoginDataAccessInterface;
 import server.use_case.server_shutdown.ServerShutdownDataAccessInterface;
 import server.use_case.signup.ServerSignupDataAccessInterface;
 import server.use_case.terminal_message.TerminalMessageDataAccessInterface;
+import utils.Tuple;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface {
+//TODO: Doc
+public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface, ServerLoginDataAccessInterface {
 
     private final NetworkManager networkManager;
     private final FileManager fileManager;
     private final LinkedBlockingQueue<String> terminalMessage = new LinkedBlockingQueue<>();
 
     private final LinkedBlockingQueue<PacketIn<PacketClientSignup>> signups = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<PacketIn<PacketClientLogin>> logins = new LinkedBlockingQueue<>();
 
     public DataAccess() throws IOException {
         fileManager = new FileManager(this);
@@ -39,6 +44,10 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
         return terminalMessage.take();
     }
 
+    public void addPacketClientLogin(PacketIn<PacketClientLogin> packet) {
+        logins.add(packet);
+    }
+
     public void addPacketClientSignup(PacketIn<PacketClientSignup> packet) {
         signups.add(packet);
     }
@@ -51,6 +60,10 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
         return fileManager.addUser(username, password);
     }
 
+    public Tuple<Integer, ServerUser> checkPassword(String username, String password) {
+        return fileManager.checkPassword(username, password);
+    }
+
     @Override
     public void sendTo(Packet packet, ConnectionInfo info) {
         networkManager.sendTo(packet, info);
@@ -59,6 +72,11 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
     @Override
     public PacketIn<PacketClientSignup> getPacketClientSignup() throws InterruptedException {
         return signups.take();
+    }
+
+    @Override
+    public PacketIn<PacketClientLogin> getPacketClientLogin() throws InterruptedException {
+        return logins.take();
     }
 
     /**

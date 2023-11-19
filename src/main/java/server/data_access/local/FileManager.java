@@ -9,6 +9,7 @@ import server.entity.IFile;
 import server.entity.ServerUser;
 import server.entity.ServerUsers;
 import utils.TextUtils;
+import utils.Tuple;
 
 import java.io.File;
 import java.io.FileReader;
@@ -87,6 +88,10 @@ public class FileManager {
      */
     public ServerUser addUser(String username, String password) {
         return serverUsers.addUser(username, password);
+    }
+
+    public Tuple<Integer, ServerUser> checkPassword(String username, String password) {
+        return serverUsers.checkPassword(username, password);
     }
 
     /**

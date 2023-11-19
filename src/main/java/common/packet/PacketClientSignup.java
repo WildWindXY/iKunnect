@@ -33,7 +33,7 @@ public class PacketClientSignup implements Packet {
      *
      * @return The hashed password.
      */
-    public String getPassword() {
+    public String getHashedPassword() {
         return this.hashedPassword;
     }
 
