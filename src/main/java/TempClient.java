@@ -1,11 +1,12 @@
 import client.data_access.ServerDataAccessObject;
 import common.packet.Packet;
+import common.packet.PacketClientGetFriendList;
 import common.packet.PacketClientLogin;
 
 import static utils.MessageEncryptionUtils.md5Java;
 
 public class TempClient {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         String serverAddress = "localhost";
         int serverPort = 0x2304;
         ServerDataAccessObject dao = new ServerDataAccessObject(serverAddress, serverPort);
@@ -27,6 +28,8 @@ public class TempClient {
 //        Packet msg7 = new PacketClientSignup("myuser1.", md5Java("pwd123"));
         Packet msg = new PacketClientLogin("myuser1", md5Java("pwd123"));
         dao.sendPacket(msg);
+        Thread.sleep(20);
+        dao.sendPacket(new PacketClientGetFriendList());
         while (true) {
             System.out.println(dao.getLoginResponse());
         }

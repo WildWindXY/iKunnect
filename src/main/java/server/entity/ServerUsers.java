@@ -5,6 +5,7 @@ import server.data_access.local.FileManager;
 import utils.Tuple;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -104,7 +105,51 @@ public class ServerUsers implements IFile<ServerUsers> {
         return PATH;
     }
 
-    public static class User implements ServerUser {
+    /**
+     * The Friend class represents a friend relationship with another user.
+     */
+    private static class Friend {
+        @Expose
+        private int friendId;
+        @Expose
+        private int chatId;
+        @Expose
+        private boolean isFriend = true;
+
+        Friend(int friendId, int chatId) {
+            this.friendId = friendId;
+            this.chatId = chatId;
+        }
+
+        /**
+         * Gets the friend's user ID.
+         *
+         * @return The friend's user ID.
+         */
+        public int getFriendId() {
+            return friendId;
+        }
+
+        /**
+         * Gets the chat ID associated with the friend relationship.
+         *
+         * @return The chat ID.
+         */
+        public int getChatId() {
+            return chatId;
+        }
+
+        /**
+         * Checks if this friend was deleted or not.
+         *
+         * @return True if this user is a friend; otherwise, false.
+         */
+        public boolean isFriend() {
+            return isFriend;
+        }
+    }
+
+    public class User implements ServerUser {
         @Expose
         private int userId;
         @Expose
@@ -176,11 +221,23 @@ public class ServerUsers implements IFile<ServerUsers> {
             }
         }
 
+        @Override
+        public HashMap<Integer, String> getFriendList() {
+            HashMap<Integer, String> map = new HashMap<>();
+            for (Friend friend : friends) {
+                if (friend.isFriend) {
+                    map.put(friend.friendId, getUser(friend.friendId).getUsername());
+                }
+            }
+            return map;
+        }
+
         /**
          * Gets the user ID.
          *
          * @return The user ID.
          */
+        @Override
         public int getUserId() {
             return userId;
         }
@@ -190,6 +247,7 @@ public class ServerUsers implements IFile<ServerUsers> {
          *
          * @return The username.
          */
+        @Override
         public String getUsername() {
             return username;
         }
@@ -199,52 +257,9 @@ public class ServerUsers implements IFile<ServerUsers> {
          *
          * @return The password.
          */
+        @Override
         public String getPassword() {
             return password;
-        }
-    }
-
-    /**
-     * The Friend class represents a friend relationship with another user.
-     */
-    public static class Friend {
-        @Expose
-        private int friendId;
-        @Expose
-        private int chatId;
-        @Expose
-        private boolean isFriend = true;
-
-        Friend(int friendId, int chatId) {
-            this.friendId = friendId;
-            this.chatId = chatId;
-        }
-
-        /**
-         * Gets the friend's user ID.
-         *
-         * @return The friend's user ID.
-         */
-        public int getFriendId() {
-            return friendId;
-        }
-
-        /**
-         * Gets the chat ID associated with the friend relationship.
-         *
-         * @return The chat ID.
-         */
-        public int getChatId() {
-            return chatId;
-        }
-
-        /**
-         * Checks if this friend was deleted or not.
-         *
-         * @return True if this user is a friend; otherwise, false.
-         */
-        public boolean isFriend() {
-            return isFriend;
         }
     }
 }

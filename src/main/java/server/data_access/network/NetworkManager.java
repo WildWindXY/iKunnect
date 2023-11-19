@@ -26,7 +26,8 @@ public class NetworkManager {
             dataAccess.addPacketClientSignup(new PacketIn<>(info, (PacketClientSignup) packet));
         } else if (packet instanceof PacketClientLogin) {
             dataAccess.addPacketClientLogin(new PacketIn<>(info, (PacketClientLogin) packet));
-            addMessageToTerminal(((PacketClientLogin) packet).getUsername());
+        } else if (packet instanceof PacketClientGetFriendList) {
+            dataAccess.addPacketClientGetFriendList(new PacketIn<>(info, (PacketClientGetFriendList) packet));
         } else if (packet instanceof PacketClientMessage) {//TODO: This is temporary
             System.out.println(((PacketClientMessage) packet));
             try {
