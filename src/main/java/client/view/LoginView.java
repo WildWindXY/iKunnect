@@ -1,7 +1,6 @@
 package client.view;
 
 import client.interface_adapter.Login.LoginController;
-import client.interface_adapter.Login.LoginPresenter;
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.Login.LoginViewModel;
 import client.view.components.buttons.CustomJButton;
@@ -21,7 +20,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
-    public static final String VIEW_NAME = "iKunnect - Sign Up";
+    public static final String VIEW_NAME = "log in";
     //private JPanel LoginMain;
     JPanel topPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
@@ -35,11 +34,12 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     CustomJButton signupButton = new CustomJButton();
     CustomJButton loginButton = new CustomJButton();
     CustomJButton exitButton = new CustomJButton();
+    
 
-    LoginViewModel loginViewModel = new LoginViewModel();
-
-    public LoginView(LoginController controller, LoginViewModel LoginViewModel) {
+    public LoginView(LoginController controller, LoginViewModel loginViewModel) {
         initComponents();
+        
+        loginViewModel.addPropertyChangeListener(this);
 
         usernameField.addKeyListener(new KeyAdapter() {
             private final StringBuilder usernameBuilder = new StringBuilder();
@@ -74,9 +74,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 } else {
                     usernameBuilder.insert(usernameField.getCaretPosition(), typedChar);
                 }
-                final LoginState currentState = LoginViewModel.getState();
+                final LoginState currentState = loginViewModel.getState();
                 currentState.setUsername(usernameBuilder.toString());
-                LoginViewModel.setState(currentState);
+                loginViewModel.setState(currentState);
             }
 
             @Override
@@ -121,9 +121,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 } else {
                     passwordBuilder.insert(passwordField.getCaretPosition(), typedChar);
                 }
-                final LoginState currentState = LoginViewModel.getState();
+                final LoginState currentState = loginViewModel.getState();
                 currentState.setPassword(passwordBuilder.toString());
-                LoginViewModel.setState(currentState);
+                loginViewModel.setState(currentState);
             }
 
             @Override
@@ -136,13 +136,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         signupButton.addActionListener(e -> {
-            System.out.println("SignupButton Clicked");
+            controller.executeSignup();
+            System.out.println("signup button clicked");
         });
 
         loginButton.addActionListener(e -> {
-            final LoginState currentState = LoginViewModel.getState();
+            final LoginState currentState = loginViewModel.getState();
             controller.execute(currentState.getUsername(), currentState.getPassword());
-
+            System.out.println("login button clicked");
         });
 
         exitButton.addActionListener(e -> {
@@ -224,14 +225,25 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     }
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println("Click " + evt.getActionCommand());
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        LoginState state = (LoginState) evt.getNewValue();
+//        setFields(state);
+        if(state.getPasswordError() != null) {
+            JOptionPane.showMessageDialog(this, state.getPasswordError());
+        }
+        else if(state.getUsernameError() != null) {
+            JOptionPane.showMessageDialog(this, state.getUsernameError());
+        }
 
     }
+
+//    private void setFields(LoginState state) {
+//        usernameField.setText(state.getUsername());
+//    }
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

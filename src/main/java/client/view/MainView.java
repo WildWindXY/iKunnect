@@ -39,12 +39,14 @@ import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static utils.MessageEncryptionUtils.initKey;
 
 public class MainView extends JPanel implements ActionListener, PropertyChangeListener {
 
-    public static final String VIEW_NAME = "iKunnect - Main";
+    public static final String VIEW_NAME = "Main Window";
 
     //--------------------- Styles ---------------------
 
@@ -109,6 +111,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
         Thread thread = new Thread(receive);
         thread.start();
+
     }
 
     public void initComponents() {
@@ -304,8 +307,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         listOfMessages[0] = catIpsum;
         int i = 0;
         for (String listOfMessage : listOfMessages) {
-            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, i++ % 2));
+            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, 0,  i++ % 2));
         }
+        messagesPanel.add(new PlainTextMessage("cxk", "测试插入", 0,0),2);
+        messagesPanel.add(new PlainTextMessage("You", "测试插入", 0, 1),2);
     }
 
     private void initMessagesPanel() {
@@ -376,40 +381,40 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         basePanel.setBorder(mainBorder);
     }
 
-    public static void main(String[] args) {
-        SmallJFrame frame = new SmallJFrame("Main");
-        try {
-            initKey("1111222233334444");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        MainViewModel mainViewModel = new MainViewModel();
-        SendMessagePresenter sendMessagePresenter = new SendMessagePresenter(mainViewModel);
-        ReceiveMessagePresenter receiveMessagePresenter = new ReceiveMessagePresenter(mainViewModel);
-        ServerDataAccessObject serverDAO = new ServerDataAccessObject("localhost", 8964);
-        SendMessageDataAccessInterface sendMessageDataAccess = new SendMessageDataAccess(serverDAO);
-        ReceiveMessageDataAccessInterface receiveMessageDataAccess = new ReceiveMessageDataAccess(serverDAO);
-        SendMessageInteractor sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccess, sendMessagePresenter);
-        ReceiveMessageInteractor receiveMessageInteractor = new ReceiveMessageInteractor(receiveMessageDataAccess, receiveMessagePresenter);
-
-        TranslateDataAccessInterface translationDataAccessObject = new TranslateDataAccess();
-        TranslationInputBoundary translationInteractor = new TranslationInteractor(translationDataAccessObject);
-
-        frame.add(new MainView(new MainController("CAIXUKUN", sendMessageInteractor, receiveMessageInteractor, translationInteractor), mainViewModel));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.prepare();
-        frame.setSize(new Dimension(1200, 800));
-        frame.setLocationRelativeTo(null);
-        frame.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    frame.dispose();
-                }
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SmallJFrame frame = new SmallJFrame("Main");
+//        try {
+//            initKey("1111222233334444");
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        MainViewModel mainViewModel = new MainViewModel();
+//        SendMessagePresenter sendMessagePresenter = new SendMessagePresenter(mainViewModel);
+//        ReceiveMessagePresenter receiveMessagePresenter = new ReceiveMessagePresenter(mainViewModel);
+//        ServerDataAccessObject serverDAO = new ServerDataAccessObject("localhost", 8964);
+//        SendMessageDataAccessInterface sendMessageDataAccess = new SendMessageDataAccess(serverDAO);
+//        ReceiveMessageDataAccessInterface receiveMessageDataAccess = new ReceiveMessageDataAccess(serverDAO);
+//        SendMessageInteractor sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccess, sendMessagePresenter);
+//        ReceiveMessageInteractor receiveMessageInteractor = new ReceiveMessageInteractor(receiveMessageDataAccess, receiveMessagePresenter);
+//
+//        TranslateDataAccessInterface translationDataAccessObject = new TranslateDataAccess();
+//        TranslationInputBoundary translationInteractor = new TranslationInteractor(translationDataAccessObject);
+//
+//        frame.add(new MainView(new MainController("CAIXUKUN", sendMessageInteractor, receiveMessageInteractor, translationInteractor), mainViewModel));
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.prepare();
+//        frame.setSize(new Dimension(1200, 800));
+//        frame.setLocationRelativeTo(null);
+//        frame.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyPressed(KeyEvent e) {
+//                super.keyPressed(e);
+//                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+//                    frame.dispose();
+//                }
+//            }
+//        });
+//    }
 
     class PlainTextMessage extends MessagesJPanel {
 
@@ -422,10 +427,17 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
         JPanel contentWrapper;
 
-        public PlainTextMessage(String username, String content, int orientation) {
+        public PlainTextMessage(String username, String content, long timestamp, int orientation) {
+
             super();
             this.username = username;
             boolean isLeft;
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm");
+
+            Date date = new Date(timestamp);
+
+            String formattedDate = dateFormat.format(date);
 
             if (orientation != MessagesJPanel.LEFT && orientation != MessagesJPanel.RIGHT) {
                 isLeft = true;
@@ -453,24 +465,29 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
             //Username Label
             if (isLeft) {
+                username=username+" "+formattedDate + " ";
                 usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
                 labelWrapper.setBackground(leftColor);
             } else {
-                usernameLabel = new JLabel("You");
+                username = formattedDate+" You" +" ";
+                usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.RIGHT));
                 labelWrapper.setBackground(rightColor);
             }
-            int WIDTH = Math.min(getTextWidth(content), 450);
+            int WIDTH = Math.min(Math.max(getTextWidth(content),getTextWidth(username)), 450);
 
             labelWrapper.add(usernameLabel);
-            labelWrapper.setPreferredSize(new Dimension(WIDTH, 30));
+            labelWrapper.setPreferredSize(new Dimension(WIDTH, 25));
             labelWrapper.setBorder(mainBorder);
             usernameLabel.setFont(labelFont);
+
+
 
             //Text
             contentTextArea = new JTextArea(content);
             contentTextArea.setEditable(false);
+
             contentTextArea.setLineWrap(true);
             contentTextArea.setWrapStyleWord(true);
             contentTextArea.setBorder(mainBorder);
@@ -531,10 +548,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             setBorder(null);
         }
 
-        public PlainTextMessage(String content) {
-            this("self", content, MessagesJPanel.RIGHT);
-        }
-
+//        public PlainTextMessage(String content) {
+//            this("self", content,0, MessagesJPanel.RIGHT);
+//        }
+//
 
         private int getHeight(String text) {
             if (text.contains("\n")) {
@@ -654,9 +671,9 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         SendMessageState state = (SendMessageState) evt.getNewValue();
         PlainTextMessage m = null;
         if (state.getSender().isEmpty()) {
-            m = new PlainTextMessage("You", state.getMessage(), 1);
+            m = new PlainTextMessage("You", state.getMessage(), state.getTimestamp(), 1);
         } else {
-            m = new PlainTextMessage(state.getSender(), state.getMessage(), 0);
+            m = new PlainTextMessage(state.getSender(), state.getMessage(), state.getTimestamp(), 0);
         }
         messagesPanel.add(m);
         messagesPanel.revalidate();

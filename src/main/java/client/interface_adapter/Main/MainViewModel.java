@@ -25,6 +25,9 @@ public class MainViewModel {
     public SendMessageState getState() {
         return state;
     }
+    public String getViewName() {
+        return "Main Window";
+    }
 
     public void setState(SendMessageState state) {
         this.state = state;
