@@ -2,11 +2,14 @@ package server.data_access;
 
 import server.data_access.local.FileManager;
 import server.data_access.network.NetworkManager;
+import server.use_case.server_shutdown.ServerShutdownDataAccessInterface;
+import server.use_case.signup.ServerSignupDataAccessInterface;
+import server.use_case.terminal_message.TerminalMessageDataAccessInterface;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface {
+public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface {
 
     private final NetworkManager networkManager;
     private final FileManager fileManager;
@@ -25,12 +28,8 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
      * @return The String to be displayed in the terminal.
      */
     @Override
-    public String getTerminalMessage() {
-        try {
-            return terminalMessage.take();
-        } catch (InterruptedException e) {
-            return e.getMessage();
-        }
+    public String getTerminalMessage() throws InterruptedException {
+        return terminalMessage.take();
     }
 
     /**

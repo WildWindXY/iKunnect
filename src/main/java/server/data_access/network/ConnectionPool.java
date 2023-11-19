@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
@@ -17,7 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 
 class ConnectionPool {
-    private final ArrayList<Connection> connections = new ArrayList<>();
+    private final LinkedList<Connection> connections = new LinkedList<>();
     private final ServerSocket serverSocket;
     private final NetworkManager networkManager;
     private final Timer timer;
