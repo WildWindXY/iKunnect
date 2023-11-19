@@ -9,10 +9,19 @@ import utils.TextUtils;
 
 import java.util.HashMap;
 
+/**
+ * The ServerGetFriendListInteractor class represents the use case for retrieving a user's friend list.
+ */
 public class ServerGetFriendListInteractor implements ServerGetFriendListInputBoundary {
     private final ServerGetFriendListOutputBoundary getFriendListPresenter;
     private final ServerGetFriendListDataAccessInterface serverGetFriendListDataAccessInterface;
 
+    /**
+     * Constructs a ServerGetFriendListInteractor with the specified data access interface and output boundary.
+     *
+     * @param serverGetFriendListDataAccessInterface The data access interface for retrieving friend list information.
+     * @param getFriendListPresenter                 The output boundary for presenting friend list information.
+     */
     public ServerGetFriendListInteractor(ServerGetFriendListDataAccessInterface serverGetFriendListDataAccessInterface, ServerGetFriendListOutputBoundary getFriendListPresenter) {
         this.getFriendListPresenter = getFriendListPresenter;
         this.serverGetFriendListDataAccessInterface = serverGetFriendListDataAccessInterface;
@@ -28,6 +37,11 @@ public class ServerGetFriendListInteractor implements ServerGetFriendListInputBo
         }, "ServerGetFriendListInteractor");
     }
 
+    /**
+     * Handles the incoming packet for getting a friend list and processes the request accordingly.
+     *
+     * @param packetIn The incoming packet containing the request and connection information.
+     */
     private void handlePacket(PacketIn<PacketClientGetFriendList> packetIn) {
         ConnectionInfo info = packetIn.getConnectionInfo();
         try {

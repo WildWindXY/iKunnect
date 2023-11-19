@@ -221,6 +221,11 @@ public class ServerUsers implements IFile<ServerUsers> {
             }
         }
 
+        /**
+         * Gets the user's friend list as a HashMap containing friend IDs and usernames.
+         *
+         * @return The HashMap representing the user's friend list (Key: friend ID, Value: friend username).
+         */
         @Override
         public HashMap<Integer, String> getFriendList() {
             HashMap<Integer, String> map = new HashMap<>();

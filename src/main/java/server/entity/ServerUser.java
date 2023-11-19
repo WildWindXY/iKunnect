@@ -39,6 +39,12 @@ public interface ServerUser {
 
     void removeFriend(int friendId);
 
+    /**
+     * Gets the user's friend list as a HashMap containing friend IDs and usernames.
+     *
+     * @return The HashMap representing the user's friend list (Key: friend ID, Value: friend username).
+     */
+
     HashMap<Integer, String> getFriendList();
 
     /**
