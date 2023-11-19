@@ -1,6 +1,7 @@
 package server.data_access;
 
 import common.packet.Packet;
+import common.packet.PacketClientGetFriendList;
 import common.packet.PacketClientLogin;
 import common.packet.PacketClientSignup;
 import server.data_access.local.FileManager;
@@ -8,6 +9,7 @@ import server.data_access.network.ConnectionInfo;
 import server.data_access.network.NetworkManager;
 import server.entity.PacketIn;
 import server.entity.ServerUser;
+import server.use_case.get_friend_list.ServerGetFriendListDataAccessInterface;
 import server.use_case.login.ServerLoginDataAccessInterface;
 import server.use_case.server_shutdown.ServerShutdownDataAccessInterface;
 import server.use_case.signup.ServerSignupDataAccessInterface;
@@ -18,7 +20,7 @@ import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 //TODO: Doc
-public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface, ServerLoginDataAccessInterface {
+public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface, ServerLoginDataAccessInterface , ServerGetFriendListDataAccessInterface {
 
     private final NetworkManager networkManager;
     private final FileManager fileManager;
@@ -26,6 +28,8 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
 
     private final LinkedBlockingQueue<PacketIn<PacketClientSignup>> signups = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketIn<PacketClientLogin>> logins = new LinkedBlockingQueue<>();
+
+    private final LinkedBlockingQueue<PacketIn<PacketClientGetFriendList>> getFriendLists = new LinkedBlockingQueue<>();
 
     /**
      * Constructs a new DataAccess object, initializing the FileManager and NetworkManager.
@@ -56,6 +60,15 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
      */
     public void addPacketClientLogin(PacketIn<PacketClientLogin> packet) {
         logins.add(packet);
+    }
+
+    /**
+     * Adds a packet to the queue of get friend list packets.
+     *
+     * @param packet The login packet to be added.
+     */
+    public void addPacketClientGetFriendList(PacketIn<PacketClientGetFriendList> packet) {
+        getFriendLists.add(packet);
     }
 
     /**
@@ -135,6 +148,16 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
     @Override
     public PacketIn<PacketClientLogin> getPacketClientLogin() throws InterruptedException {
         return logins.take();
+    }
+    /**
+     * Gets the incoming get friend list packet, blocking if no packet is available.
+     *
+     * @return The PacketIn object containing the packet and connection information.
+     * @throws InterruptedException If the thread is interrupted while waiting for a packet.
+     */
+    @Override
+    public PacketIn<PacketClientGetFriendList> getPacketClientGetFriendList() throws InterruptedException {
+        return getFriendLists.take();
     }
 
     /**

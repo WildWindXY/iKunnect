@@ -1,5 +1,7 @@
 package server.entity;
 
+import java.util.HashMap;
+
 /**
  * The ServerUser interface defines the common behavior for server user-related operations.
  */
@@ -36,6 +38,14 @@ public interface ServerUser {
      */
 
     void removeFriend(int friendId);
+
+    /**
+     * Gets the user's friend list as a HashMap containing friend IDs and usernames.
+     *
+     * @return The HashMap representing the user's friend list (Key: friend ID, Value: friend username).
+     */
+
+    HashMap<Integer, String> getFriendList();
 
     /**
      * Gets the user ID.
