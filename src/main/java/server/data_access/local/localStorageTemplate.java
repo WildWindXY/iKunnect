@@ -2,6 +2,7 @@ package server.data_access.local;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import server.entity.IFile;
 
 import java.io.FileWriter;
 import java.io.IOException;
