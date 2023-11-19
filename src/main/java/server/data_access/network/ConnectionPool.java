@@ -95,7 +95,13 @@ class ConnectionPool {
     }
 
     public void sendTo(Packet packet, int id) {
-
+        for (Connection connection : connections) {
+            if (connection.id == id) {
+                connection.toSend.add(packet);
+                return;
+            }
+        }
+        networkManager.addMessageToTerminal("Unsent packet since connection id expired, packet: " + packet);
     }
 
     private class Connection {
