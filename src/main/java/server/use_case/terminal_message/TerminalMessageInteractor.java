@@ -1,6 +1,6 @@
 package server.use_case.terminal_message;
 
-import server.data_access.TerminalMessageDataAccessInterface;
+import server.use_case.ServerThreadPool;
 
 public class TerminalMessageInteractor implements TerminalMessageInputBoundary {
     private final TerminalMessageDataAccessInterface terminalMessageDataAccess;
@@ -9,12 +9,17 @@ public class TerminalMessageInteractor implements TerminalMessageInputBoundary {
     public TerminalMessageInteractor(TerminalMessageDataAccessInterface terminalMessageDataAccess, TerminalMessageOutputBoundary terminalMessagePresenter) {
         this.terminalMessageDataAccess = terminalMessageDataAccess;
         this.terminalMessagePresenter = terminalMessagePresenter;
-        new Thread(this::handleMessage).start();
+        ServerThreadPool.submit(this::handleMessage, "TerminalMessageInteractor");
     }
 
     private void handleMessage() {
-        while (true) {
-            terminalMessagePresenter.addMessage(terminalMessageDataAccess.getTerminalMessage());
+        try {
+            while (!Thread.interrupted()) {
+                terminalMessagePresenter.addMessage(terminalMessageDataAccess.getTerminalMessage());
+            }
+        } catch (InterruptedException ignored) {
+            Thread.currentThread().interrupt();
+            terminalMessagePresenter.addMessage("TerminalMessageInteractor ended");
         }
     }
 }

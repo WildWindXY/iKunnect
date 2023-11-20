@@ -1,7 +1,7 @@
 package client.view;
 
+import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Signup.SignupController;
-import client.interface_adapter.Signup.SignupPresenter;
 import client.interface_adapter.Signup.SignupState;
 import client.interface_adapter.Signup.SignupViewModel;
 import client.view.components.buttons.CustomJButton;
@@ -21,8 +21,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
-    public static final String VIEW_NAME = "iKunnect - Sign Up";
-    //private JPanel SignupMain;
+    public static final String VIEW_NAME = "Sign Up";
+    //private JPanel LoginMain;
+    private StringBuilder usernameBuilder;
+    private StringBuilder passwordBuilder;
     JPanel topPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
 
@@ -33,18 +35,21 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     CustomUsernameJTextField usernameField = new CustomUsernameJTextField();
     CustomJPasswordField passwordField = new CustomJPasswordField();
     CustomJPasswordField passwordRepeatField = new CustomJPasswordField();
-
     CustomJButton signupButton = new CustomJButton();
     CustomJButton loginButton = new CustomJButton();
     CustomJButton exitButton = new CustomJButton();
 
-    SignupViewModel signupViewModel = new SignupViewModel();
 
     public SignupView(SignupController controller, SignupViewModel signupViewModel) {
         initComponents();
 
+        signupViewModel.addPropertyChangeListener(this);
+        this.usernameBuilder = new StringBuilder();
+        this.passwordBuilder = new StringBuilder();
+
+
         usernameField.addKeyListener(new KeyAdapter() {
-            private final StringBuilder usernameBuilder = new StringBuilder();
+            private final StringBuilder usernameBuilder = SignupView.this.usernameBuilder;
             private boolean deleteFirstChar = false;
 
             @Override
@@ -91,7 +96,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         });
 
         passwordField.addKeyListener(new KeyAdapter() {
-            private final StringBuilder passwordBuilder = new StringBuilder();
+            private final StringBuilder passwordBuilder = SignupView.this.passwordBuilder;
             private boolean deleteFirstChar = false;
 
             @Override
@@ -136,6 +141,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 }
             }
         });
+
         passwordRepeatField.addKeyListener(new KeyAdapter() {
             private final StringBuilder passwordBuilder = new StringBuilder();
             private boolean deleteFirstChar = false;
@@ -183,15 +189,27 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
             }
         });
 
-
-        signupButton.addActionListener(e -> {
-            final SignupState currentState = signupViewModel.getState();
-            controller.execute(currentState.getUsername(), currentState.getPassword(), currentState.getRepeatPassword());
-
-        });
+        signupButton.addActionListener(
+//            System.out.println("SignupButton Clicked");
+//            final SignupState currentState = SignupViewModel.getState();
+//            controller.execute(currentState.getUsername(), currentState.getPassword(), currentState.getRepeatPassword());
+            new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                    if (evt.getSource().equals(signupButton)) {
+                        SignupState currentState = signupViewModel.getState();
+                        controller.execute(
+                                currentState.getUsername(),
+                                currentState.getPassword(),
+                                currentState.getRepeatPassword()
+                        );
+                    }
+                }
+            }
+        );
 
         loginButton.addActionListener(e -> {
             System.out.println("LoginButton Clicked");
+
         });
 
         exitButton.addActionListener(e -> {
@@ -205,6 +223,19 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
             }
         });
 
+    }
+
+    public void actionPerformed(ActionEvent evt) {
+        JOptionPane.showConfirmDialog(this, "Hello.");
+    }
+
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        SignupState state = (SignupState) evt.getNewValue();
+        if (state.getUsernameError() != null) {
+            JOptionPane.showMessageDialog(this, state.getUsernameError());
+        }
     }
 
     private void initComponents() {
@@ -223,21 +254,21 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         //---- signupButton----
         signupButton.setEnabled(true);
         signupButton.setHideActionText(false);
-        signupButton.setText(SignupViewModel.SIGNUP_BUTTON_LABEL);
-        signupButton.setToolTipText(SignupViewModel.SIGNUP_BUTTON_TOOLTIPS);
+        signupButton.setText(LoginViewModel.SIGNUP_BUTTON_LABEL);
+        signupButton.setToolTipText(LoginViewModel.SIGNUP_BUTTON_TOOLTIPS);
 
 
         //---- loginButton ----
         loginButton.setEnabled(true);
         loginButton.setHideActionText(false);
-        loginButton.setText(SignupViewModel.LOGIN_BUTTON_LABEL);
-        loginButton.setToolTipText(SignupViewModel.LOGIN_BUTTON_TOOLTIPS);
+        loginButton.setText(LoginViewModel.LOGIN_BUTTON_LABEL);
+        loginButton.setToolTipText(LoginViewModel.LOGIN_BUTTON_TOOLTIPS);
 
         //---- exitButton ----
         exitButton.setEnabled(true);
         exitButton.setHideActionText(false);
-        exitButton.setText(SignupViewModel.EXIT_BUTTON_LABEL);
-        exitButton.setToolTipText(SignupViewModel.EXIT_BUTTON_TOOLTIPS);
+        exitButton.setText(LoginViewModel.EXIT_BUTTON_LABEL);
+        exitButton.setToolTipText(LoginViewModel.EXIT_BUTTON_TOOLTIPS);
 
 
         //---- enterUsernameLabel ----
@@ -247,7 +278,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         //---- enterPasswordLabel ----
         enterPasswordLabel.setText(SignupViewModel.PASSWORD_LABEL);
 
-        //---- repeatPasswordLabel ----
+        //---- enterPasswordRepeatLabel ----
         repeatPasswordLabel.setText(SignupViewModel.REPEAT_PASSWORD_LABEL);
 
         //======== topPanel========
@@ -276,15 +307,5 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         add(buttonPanel, new GridConstraints(4, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(2, 1), null, null));
     }
 
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-
-    }
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

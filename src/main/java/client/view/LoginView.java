@@ -1,7 +1,6 @@
 package client.view;
 
 import client.interface_adapter.Login.LoginController;
-import client.interface_adapter.Login.LoginPresenter;
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Signup.SignupController;
@@ -22,7 +21,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
-    public static final String VIEW_NAME = "iKunnect - Sign Up";
+    public static final String VIEW_NAME = "log in";
     //private JPanel LoginMain;
     JPanel topPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
@@ -36,6 +35,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     CustomJButton signupButton = new CustomJButton();
     CustomJButton loginButton = new CustomJButton();
     CustomJButton exitButton = new CustomJButton();
+    
 
     private final StringBuilder passwordBuilder = new StringBuilder();
 
@@ -49,6 +49,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         this.loginController = loginController;
         this.signupController = signupController;
         initComponents();
+        
+        loginViewModel.addPropertyChangeListener(this);
 
         usernameField.addKeyListener(new KeyAdapter() {
             private final StringBuilder usernameBuilder = new StringBuilder();
@@ -83,9 +85,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 } else {
                     usernameBuilder.insert(usernameField.getCaretPosition(), typedChar);
                 }
-                final LoginState currentState = LoginViewModel.getState();
+                final LoginState currentState = loginViewModel.getState();
                 currentState.setUsername(usernameBuilder.toString());
-                LoginViewModel.setState(currentState);
+                loginViewModel.setState(currentState);
             }
 
             @Override
@@ -130,9 +132,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 } else {
                     passwordBuilder.insert(passwordField.getCaretPosition(), typedChar);
                 }
-                final LoginState currentState = LoginViewModel.getState();
+                final LoginState currentState = loginViewModel.getState();
                 currentState.setPassword(passwordBuilder.toString());
-                LoginViewModel.setState(currentState);
+                loginViewModel.setState(currentState);
             }
 
             @Override
@@ -154,6 +156,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         loginButton.addActionListener(e -> {
             final LoginState currentState = LoginViewModel.getState();
             loginController.execute(currentState.getUsername(), currentState.getPassword());
+
 
         });
 
@@ -236,14 +239,25 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     }
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println("Click " + evt.getActionCommand());
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        LoginState state = (LoginState) evt.getNewValue();
+//        setFields(state);
+        if(state.getPasswordError() != null) {
+            JOptionPane.showMessageDialog(this, state.getPasswordError());
+        }
+        else if(state.getUsernameError() != null) {
+            JOptionPane.showMessageDialog(this, state.getUsernameError());
+        }
 
     }
+
+//    private void setFields(LoginState state) {
+//        usernameField.setText(state.getUsername());
+//    }
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

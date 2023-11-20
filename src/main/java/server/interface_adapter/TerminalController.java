@@ -1,15 +1,20 @@
 package server.interface_adapter;
 
+import server.use_case.friend_request.ServerFriendRequestInputBoundary;
+import server.use_case.friend_request.ServerFriendRequestInteractor;
+import server.use_case.friend_request.ServerFriendRequestOutputBoundary;
+import server.use_case.get_friend_list.ServerGetFriendListInputBoundary;
+import server.use_case.login.ServerLoginInputBoundary;
 import server.use_case.server_shutdown.ServerShutdownInputBoundary;
+import server.use_case.signup.ServerSignupInputBoundary;
 import server.use_case.terminal_message.TerminalMessageInputBoundary;
 
 public class TerminalController {
-    @SuppressWarnings({"all"}) //I hate this warning, of course it is unused
-    private final TerminalMessageInputBoundary terminalMessageInputBoundary;
+
     private final ServerShutdownInputBoundary serverShutdownInputBoundary;
 
-    public TerminalController(TerminalMessageInputBoundary terminalMessageInputBoundary, ServerShutdownInputBoundary serverShutdownInputBoundary) {
-        this.terminalMessageInputBoundary = terminalMessageInputBoundary;
+    @SuppressWarnings("unused")
+    public TerminalController(TerminalMessageInputBoundary terminalMessageInputBoundary, ServerShutdownInputBoundary serverShutdownInputBoundary, ServerSignupInputBoundary serverSignupInputBoundary, ServerLoginInputBoundary serverLoginInputBoundary, ServerGetFriendListInputBoundary serverGetFriendListInputBoundary, ServerFriendRequestInputBoundary serverFriendRequestInputBoundary) {
         this.serverShutdownInputBoundary = serverShutdownInputBoundary;
     }
 

@@ -2,7 +2,9 @@ package client.data_access;
 
 import common.packet.*;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -10,7 +12,10 @@ public class ServerDataAccessObject {
 
     private final LinkedBlockingQueue<Packet> receivedPacket = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketServerLoginResponse> loginResponses = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<PacketServerSignupResponse> signupResponses = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketServerMessage> serverMessages = new LinkedBlockingQueue<>();
+
+    private final LinkedBlockingQueue<PacketServerGetFriendListResponse> getFriendListResponses = new LinkedBlockingQueue<>();
 
     private final LinkedBlockingQueue<PacketServerSendMessageResponse> sendMessageResponses = new LinkedBlockingQueue<>();
 
@@ -26,7 +31,6 @@ public class ServerDataAccessObject {
             in = new ObjectInputStream(clientSocket.getInputStream());
 
             receivePacket();
-
             packetClassification();
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,8 +68,10 @@ public class ServerDataAccessObject {
                         loginResponses.add((PacketServerLoginResponse) packet);
                     } else if (packet instanceof PacketServerSendMessageResponse) {
                         sendMessageResponses.add((PacketServerSendMessageResponse) packet);
-                    } else {
-
+                    } else if (packet instanceof PacketServerSignupResponse) {
+                        signupResponses.add((PacketServerSignupResponse) packet);
+                    } else if (packet instanceof PacketServerGetFriendListResponse) {
+                        getFriendListResponses.add((PacketServerGetFriendListResponse) packet);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -93,6 +99,14 @@ public class ServerDataAccessObject {
         }
     }
 
+    public PacketServerGetFriendListResponse getFriendListResponse() {
+        try {
+            return getFriendListResponses.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public PacketServerSendMessageResponse getSendMessageResponse() {
         try {
             return sendMessageResponses.take();
@@ -109,4 +123,11 @@ public class ServerDataAccessObject {
         }
     }
 
+    public PacketServerSignupResponse getSignupResponse() {
+        try {
+            return signupResponses.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

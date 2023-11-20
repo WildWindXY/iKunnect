@@ -1,24 +1,29 @@
 package common.packet;
 
-public class PacketServerLoginResponse implements Packet{
+//TODO: Doc
+public class PacketServerLoginResponse implements Packet {
     private final long userID;
-    private final boolean success;
+    private final Status status;
 
-    public PacketServerLoginResponse(long userID, boolean success){
+    public PacketServerLoginResponse(long userID, Status status) {
         this.userID = userID;
-        this.success = success;
+        this.status = status;
     }
 
-    public long getUserID(){
+    public long getUserID() {
         return userID;
     }
 
-    public boolean isSuccess(){
-        return success;
+    public Status getStatus() {
+        return status;
     }
 
     @Override
-    public String toString(){
-        return String.valueOf(userID) + " " + String.valueOf(success);
+    public String toString() {
+        return "[PacketServerLoginResponse] userID: " + userID + ", status: " + status;
+    }
+
+    public enum Status {
+        SUCCESS, ALREADY_LOGGED_IN, NO_SUCH_USERNAME, WRONG_PASSWORD, NULL_ATTRIBUTE
     }
 }
