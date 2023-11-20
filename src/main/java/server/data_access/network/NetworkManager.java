@@ -28,6 +28,8 @@ public class NetworkManager {
             dataAccess.addPacketClientLogin(new PacketIn<>(info, (PacketClientLogin) packet));
         } else if (packet instanceof PacketClientGetFriendList) {
             dataAccess.addPacketClientGetFriendList(new PacketIn<>(info, (PacketClientGetFriendList) packet));
+        } else if (packet instanceof PacketClientFriendRequest) {
+            dataAccess.addPacketClientFriendRequest(new PacketIn<>(info, (PacketClientFriendRequest) packet));
         } else if (packet instanceof PacketClientMessage) {//TODO: This is temporary
             System.out.println(((PacketClientMessage) packet));
             try {

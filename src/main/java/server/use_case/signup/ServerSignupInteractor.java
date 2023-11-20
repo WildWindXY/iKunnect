@@ -65,7 +65,7 @@ public class ServerSignupInteractor implements ServerSignupInputBoundary {
             serverSignupDataAccessInterface.sendTo(new PacketServerSignupResponse(-1, PacketServerSignupResponse.Status.TOO_LONG), info);
         } else {
             ServerUser user = serverSignupDataAccessInterface.addUser(username, password);
-            serverSignupPresenter.addMessage("Signup Success: [username: " + username + ", password: " + password + ", id: " + user.getUserId());
+            serverSignupPresenter.addMessage("Signup Success: [username: " + username + ", password: " + password + ", id: " + user.getUserId() + "]");
             info.login(user);
             serverSignupDataAccessInterface.sendTo(new PacketServerSignupResponse(user.getUserId(), PacketServerSignupResponse.Status.SUCCESS), info);
         }

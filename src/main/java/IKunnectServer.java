@@ -2,6 +2,7 @@ import server.data_access.DataAccess;
 import server.interface_adapter.TerminalController;
 import server.interface_adapter.TerminalPresenter;
 import server.interface_adapter.TerminalViewModel;
+import server.use_case.friend_request.ServerFriendRequestInteractor;
 import server.use_case.get_friend_list.ServerGetFriendListInteractor;
 import server.use_case.login.ServerLoginInteractor;
 import server.use_case.server_shutdown.ServerShutdownInteractor;
@@ -35,8 +36,9 @@ public class IKunnectServer {
         ServerSignupInteractor serverSignupInteractor = new ServerSignupInteractor(dataAccess, terminalPresenter);
         ServerLoginInteractor serverLoginInteractor = new ServerLoginInteractor(dataAccess, terminalPresenter);
         ServerGetFriendListInteractor serverGetFriendListInteractor = new ServerGetFriendListInteractor(dataAccess, terminalPresenter);
+        ServerFriendRequestInteractor serverFriendRequestInteractor = new ServerFriendRequestInteractor(dataAccess, terminalPresenter);
 
-        TerminalView terminalView = new TerminalView(new TerminalController(terminalMessageInteractor, serverShutdownInteractor, serverSignupInteractor, serverLoginInteractor, serverGetFriendListInteractor), terminalViewModel);
+        TerminalView terminalView = new TerminalView(new TerminalController(terminalMessageInteractor, serverShutdownInteractor, serverSignupInteractor, serverLoginInteractor, serverGetFriendListInteractor, serverFriendRequestInteractor), terminalViewModel);
     }
 }
 
