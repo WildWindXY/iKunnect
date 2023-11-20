@@ -14,6 +14,8 @@ public interface ServerUser {
      */
     boolean wasFriend(int friendId);
 
+    boolean isFriend(int friendId);
+
     /**
      * Adds a friend with the specified ID and chat ID to the user's friends list.
      *
@@ -38,6 +40,12 @@ public interface ServerUser {
      */
 
     void removeFriend(int friendId);
+
+    boolean isFriendRequestedBy(int friendId);
+
+    void removeFriendRequest(int friendId);
+
+    void addFriendRequest(int friendId);
 
     /**
      * Gets the user's friend list as a HashMap containing friend IDs and usernames.

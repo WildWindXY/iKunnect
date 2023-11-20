@@ -6,6 +6,7 @@ import utils.Tuple;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -18,11 +19,20 @@ public class ServerUsers implements IFile<ServerUsers> {
      * The default path for storing user data in JSON format.
      */
     public static final String PATH = "user.json";
+    private static ServerUsers instance;
     /**
      * The list of users registered on the server.
      */
     @Expose
     private List<User> users = new ArrayList<>();
+
+    public ServerUsers() {
+        if (instance == null) {
+            instance = this;
+        } else {
+            throw new IllegalStateException("Only one ServerUsers instance should exists");
+        }
+    }
 
     /**
      * Gets the default instance of the ServerUsers class.
@@ -31,6 +41,10 @@ public class ServerUsers implements IFile<ServerUsers> {
      */
     public static ServerUsers getDefault() {
         return new ServerUsers();
+    }
+
+    public static void save() {
+        FileManager.registerModifiedFile(instance);
     }
 
     /**
@@ -61,6 +75,7 @@ public class ServerUsers implements IFile<ServerUsers> {
         }
         return null;
     }
+
 
     /**
      * Retrieves a server user based on the provided user ID.
@@ -120,33 +135,6 @@ public class ServerUsers implements IFile<ServerUsers> {
             this.friendId = friendId;
             this.chatId = chatId;
         }
-
-        /**
-         * Gets the friend's user ID.
-         *
-         * @return The friend's user ID.
-         */
-        public int getFriendId() {
-            return friendId;
-        }
-
-        /**
-         * Gets the chat ID associated with the friend relationship.
-         *
-         * @return The chat ID.
-         */
-        public int getChatId() {
-            return chatId;
-        }
-
-        /**
-         * Checks if this friend was deleted or not.
-         *
-         * @return True if this user is a friend; otherwise, false.
-         */
-        public boolean isFriend() {
-            return isFriend;
-        }
     }
 
     public class User implements ServerUser {
@@ -157,7 +145,9 @@ public class ServerUsers implements IFile<ServerUsers> {
         @Expose
         private String password;
         @Expose
-        private List<Friend> friends = new ArrayList<>();
+        private List<Friend> friends = new LinkedList<>();
+        @Expose
+        private List<Integer> incomingFriendRequests = new LinkedList<>();
 
         /**
          * The User class represents a server user with associated details.
@@ -178,6 +168,15 @@ public class ServerUsers implements IFile<ServerUsers> {
             for (Friend friend : friends) {
                 if (friend.friendId == friendId) {
                     return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean isFriend(int friendId) {
+            for (Friend friend : friends) {
+                if (friend.friendId == friendId) {
+                    return friend.isFriend;
                 }
             }
             return false;
@@ -220,6 +219,21 @@ public class ServerUsers implements IFile<ServerUsers> {
                 }
             }
         }
+
+        public void addFriendRequest(int friendId) {
+            if (!incomingFriendRequests.contains(friendId)) {
+                incomingFriendRequests.add(friendId);
+            }
+        }
+
+        public void removeFriendRequest(int friendId) {
+            incomingFriendRequests.remove((Object) friendId);
+        }
+
+        public boolean isFriendRequestedBy(int friendId) {
+            return incomingFriendRequests.contains(friendId);
+        }
+
 
         /**
          * Gets the user's friend list as a HashMap containing friend IDs and usernames.
