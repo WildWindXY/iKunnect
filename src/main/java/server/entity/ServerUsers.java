@@ -158,7 +158,7 @@ public class ServerUsers implements IFile<ServerUsers> {
         /**
          * The User class represents a server user with associated details.
          */
-        User(int userId, String username, String password) {
+        private User(int userId, String username, String password) {
             this.userId = userId;
             this.username = username;
             this.password = password;
