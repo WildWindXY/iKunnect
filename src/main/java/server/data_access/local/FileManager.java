@@ -5,9 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import server.data_access.DataAccess;
-import server.entity.IFile;
-import server.entity.ServerUser;
-import server.entity.ServerUsers;
+import server.entity.*;
 import utils.TextUtils;
 import utils.Tuple;
 
@@ -27,6 +25,9 @@ public class FileManager {
     private static final String TEST_PATH = "E:\\Desktop\\data\\";
     private final DataAccess dataAccess;
     private final ServerUsers serverUsers;
+
+    private final ServerChats serverChats;
+    private final ServerMessages serverMessages;
     private final Timer timer;
 
     public FileManager(DataAccess dataAccess) {
@@ -37,6 +38,8 @@ public class FileManager {
         }
         this.dataAccess = dataAccess;
         serverUsers = loadServerUsers();
+        serverChats = loadServerChats();
+        serverMessages = loadServerMessages();
         timer = new Timer("Timer save modified files");
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -139,6 +142,44 @@ public class FileManager {
         } catch (IOException | JsonSyntaxException | JsonIOException e) {
             dataAccess.addTerminalMessage(TextUtils.error("Warning: Error reading users file at: " + TEST_PATH + file.getPath()) + "with exception " + e.getMessage());
             return registerModifiedFile(ServerUsers.getDefault());
+        }
+    }
+
+    private ServerChats loadServerChats() {
+        File file = new File(TEST_PATH + ServerChats.PATH);
+        if (!file.exists()) {
+            return registerModifiedFile(ServerChats.getDefault());
+        }
+        try (FileReader fileReader = new FileReader(file)) {
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            ServerChats fileIn = gson.fromJson(fileReader, ServerChats.class);
+            if (fileIn == null) {
+                dataAccess.addTerminalMessage(TextUtils.error("Warning: Invalid or corrupt users file at: " + TEST_PATH + file.getPath()));
+                return registerModifiedFile(ServerChats.getDefault());
+            }
+            return fileIn;
+        } catch (IOException | JsonSyntaxException | JsonIOException e) {
+            dataAccess.addTerminalMessage(TextUtils.error("Warning: Error reading chats file at: " + TEST_PATH + file.getPath()) + "with exception " + e.getMessage());
+            return registerModifiedFile(ServerChats.getDefault());
+        }
+    }
+
+    private ServerMessages loadServerMessages() {
+        File file = new File(TEST_PATH + ServerMessages.PATH);
+        if (!file.exists()) {
+            return registerModifiedFile(ServerMessages.getDefault());
+        }
+        try (FileReader fileReader = new FileReader(file)) {
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            ServerMessages fileIn = gson.fromJson(fileReader, ServerMessages.class);
+            if (fileIn == null) {
+                dataAccess.addTerminalMessage(TextUtils.error("Warning: Invalid or corrupt users file at: " + TEST_PATH + file.getPath()));
+                return registerModifiedFile(ServerMessages.getDefault());
+            }
+            return fileIn;
+        } catch (IOException | JsonSyntaxException | JsonIOException e) {
+            dataAccess.addTerminalMessage(TextUtils.error("Warning: Error reading chats file at: " + TEST_PATH + file.getPath()) + "with exception " + e.getMessage());
+            return registerModifiedFile(ServerMessages.getDefault());
         }
     }
 
