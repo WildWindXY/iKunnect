@@ -9,10 +9,19 @@ import server.entity.ServerUsers;
 import server.use_case.ServerThreadPool;
 import utils.TextUtils;
 
+/**
+ * The ServerFriendRequestInteractor class handles client friend request packets.
+ */
 public class ServerFriendRequestInteractor implements ServerFriendRequestInputBoundary {
     private final ServerFriendRequestOutputBoundary friendRequestPresenter;
     private final ServerFriendRequestDataAccessInterface serverFriendRequestDataAccessInterface;
 
+    /**
+     * Constructs a ServerFriendRequestInteractor with the given data access interface and presenter.
+     *
+     * @param serverFriendRequestDataAccessInterface The data access interface for friend request-related operations.
+     * @param friendRequestPresenter                 The presenter for friend request-related output.
+     */
     public ServerFriendRequestInteractor(ServerFriendRequestDataAccessInterface serverFriendRequestDataAccessInterface, ServerFriendRequestOutputBoundary friendRequestPresenter) {
         this.friendRequestPresenter = friendRequestPresenter;
         this.serverFriendRequestDataAccessInterface = serverFriendRequestDataAccessInterface;
@@ -28,6 +37,11 @@ public class ServerFriendRequestInteractor implements ServerFriendRequestInputBo
         }, "ServerFriendRequestInteractor");
     }
 
+    /**
+     * Handles the incoming friend request packet.
+     *
+     * @param packetIn The incoming friend request packet.
+     */
     private void handlePacket(PacketIn<PacketClientFriendRequest> packetIn) {
         ConnectionInfo info = packetIn.getConnectionInfo();
         try {

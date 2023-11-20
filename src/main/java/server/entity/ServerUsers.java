@@ -26,6 +26,9 @@ public class ServerUsers implements IFile<ServerUsers> {
     @Expose
     private List<User> users = new ArrayList<>();
 
+    /**
+     * Constructor that enforce the singleton pattern.
+     */
     public ServerUsers() {
         if (instance == null) {
             instance = this;
@@ -43,6 +46,9 @@ public class ServerUsers implements IFile<ServerUsers> {
         return new ServerUsers();
     }
 
+    /**
+     * Saves the modifications made to the ServerUsers instance.
+     */
     public static void save() {
         FileManager.registerModifiedFile(instance);
     }
@@ -173,6 +179,12 @@ public class ServerUsers implements IFile<ServerUsers> {
             return false;
         }
 
+        /**
+         * Checks if a user is a friend with the specified friendId.
+         *
+         * @param friendId The ID of the user to check for friendship.
+         * @return True if the user is a friend with the specified friendId; otherwise, false.
+         */
         public boolean isFriend(int friendId) {
             for (Friend friend : friends) {
                 if (friend.friendId == friendId) {
@@ -220,16 +232,32 @@ public class ServerUsers implements IFile<ServerUsers> {
             }
         }
 
+        /**
+         * Adds a friend request from a user with the specified friendId.
+         *
+         * @param friendId The ID of the user sending the friend request.
+         */
         public void addFriendRequest(int friendId) {
             if (!incomingFriendRequests.contains(friendId)) {
                 incomingFriendRequests.add(friendId);
             }
         }
 
+        /**
+         * Removes a friend request from a user with the specified friendId.
+         *
+         * @param friendId The ID of the user whose friend request should be removed.
+         */
         public void removeFriendRequest(int friendId) {
             incomingFriendRequests.remove((Object) friendId);
         }
 
+        /**
+         * Checks if a friend request is received from a user with the specified friendId.
+         *
+         * @param friendId The ID of the user to check for a friend request.
+         * @return True if a friend request is received from the specified user; otherwise, false.
+         */
         public boolean isFriendRequestedBy(int friendId) {
             return incomingFriendRequests.contains(friendId);
         }

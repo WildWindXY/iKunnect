@@ -14,6 +14,12 @@ public interface ServerUser {
      */
     boolean wasFriend(int friendId);
 
+    /**
+     * Checks if a user is a friend with the specified friendId.
+     *
+     * @param friendId The ID of the user to check for friendship.
+     * @return True if the user is a friend with the specified friendId; otherwise, false.
+     */
     boolean isFriend(int friendId);
 
     /**
@@ -41,10 +47,26 @@ public interface ServerUser {
 
     void removeFriend(int friendId);
 
+    /**
+     * Checks if a friend request is received from a user with the specified friendId.
+     *
+     * @param friendId The ID of the user to check for a friend request.
+     * @return True if a friend request is received from the specified user; otherwise, false.
+     */
     boolean isFriendRequestedBy(int friendId);
 
+    /**
+     * Removes a friend request from a user with the specified friendId.
+     *
+     * @param friendId The ID of the user whose friend request should be removed.
+     */
     void removeFriendRequest(int friendId);
 
+    /**
+     * Adds a friend request from a user with the specified friendId.
+     *
+     * @param friendId The ID of the user sending the friend request.
+     */
     void addFriendRequest(int friendId);
 
     /**
