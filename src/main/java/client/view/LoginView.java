@@ -3,6 +3,7 @@ package client.view;
 import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.Login.LoginViewModel;
+import client.interface_adapter.Signup.SignupController;
 import client.view.components.buttons.CustomJButton;
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;
@@ -36,7 +37,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     CustomJButton exitButton = new CustomJButton();
     
 
-    public LoginView(LoginController controller, LoginViewModel loginViewModel) {
+    private final StringBuilder passwordBuilder = new StringBuilder();
+
+    LoginController loginController;
+
+    SignupController signupController;
+
+    LoginViewModel loginViewModel = new LoginViewModel();
+
+    public LoginView(LoginController loginController, SignupController signupController, LoginViewModel LoginViewModel) {
+        this.loginController = loginController;
+        this.signupController = signupController;
         initComponents();
         
         loginViewModel.addPropertyChangeListener(this);
@@ -89,7 +100,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         passwordField.addKeyListener(new KeyAdapter() {
-            private final StringBuilder passwordBuilder = new StringBuilder();
+
             private boolean deleteFirstChar = false;
 
             @Override
@@ -136,14 +147,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         signupButton.addActionListener(e -> {
-            controller.executeSignup();
-            System.out.println("signup button clicked");
+            passwordBuilder.delete(0, passwordBuilder.length());
+            passwordField.setText("");
+            String password = LoginViewModel.getState().getPassword();
+            System.out.println("Sign up:"+password+" Is password valid? :"+signupController.checkPassword(password));
         });
 
         loginButton.addActionListener(e -> {
-            final LoginState currentState = loginViewModel.getState();
-            controller.execute(currentState.getUsername(), currentState.getPassword());
-            System.out.println("login button clicked");
+            final LoginState currentState = LoginViewModel.getState();
+            loginController.execute(currentState.getUsername(), currentState.getPassword());
+
+
         });
 
         exitButton.addActionListener(e -> {

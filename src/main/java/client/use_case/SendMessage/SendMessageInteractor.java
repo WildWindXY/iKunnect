@@ -2,7 +2,7 @@ package client.use_case.SendMessage;
 
 public class SendMessageInteractor implements SendMessageInputBoundary {
     private final SendMessageDataAccessInterface dataAccess;
-    private final SendMessageOutputBoundary outputBoundary;
+    private final SendMessageOutputBoundary sendMessagePresenter;
 
     /**
      * Constructs a SendMessageInteractor with the provided data access and output boundary.
@@ -12,7 +12,7 @@ public class SendMessageInteractor implements SendMessageInputBoundary {
      */
     public SendMessageInteractor(SendMessageDataAccessInterface dataAccess, SendMessageOutputBoundary outputBoundary) {
         this.dataAccess = dataAccess;
-        this.outputBoundary = outputBoundary;
+        this.sendMessagePresenter = outputBoundary;
     }
 
     /**
@@ -24,6 +24,6 @@ public class SendMessageInteractor implements SendMessageInputBoundary {
     @Override
     public void execute(SendMessageInputData sendMessageInputData) {
         SendMessageOutputData outputData = dataAccess.sendMessage(sendMessageInputData);
-        outputBoundary.presentSendMessageResult(outputData, sendMessageInputData.getMessage());
+        sendMessagePresenter.presentSendMessageResult(outputData, sendMessageInputData.getMessage());
     }
 }
