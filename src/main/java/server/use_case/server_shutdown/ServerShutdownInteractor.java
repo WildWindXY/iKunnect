@@ -1,14 +1,25 @@
 package server.use_case.server_shutdown;
 
+import server.entity.ServerChats;
+import server.entity.ServerMessages;
+import server.entity.ServerUsers;
 import server.use_case.ServerThreadPool;
 
 public class ServerShutdownInteractor implements ServerShutdownInputBoundary {
+    private static final Thread shutdownHook = new Thread(() -> {
+        System.err.println("Emergency Saving...");
+        ServerUsers.save();
+        ServerChats.save();
+        ServerMessages.save();
+        System.err.println("Savings Done.");
+    });
     private final ServerShutdownDataAccessInterface serverShutdownDataAccessInterface;
     private final ServerShutdownOutputBoundary serverShutdownOutputBoundary;
 
     public ServerShutdownInteractor(ServerShutdownDataAccessInterface serverShutdownDataAccessInterface, ServerShutdownOutputBoundary serverShutdownOutputBoundary) {
         this.serverShutdownDataAccessInterface = serverShutdownDataAccessInterface;
         this.serverShutdownOutputBoundary = serverShutdownOutputBoundary;
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
     /**
@@ -23,7 +34,7 @@ public class ServerShutdownInteractor implements ServerShutdownInputBoundary {
         serverShutdownOutputBoundary.addMessage("DataAccess closed successfully.");
         serverShutdownOutputBoundary.addMessage("Closing ServerThreadPool...");
         ServerThreadPool.shutdown();
-        serverShutdownOutputBoundary.addMessage("ServerThreadPool closed successfully.");
+        Runtime.getRuntime().removeShutdownHook(shutdownHook);
         System.exit(0);
     }
 }

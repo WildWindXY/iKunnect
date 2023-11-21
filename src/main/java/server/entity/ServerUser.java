@@ -39,6 +39,8 @@ public interface ServerUser {
 
     void makeupFriend(int friendId);
 
+    int getChatId(int friendId);
+
     /**
      * Sets a friend status to false for the specified friend ID.
      *

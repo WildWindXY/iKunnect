@@ -29,10 +29,11 @@ public class ServerMessages implements IFile<ServerMessages> {
         return new ServerMessages();
     }
 
-    public TextMessage addMessage(int senderId, String text) {
-        TextMessage textMessage = new TextMessage(messages.size(), senderId, text);
+    public int addMessage(int senderId, String text) {
+        int messageId = messages.size();
+        TextMessage textMessage = new TextMessage(messageId, senderId, text);
         messages.add(textMessage);
-        return textMessage;
+        return messageId;
     }
 
     public TextMessage getMessage(int id) {

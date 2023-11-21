@@ -4,6 +4,7 @@ import common.packet.Packet;
 import common.packet.PacketClientFriendRequest;
 import server.data_access.network.ConnectionInfo;
 import server.entity.PacketIn;
+import server.entity.ServerChat;
 import server.entity.ServerUser;
 
 /**
@@ -25,6 +26,8 @@ public interface ServerFriendRequestDataAccessInterface {
      * @return The ServerUser object corresponding to the username.
      */
     ServerUser getUserByUsername(String username);
+
+    ServerChat createChat();
 
     /**
      * Sends a packet to the specified connection information.

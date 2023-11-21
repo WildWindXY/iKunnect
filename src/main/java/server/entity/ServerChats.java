@@ -59,6 +59,10 @@ public class ServerChats implements IFile<ServerChats> {
             return chatId;
         }
 
+        public void addMessage(int messageId) {
+            messages.add(messageId);
+        }
+
         public List<Integer> getMessages() {
             return new ArrayList<>(messages);
         }

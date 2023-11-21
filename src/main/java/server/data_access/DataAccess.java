@@ -5,6 +5,7 @@ import server.data_access.local.FileManager;
 import server.data_access.network.ConnectionInfo;
 import server.data_access.network.NetworkManager;
 import server.entity.PacketIn;
+import server.entity.ServerChat;
 import server.entity.ServerUser;
 import server.use_case.friend_request.ServerFriendRequestDataAccessInterface;
 import server.use_case.get_friend_list.ServerGetFriendListDataAccessInterface;
@@ -187,6 +188,21 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
     @Override
     public PacketIn<PacketClientFriendRequest> getPacketClientFriendRequests() throws InterruptedException {
         return friendRequests.take();
+    }
+
+    @Override
+    public ServerChat createChat() {
+        return fileManager.createChat();
+    }
+
+    @Override
+    public ServerChat getChat(int id) {
+        return fileManager.getChat(id);
+    }
+
+    @Override
+    public int addMessage(int senderId, String text) {
+        return fileManager.addMessage(senderId, text);
     }
 
     /**

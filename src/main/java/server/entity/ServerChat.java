@@ -6,4 +6,6 @@ public interface ServerChat{
     int getChatId();
 
     List<Integer> getMessages();
+
+    void addMessage(int messageId);
 }

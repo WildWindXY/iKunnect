@@ -93,6 +93,18 @@ public class FileManager {
         return serverUsers.addUser(username, password);
     }
 
+    public ServerChat createChat() {
+        return serverChats.create();
+    }
+
+    public ServerChat getChat(int id) {
+        return serverChats.getChat(id);
+    }
+
+    public int addMessage(int senderId, String text) {
+        return serverMessages.addMessage(senderId, text);
+    }
+
     /**
      * Checks the password for a given username in the server user database.
      *

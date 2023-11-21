@@ -218,6 +218,15 @@ public class ServerUsers implements IFile<ServerUsers> {
             friends.add(new Friend(friendId, chatId));
         }
 
+        public int getChatId(int friendId) {
+            for (Friend friend : friends) {
+                if (friend.friendId == friendId) {
+                    return friend.chatId;
+                }
+            }
+            return -1;
+        }
+
         /**
          * Removes a friend relationship with the specified friend ID.
          *

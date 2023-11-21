@@ -4,6 +4,7 @@ import common.packet.Packet;
 import common.packet.PacketClientTextMessage;
 import server.data_access.network.ConnectionInfo;
 import server.entity.PacketIn;
+import server.entity.ServerChat;
 import server.entity.ServerUser;
 
 /**
@@ -22,6 +23,10 @@ public interface ServerTextMessageDataAccessInterface {
     ServerUser getUserByUsername(String username);
 
     ServerUser getUserById(int id);
+
+    ServerChat getChat(int id);
+
+    int addMessage(int senderId, String text);
 
     /**
      * Sends a packet to the specified connection information.

@@ -1,7 +1,6 @@
 import common.packet.Packet;
-import common.packet.PacketClientFriendRequest;
 import common.packet.PacketClientLogin;
-import common.packet.PacketClientSignup;
+import common.packet.PacketClientTextMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -28,8 +27,11 @@ public class TestClient {
             }
         }).start();
 
-        send(new PacketClientLogin("user1", "user"));
-        send(new PacketClientFriendRequest("user2"));
+//        send(new PacketClientSignup("user1", "user"));
+//        send(new PacketClientSignup("user2", "user"));
+//        send(new PacketClientLogin("user1", "user"));
+        send(new PacketClientLogin("user2", "user"));
+        send(new PacketClientTextMessage(0, 0, "hello"));
     }
 
     public static void send(Packet packet) throws InterruptedException, IOException {

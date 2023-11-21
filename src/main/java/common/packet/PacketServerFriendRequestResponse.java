@@ -1,13 +1,13 @@
 package common.packet;
 
-import utils.Tuple;
+import utils.Triple;
 
 @SuppressWarnings("record")
 public class PacketServerFriendRequestResponse implements Packet {
     private final Status status;
-    private final Tuple<Integer, String> friendInfo;
+    private final Triple<Integer, String, Integer> friendInfo;
 
-    public PacketServerFriendRequestResponse(Tuple<Integer, String> friendInfo, Status status) {
+    public PacketServerFriendRequestResponse(Triple<Integer, String, Integer> friendInfo, Status status) {
         this.status = status;
         this.friendInfo = friendInfo;
     }
@@ -16,7 +16,7 @@ public class PacketServerFriendRequestResponse implements Packet {
         return status;
     }
 
-    public Tuple<Integer, String> getFriendInfo() {
+    public Triple<Integer, String, Integer> getFriendInfo() {
         return friendInfo;
     }
 

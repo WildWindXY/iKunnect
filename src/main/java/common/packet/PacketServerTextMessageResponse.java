@@ -31,6 +31,6 @@ public class PacketServerTextMessageResponse implements Packet {
     }
 
     public enum Status {
-        RECEIVED, NOT_LOGGED_IN, EMPTY_MESSAGE, NOT_FRIEND, SERVER_ERROR
+        RECEIVED, NOT_LOGGED_IN, INVALID_MESSAGE, NOT_FRIEND, SERVER_ERROR
     }
 }
