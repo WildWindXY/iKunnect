@@ -4,6 +4,7 @@ package common.packet;
  * The PacketClientSignup class represents a client packet for signup requests.
  * It includes information about the username and hashed password for the signup operation.
  */
+@SuppressWarnings("record")
 public class PacketClientSignup implements Packet {
     private final String username;
     private final String hashedPassword;
