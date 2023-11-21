@@ -4,8 +4,8 @@ import client.data_access.ServerDataAccessObject;
 import client.use_case.SendMessage.SendMessageDataAccessInterface;
 import client.use_case.SendMessage.SendMessageInputData;
 import client.use_case.SendMessage.SendMessageOutputData;
-import common.packet.PacketClientMessage;
-import common.packet.PacketServerSendMessageResponse;
+import common.packet.PacketClientTextMessage;
+import common.packet.PacketServerTextMessageResponse;
 
 import static utils.MessageEncryptionUtils.AES_encrypt;
 
@@ -29,15 +29,16 @@ public class SendMessageDataAccess implements SendMessageDataAccessInterface {
      */
     @Override
     public SendMessageOutputData sendMessage(SendMessageInputData input) {
-        PacketClientMessage packet = null;
+        PacketClientTextMessage packet = null;
         try {
-            packet = new PacketClientMessage(input.getReceiver(), AES_encrypt(input.getMessage()));
+            packet = new PacketClientTextMessage(0, Integer.parseInt(input.getReceiver()), AES_encrypt(input.getMessage())); //TODO: Unchecked Integer Cast
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         serverDataAccessObject.sendPacket(packet);
-        PacketServerSendMessageResponse response = serverDataAccessObject.getSendMessageResponse();
-        return new SendMessageOutputData(response.isSuccess(), response.getTimestamp());
+        PacketServerTextMessageResponse response = serverDataAccessObject.getSendMessageResponse();
+        return new SendMessageOutputData(response.getStatus() == PacketServerTextMessageResponse.Status.RECEIVED, response.getTimestamp());
     }
 
 

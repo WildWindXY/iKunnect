@@ -12,13 +12,14 @@ import server.use_case.login.ServerLoginDataAccessInterface;
 import server.use_case.server_shutdown.ServerShutdownDataAccessInterface;
 import server.use_case.signup.ServerSignupDataAccessInterface;
 import server.use_case.terminal_message.TerminalMessageDataAccessInterface;
+import server.use_case.text_message.ServerTextMessageDataAccessInterface;
 import utils.Tuple;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 //TODO: Doc
-public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface, ServerLoginDataAccessInterface, ServerGetFriendListDataAccessInterface, ServerFriendRequestDataAccessInterface {
+public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface, ServerLoginDataAccessInterface, ServerGetFriendListDataAccessInterface, ServerFriendRequestDataAccessInterface, ServerTextMessageDataAccessInterface {
 
     private final NetworkManager networkManager;
     private final FileManager fileManager;
@@ -29,6 +30,8 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
 
     private final LinkedBlockingQueue<PacketIn<PacketClientGetFriendList>> getFriendLists = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketIn<PacketClientFriendRequest>> friendRequests = new LinkedBlockingQueue<>();
+
+    private final LinkedBlockingQueue<PacketIn<PacketClientTextMessage>> textMessages = new LinkedBlockingQueue<>();
 
     /**
      * Constructs a new DataAccess object, initializing the FileManager and NetworkManager.
@@ -83,6 +86,10 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
         signups.add(packet);
     }
 
+    public void addPacketClientTextMessage(PacketIn<PacketClientTextMessage> packet) {
+        textMessages.add(packet);
+    }
+
     /**
      * Checks if a username already exists in the user database.
      *
@@ -95,6 +102,10 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
 
     public ServerUser getUserByUsername(String username) {
         return fileManager.getUserByUsername(username);
+    }
+
+    public ServerUser getUserById(int id) {
+        return fileManager.getUserById(id);
     }
 
     /**
@@ -144,6 +155,11 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
     @Override
     public PacketIn<PacketClientSignup> getPacketClientSignup() throws InterruptedException {
         return signups.take();
+    }
+
+    @Override
+    public PacketIn<PacketClientTextMessage> getPacketClientTextMessage() throws InterruptedException {
+        return textMessages.take();
     }
 
     /**

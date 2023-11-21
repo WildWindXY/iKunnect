@@ -1,6 +1,7 @@
 package server.entity;
 
 import com.google.gson.annotations.Expose;
+import server.data_access.local.FileManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,10 @@ public class ServerMessages implements IFile<ServerMessages> {
         } else {
             throw new IllegalStateException("Only one ServerMessages instance should exists");
         }
+    }
+
+    public static void save() {
+        FileManager.registerModifiedFile(instance);
     }
 
     public static ServerMessages getDefault() {
@@ -46,6 +51,9 @@ public class ServerMessages implements IFile<ServerMessages> {
         private int messageId;
         @Expose
         private int senderId;
+
+        @Expose
+        private long timestamp;
         @Expose
         private String text;
 
@@ -53,6 +61,7 @@ public class ServerMessages implements IFile<ServerMessages> {
             this.messageId = messageId;
             this.senderId = senderId;
             this.text = text;
+            this.timestamp = System.currentTimeMillis();
         }
 
         public int getSenderId() {

@@ -6,9 +6,6 @@ import server.entity.PacketIn;
 
 import java.io.IOException;
 
-import static utils.MessageEncryptionUtils.AES_decrypt;
-import static utils.MessageEncryptionUtils.AES_encrypt;
-
 public class NetworkManager {
     private final ConnectionPool connectionPool;
     private final DataAccess dataAccess;
@@ -30,22 +27,23 @@ public class NetworkManager {
             dataAccess.addPacketClientGetFriendList(new PacketIn<>(info, (PacketClientGetFriendList) packet));
         } else if (packet instanceof PacketClientFriendRequest) {
             dataAccess.addPacketClientFriendRequest(new PacketIn<>(info, (PacketClientFriendRequest) packet));
-        } else if (packet instanceof PacketClientMessage) {//TODO: This is temporary
-            System.out.println(((PacketClientMessage) packet));
-            try {
-                System.out.println("Sender:" + "Send To" + ((PacketClientMessage) packet).getRecipient() + "Message After Decryption: " + AES_decrypt(((PacketClientMessage) packet).getEncryptedMessage()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            Packet response = new PacketServerSendMessageResponse(System.currentTimeMillis(), true);
-            connectionPool.sendAll(response);
-            Packet response1 = null;
-            try {
-                response1 = new PacketServerMessage("cxk", AES_encrypt("坤坤天下第一"), System.currentTimeMillis());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            connectionPool.sendAll(response1);
+        } else if (packet instanceof PacketClientTextMessage) {
+            dataAccess.addPacketClientTextMessage(new PacketIn<>(info, (PacketClientTextMessage) packet));
+//            System.out.println(((PacketClientTextMessage) packet));
+//            try {
+//                System.out.println("Sender:" + "Send To" + ((PacketClientTextMessage) packet).getRecipient() + "Message After Decryption: " + AES_decrypt(((PacketClientTextMessage) packet).getEncryptedMessage()));
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//            Packet response = new PacketServerTextMessageResponse(System.currentTimeMillis(), true);
+//            connectionPool.sendAll(response);
+//            Packet response1 = null;
+//            try {
+//                response1 = new PacketServerMessage("cxk", AES_encrypt("坤坤天下第一"), System.currentTimeMillis());
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//            connectionPool.sendAll(response1);
         }
     }
 

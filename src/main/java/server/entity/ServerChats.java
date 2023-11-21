@@ -2,6 +2,7 @@ package server.entity;
 
 
 import com.google.gson.annotations.Expose;
+import server.data_access.local.FileManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public class ServerChats implements IFile<ServerChats> {
     public static final String PATH = "chats.json";
 
-    private ServerChats instance;
+    private static ServerChats instance;
     @Expose
     private List<Chat> chats = new ArrayList<>();
 
@@ -23,6 +24,10 @@ public class ServerChats implements IFile<ServerChats> {
 
     public static ServerChats getDefault() {
         return new ServerChats();
+    }
+
+    public static void save() {
+        FileManager.registerModifiedFile(instance);
     }
 
     public ServerChat create() {
@@ -39,7 +44,6 @@ public class ServerChats implements IFile<ServerChats> {
     public String getPath() {
         return PATH;
     }
-
 
     private static class Chat implements ServerChat {
         @Expose
