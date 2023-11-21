@@ -2,8 +2,6 @@ package client.data_access.user_data;
 
 import client.entity.User;
 import client.entity.UserFactory;
-import client.use_case.Login.LoginDataAccessInterface;
-import client.use_case.Signup.SignupDataAccessInterface;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -11,7 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FileUserDataAccessObject implements SignupDataAccessInterface, LoginDataAccessInterface {
+@Deprecated
+public class FileUserDataAccessObject {
 
     private final File csvFile;
 
@@ -53,13 +52,13 @@ public class FileUserDataAccessObject implements SignupDataAccessInterface, Logi
         }
     }
 
-    @Override
+    //    @Override
     public void save(User user) {
         accounts.put(user.getName(), user);
         this.save();
     }
 
-    @Override
+    //    @Override
     public User get(String username) {
         return accounts.get(username);
     }
@@ -72,8 +71,7 @@ public class FileUserDataAccessObject implements SignupDataAccessInterface, Logi
             writer.newLine();
 
             for (User user : accounts.values()) {
-                String line = String.format("%s,%s,%s",
-                        user.getName(), user.getPassword(), user.getCreationTime());
+                String line = String.format("%s,%s,%s", user.getName(), user.getPassword(), user.getCreationTime());
                 writer.write(line);
                 writer.newLine();
             }
@@ -88,10 +86,11 @@ public class FileUserDataAccessObject implements SignupDataAccessInterface, Logi
 
     /**
      * Return whether a user exists with username identifier.
+     *
      * @param identifier the username to check.
      * @return whether a user exists with username identifier
      */
-    @Override
+//    @Override
     public boolean existsByName(String identifier) {
         return accounts.containsKey(identifier);
     }

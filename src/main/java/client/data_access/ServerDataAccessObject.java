@@ -1,5 +1,7 @@
 package client.data_access;
 
+import client.use_case.Login.LoginDataAccessInterface;
+import client.use_case.Signup.SignupDataAccessInterface;
 import common.packet.*;
 
 import java.io.IOException;
@@ -8,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ServerDataAccessObject {
+public class ServerDataAccessObject implements SignupDataAccessInterface, LoginDataAccessInterface {
 
     private final LinkedBlockingQueue<Packet> receivedPacket = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketServerLoginResponse> loginResponses = new LinkedBlockingQueue<>();
@@ -81,13 +83,13 @@ public class ServerDataAccessObject {
         receiveThread.start();
     }
 
-    public void sendPacket(Packet msg) {
+    public synchronized void sendPacket(Packet msg) { //TODO: Exception should be thrown and handled outside
         System.out.println("Message to send to server: " + msg.toString());
         try {
             out.writeObject(msg);
             out.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -121,6 +123,16 @@ public class ServerDataAccessObject {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public PacketServerSignupResponse signup(String username, String password) {
+        sendPacket(new PacketClientSignup(username, password));
+        return getSignupResponse();
+    }
+
+    public PacketServerLoginResponse login(String username, String password) {
+        sendPacket(new PacketClientLogin(username, password));
+        return getLoginResponse();
     }
 
     public PacketServerSignupResponse getSignupResponse() {

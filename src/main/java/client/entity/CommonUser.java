@@ -2,6 +2,7 @@ package client.entity;
 
 import java.time.LocalDateTime;
 
+@SuppressWarnings("record")
 class CommonUser implements User {
 
     private final String name;

@@ -4,31 +4,16 @@ import client.app.LoginUseCaseFactory;
 import client.app.MainUseCaseFactory;
 import client.app.SignupUseCaseFactory;
 import client.data_access.ServerDataAccessObject;
-import client.data_access.password_checker.PasswordCheckerDataAccess;
-
 import client.data_access.receive_message.ReceiveMessageDataAccess;
 import client.data_access.send_message.SendMessageDataAccess;
 import client.data_access.translate.TranslateDataAccess;
 import client.data_access.user_data.FileUserDataAccessObject;
-import client.entity.*;
+import client.entity.CommonUserFactory;
 import client.interface_adapter.Logged_in.LoggedInViewModel;
-import client.interface_adapter.Login.*;
-import client.interface_adapter.Main.MainController;
+import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Main.MainViewModel;
-import client.interface_adapter.Signup.*;
+import client.interface_adapter.Signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
-
-import client.use_case.Login.LoginDataAccessInterface;
-import client.use_case.Login.LoginInputBoundary;
-import client.use_case.Login.LoginInteractor;
-import client.use_case.Login.LoginOutputBoundary;
-import client.use_case.PasswordChecker.PasswordCheckerInputBoundary;
-import client.use_case.PasswordChecker.PasswordCheckerInteractor;
-import client.use_case.SendMessage.SendMessageDataAccessInterface;
-import client.use_case.Signup.SignupDataAccessInterface;
-import client.use_case.Signup.SignupInputBoundary;
-import client.use_case.Signup.SignupInteractor;
-import client.use_case.Signup.SignupOutputBoundary;
 import client.view.*;
 import client.view.components.frames.SmallJFrame;
 
@@ -104,19 +89,19 @@ public class TestClientUI {
         TranslateDataAccess translateDataAccessObject = new TranslateDataAccess();
 
 
-        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, fileUserDataAccessObject);
-        views.add(signupView, signupView.VIEW_NAME);
+        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, serverDataAccessObject);
+        views.add(signupView, SignupView.VIEW_NAME);
 
-        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, fileUserDataAccessObject);
-        views.add(loginView, loginView.VIEW_NAME);
+        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject);
+        views.add(loginView, LoginView.VIEW_NAME);
 
         LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
-        views.add(loggedInView, loggedInView.VIEW_NAME);
+        views.add(loggedInView, LoggedInView.VIEW_NAME);
 
         MainView mainView = MainUseCaseFactory.create("", sendDataAccessObject, receiveDataAccessObject, translateDataAccessObject, mainViewModel);
-        views.add(mainView, mainView.VIEW_NAME);
+        views.add(mainView, MainView.VIEW_NAME);
 
-        viewManagerModel.setActiveView(signupView.VIEW_NAME);
+        viewManagerModel.setActiveView(SignupView.VIEW_NAME);
         viewManagerModel.firePropertyChanged();
 
         app.setVisible(true);

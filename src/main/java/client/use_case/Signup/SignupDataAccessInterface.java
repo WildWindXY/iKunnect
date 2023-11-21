@@ -1,11 +1,8 @@
 package client.use_case.Signup;
 
 
-import client.entity.User;
+import common.packet.PacketServerSignupResponse;
 
 public interface SignupDataAccessInterface {
-
-    boolean existsByName(String username);
-
-    void save(User user);
+    PacketServerSignupResponse signup(String username, String password);
 }
