@@ -1,6 +1,7 @@
 package server.entity;
 
 import com.google.gson.annotations.Expose;
+import server.data_access.local.FileManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +21,19 @@ public class ServerMessages implements IFile<ServerMessages> {
         }
     }
 
+    public static void save() {
+        FileManager.registerModifiedFile(instance);
+    }
+
     public static ServerMessages getDefault() {
         return new ServerMessages();
     }
 
-    public TextMessage addMessage(int senderId, String text) {
-        TextMessage textMessage = new TextMessage(messages.size(), senderId, text);
+    public int addMessage(int senderId, String text) {
+        int messageId = messages.size();
+        TextMessage textMessage = new TextMessage(messageId, senderId, text);
         messages.add(textMessage);
-        return textMessage;
+        return messageId;
     }
 
     public TextMessage getMessage(int id) {
@@ -46,6 +52,9 @@ public class ServerMessages implements IFile<ServerMessages> {
         private int messageId;
         @Expose
         private int senderId;
+
+        @Expose
+        private long timestamp;
         @Expose
         private String text;
 
@@ -53,6 +62,7 @@ public class ServerMessages implements IFile<ServerMessages> {
             this.messageId = messageId;
             this.senderId = senderId;
             this.text = text;
+            this.timestamp = System.currentTimeMillis();
         }
 
         public int getSenderId() {

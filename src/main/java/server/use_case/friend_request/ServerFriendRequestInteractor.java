@@ -1,13 +1,13 @@
 package server.use_case.friend_request;
 
 import common.packet.PacketClientFriendRequest;
+import common.packet.PacketServerFriendRequestFrom;
 import common.packet.PacketServerFriendRequestResponse;
 import server.data_access.network.ConnectionInfo;
-import server.entity.PacketIn;
-import server.entity.ServerUser;
-import server.entity.ServerUsers;
+import server.entity.*;
 import server.use_case.ServerThreadPool;
 import utils.TextUtils;
+import utils.Triple;
 
 /**
  * The ServerFriendRequestInteractor class handles client friend request packets.
@@ -67,26 +67,21 @@ public class ServerFriendRequestInteractor implements ServerFriendRequestInputBo
                         user.makeupFriend(friend.getUserId());
                         friend.makeupFriend(user.getUserId());
                         friendRequestPresenter.addMessage("FriendRequest Success: " + user.getUsername() + " and " + friend.getUsername() + " made up their friendship.");
-                        serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.ACCEPTED), info);
+                        serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(new Triple<>(friend.getUserId(), friend.getUsername(), user.getChatId(friend.getUserId())), PacketServerFriendRequestResponse.Status.ACCEPTED), info);
                         //TODO: notify friend
                     } else {
-                        friend.addFriendRequest(user.getUserId());
-                        friendRequestPresenter.addMessage("FriendRequest Sent: from " + user.getUsername() + " to " + friend.getUsername() + ".");
-                        serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.SENT), info);
-                        //TODO: notify friend
+                        sendRequest(info, user, friend);
                     }
                 } else if (user.isFriendRequestedBy(friend.getUserId())) {
                     user.removeFriendRequest(friend.getUserId());
-                    user.addFriend(friend.getUserId(), -1);//TODO: Chat not implemented yet.
-                    friend.addFriend(user.getUserId(), -1);
+                    ServerChat chat = serverFriendRequestDataAccessInterface.createChat();
+                    user.addFriend(friend.getUserId(), chat.getChatId());
+                    friend.addFriend(user.getUserId(), chat.getChatId());
                     friendRequestPresenter.addMessage("FriendRequest Success: " + user.getUsername() + " and " + friend.getUsername() + " become friends.");
-                    serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.ACCEPTED), info);
+                    serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(new Triple<>(friend.getUserId(), friend.getUsername(), chat.getChatId()), PacketServerFriendRequestResponse.Status.ACCEPTED), info);
                     //TODO: notify friend
                 } else {
-                    friend.addFriendRequest(user.getUserId());
-                    friendRequestPresenter.addMessage("FriendRequest Sent: from " + user.getUsername() + " to " + friend.getUsername() + ".");
-                    serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.SENT), info);
-                    //TODO: notify friend
+                    sendRequest(info, user, friend);
                 }
             }
         } catch (Exception e) {
@@ -94,6 +89,17 @@ public class ServerFriendRequestInteractor implements ServerFriendRequestInputBo
             serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.SERVER_ERROR), info);
         } finally {
             ServerUsers.save();
+            ServerChats.save();
+        }
+    }
+
+    private void sendRequest(ConnectionInfo info, ServerUser user, ServerUser friend) {
+        friend.addFriendRequest(user.getUserId());
+        friendRequestPresenter.addMessage("FriendRequest Sent: from " + user.getUsername() + " to " + friend.getUsername() + ".");
+        serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.SENT), info);
+        ConnectionInfo friendInfo = serverFriendRequestDataAccessInterface.getConnectionInfo(friend.getUserId());
+        if (friendInfo != null) {
+            serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestFrom(user.getUsername()), friendInfo);
         }
     }
 }

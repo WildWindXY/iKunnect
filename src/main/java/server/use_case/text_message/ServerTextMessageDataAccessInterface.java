@@ -1,7 +1,7 @@
-package server.use_case.friend_request;
+package server.use_case.text_message;
 
 import common.packet.Packet;
-import common.packet.PacketClientFriendRequest;
+import common.packet.PacketClientTextMessage;
 import server.data_access.network.ConnectionInfo;
 import server.entity.PacketIn;
 import server.entity.ServerChat;
@@ -10,14 +10,9 @@ import server.entity.ServerUser;
 /**
  * Interface defining the data access operations related to friend requests.
  */
-public interface ServerFriendRequestDataAccessInterface {
-    /**
-     * Retrieves a packet containing client friend requests from the queue.
-     *
-     * @return PacketIn object containing client friend requests.
-     * @throws InterruptedException if the operation is interrupted.
-     */
-    PacketIn<PacketClientFriendRequest> getPacketClientFriendRequests() throws InterruptedException;
+public interface ServerTextMessageDataAccessInterface {
+
+    public PacketIn<PacketClientTextMessage> getPacketClientTextMessage() throws InterruptedException;
 
     /**
      * Retrieves a user based on the provided username.
@@ -27,7 +22,11 @@ public interface ServerFriendRequestDataAccessInterface {
      */
     ServerUser getUserByUsername(String username);
 
-    ServerChat createChat();
+    ServerUser getUserById(int id);
+
+    ServerChat getChat(int id);
+
+    int addMessage(int senderId, String text);
 
     /**
      * Sends a packet to the specified connection information.

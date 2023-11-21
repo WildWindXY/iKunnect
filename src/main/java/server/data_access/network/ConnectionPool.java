@@ -107,6 +107,15 @@ class ConnectionPool {
         networkManager.addMessageToTerminal("Unsent packet since connection id expired, packet: " + packet);
     }
 
+    public ConnectionInfo getConnectionInfo(int id) {
+        for (Connection connection : connections) {
+            if (connection.info.getUser().getUserId() == id) {
+                return connection.info;
+            }
+        }
+        return null;
+    }
+
     private class Connection {
         private final ConnectionInfo info;
         private final Socket socket;

@@ -17,7 +17,7 @@ public class ServerDataAccessObject {
 
     private final LinkedBlockingQueue<PacketServerGetFriendListResponse> getFriendListResponses = new LinkedBlockingQueue<>();
 
-    private final LinkedBlockingQueue<PacketServerSendMessageResponse> sendMessageResponses = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<PacketServerTextMessageResponse> sendMessageResponses = new LinkedBlockingQueue<>();
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -66,8 +66,8 @@ public class ServerDataAccessObject {
                         serverMessages.add((PacketServerMessage) packet);
                     } else if (packet instanceof PacketServerLoginResponse) {
                         loginResponses.add((PacketServerLoginResponse) packet);
-                    } else if (packet instanceof PacketServerSendMessageResponse) {
-                        sendMessageResponses.add((PacketServerSendMessageResponse) packet);
+                    } else if (packet instanceof PacketServerTextMessageResponse) {
+                        sendMessageResponses.add((PacketServerTextMessageResponse) packet);
                     } else if (packet instanceof PacketServerSignupResponse) {
                         signupResponses.add((PacketServerSignupResponse) packet);
                     } else if (packet instanceof PacketServerGetFriendListResponse) {
@@ -107,7 +107,7 @@ public class ServerDataAccessObject {
         }
     }
 
-    public PacketServerSendMessageResponse getSendMessageResponse() {
+    public PacketServerTextMessageResponse getSendMessageResponse() {
         try {
             return sendMessageResponses.take();
         } catch (InterruptedException e) {
