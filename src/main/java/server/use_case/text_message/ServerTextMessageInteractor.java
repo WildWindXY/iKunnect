@@ -1,6 +1,7 @@
 package server.use_case.text_message;
 
 import common.packet.PacketClientTextMessage;
+import common.packet.PacketServerMessage;
 import common.packet.PacketServerTextMessageResponse;
 import server.data_access.network.ConnectionInfo;
 import server.entity.*;
@@ -42,7 +43,7 @@ public class ServerTextMessageInteractor implements ServerTextMessageInputBounda
             } else {
                 ServerUser friend = serverTextMessageDataAccessInterface.getUserById(packetIn.getPacket().getRecipient());
                 if (friend == null || !user.isFriend(friend.getUserId())) {
-                    textMessagePresenter.addMessage("TextMessage Error: recipient id" + packetIn.getPacket().getRecipient() + "in packet from " + user.getUsername() + " is invalid.");
+                    textMessagePresenter.addMessage("TextMessage Error: recipient id " + packetIn.getPacket().getRecipient() + " in packet from " + user.getUsername() + " is invalid.");
                     serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessageResponse(clientMessageId, timestamp, PacketServerTextMessageResponse.Status.NOT_FRIEND), info);
                 } else {
                     int chatId = user.getChatId(friend.getUserId());
@@ -57,6 +58,10 @@ public class ServerTextMessageInteractor implements ServerTextMessageInputBounda
                             chat.addMessage(messageId);
                             textMessagePresenter.addMessage("TextMessage from " + user.getUsername() + " to " + friend.getUsername() + ": " + message);
                             serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessageResponse(clientMessageId, timestamp, PacketServerTextMessageResponse.Status.RECEIVED), info);
+                            ConnectionInfo friendInfo = serverTextMessageDataAccessInterface.getConnectionInfo(friend.getUserId());
+                            if (friendInfo != null) {
+                                serverTextMessageDataAccessInterface.sendTo(new PacketServerMessage(user.getUserId(), message, timestamp), friendInfo);
+                            }
                         }
                     }
                 }

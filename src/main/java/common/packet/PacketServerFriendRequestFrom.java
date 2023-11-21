@@ -11,4 +11,9 @@ public class PacketServerFriendRequestFrom implements Packet {
     public String getUsername() {
         return username;
     }
+
+    @Override
+    public String toString() {
+        return "[PacketServerFriendRequestFrom] username: " + username;
+    }
 }

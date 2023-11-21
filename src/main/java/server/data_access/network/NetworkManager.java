@@ -47,6 +47,10 @@ public class NetworkManager {
         }
     }
 
+    public ConnectionInfo getConnectionInfo(int id) {
+        return connectionPool.getConnectionInfo(id);
+    }
+
     /**
      * Sends a packet to the specified connection using the ConnectionInfo.
      * If the connection with the given ConnectionInfo is found, the packet is added to the connection's send queue.

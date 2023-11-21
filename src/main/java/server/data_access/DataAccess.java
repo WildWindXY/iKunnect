@@ -19,7 +19,6 @@ import utils.Tuple;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
-//TODO: Doc
 public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface, ServerLoginDataAccessInterface, ServerGetFriendListDataAccessInterface, ServerFriendRequestDataAccessInterface, ServerTextMessageDataAccessInterface {
 
     private final NetworkManager networkManager;
@@ -203,6 +202,11 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
     @Override
     public int addMessage(int senderId, String text) {
         return fileManager.addMessage(senderId, text);
+    }
+
+    @Override
+    public ConnectionInfo getConnectionInfo(int id) {
+        return networkManager.getConnectionInfo(id);
     }
 
     /**

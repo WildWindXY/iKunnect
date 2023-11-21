@@ -35,4 +35,6 @@ public interface ServerTextMessageDataAccessInterface {
      * @param info   The connection information to which the packet should be sent.
      */
     void sendTo(Packet packet, ConnectionInfo info);
+
+    ConnectionInfo getConnectionInfo(int id);
 }

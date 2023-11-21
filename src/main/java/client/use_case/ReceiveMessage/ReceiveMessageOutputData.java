@@ -6,23 +6,12 @@ public class ReceiveMessageOutputData {
     private final String senderID;
     private final long timestamp;
 
-    /**
-     * Constructs a SendMessageOutputData object with the provided success status and timestamp.
-     *
-     * @param success   The success status of the message send operation.
-     * @param timestamp The timestamp of the message send operation.
-     */
-    public ReceiveMessageOutputData(String senderID, String message,  long timestamp) {
-        this.senderID = senderID;
+    public ReceiveMessageOutputData(int senderID, String message, long timestamp) {
+        this.senderID = String.valueOf(senderID);
         this.message = message;
         this.timestamp = timestamp;
     }
-
-    /**
-     * Get the success status of the message send operation.
-     *
-     * @return The success status of the message send operation.
-     */
+    
     public String getSenderID() {
         return senderID;
     }
