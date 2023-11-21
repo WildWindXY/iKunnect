@@ -1,8 +1,11 @@
 package client.app;
 
+import client.data_access.password_checker.PasswordCheckerDataAccess;
 import client.entity.CommonUserFactory;
 import client.entity.UserFactory;
 import client.interface_adapter.Main.MainViewModel;
+import client.interface_adapter.Signup.SignupController;
+import client.interface_adapter.Signup.SignupPresenter;
 import client.interface_adapter.Signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
 import client.interface_adapter.Logged_in.LoggedInViewModel;
@@ -13,6 +16,12 @@ import client.use_case.Login.LoginInputBoundary;
 import client.use_case.Login.LoginInteractor;
 import client.use_case.Login.LoginOutputBoundary;
 import client.use_case.Login.LoginDataAccessInterface;
+import client.use_case.PasswordChecker.PasswordCheckerInputBoundary;
+import client.use_case.PasswordChecker.PasswordCheckerInteractor;
+import client.use_case.Signup.SignupDataAccessInterface;
+import client.use_case.Signup.SignupInputBoundary;
+import client.use_case.Signup.SignupInteractor;
+import client.use_case.Signup.SignupOutputBoundary;
 import client.view.LoginView;
 
 import javax.swing.*;
@@ -32,7 +41,14 @@ public class LoginUseCaseFactory {
 
         try {
             LoginController loginController = createLoginUseCase(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, userDataAccessObject);
-            return new LoginView(loginController, loginViewModel);
+            SignupDataAccessInterface signupUserDataAccessObject = (SignupDataAccessInterface) userDataAccessObject; // TODO: fix this (shouldn't be casting
+            SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel, signupViewModel, loginViewModel);
+            UserFactory userFactory = new CommonUserFactory();
+            SignupInputBoundary userSignupInteractor = new SignupInteractor(
+                    signupUserDataAccessObject, signupOutputBoundary, userFactory);
+            PasswordCheckerInputBoundary passwordCheckerUseCaseInteractor = new PasswordCheckerInteractor(new PasswordCheckerDataAccess());
+            SignupController signupController = new SignupController(userSignupInteractor,passwordCheckerUseCaseInteractor);
+            return new LoginView(loginController, signupController, loginViewModel);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Could not open user data file.");
         }

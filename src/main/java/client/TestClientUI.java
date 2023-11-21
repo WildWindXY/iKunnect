@@ -1,7 +1,15 @@
 package client;
 
+import client.app.LoginUseCaseFactory;
+import client.app.MainUseCaseFactory;
+import client.app.SignupUseCaseFactory;
+import client.data_access.ServerDataAccessObject;
 import client.data_access.password_checker.PasswordCheckerDataAccess;
 
+import client.data_access.receive_message.ReceiveMessageDataAccess;
+import client.data_access.send_message.SendMessageDataAccess;
+import client.data_access.translate.TranslateDataAccess;
+import client.data_access.user_data.FileUserDataAccessObject;
 import client.entity.*;
 import client.interface_adapter.Logged_in.LoggedInViewModel;
 import client.interface_adapter.Login.*;
@@ -10,7 +18,17 @@ import client.interface_adapter.Main.MainViewModel;
 import client.interface_adapter.Signup.*;
 import client.interface_adapter.ViewManagerModel;
 
+import client.use_case.Login.LoginDataAccessInterface;
+import client.use_case.Login.LoginInputBoundary;
+import client.use_case.Login.LoginInteractor;
+import client.use_case.Login.LoginOutputBoundary;
+import client.use_case.PasswordChecker.PasswordCheckerInputBoundary;
+import client.use_case.PasswordChecker.PasswordCheckerInteractor;
 import client.use_case.SendMessage.SendMessageDataAccessInterface;
+import client.use_case.Signup.SignupDataAccessInterface;
+import client.use_case.Signup.SignupInputBoundary;
+import client.use_case.Signup.SignupInteractor;
+import client.use_case.Signup.SignupOutputBoundary;
 import client.view.*;
 import client.view.components.frames.SmallJFrame;
 
@@ -22,42 +40,42 @@ public class TestClientUI {
 
     public static void main(String[] args) {
 
-        SignupDataAccessInterface userDataAccessObject = new SignupDataAccessInterface() {
-            @Override
-            public boolean existsByName(String username) {
-                return false;
-            }
+//        SignupDataAccessInterface userDataAccessObject = new SignupDataAccessInterface() {
+//            @Override
+//            public boolean existsByName(String username) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void save(User user) {
+//            }
+//        };
+//        SignupOutputBoundary outputBoundary = new SignupPresenter();
+//        UserFactory factory = new CommonUserFactory();
+//        SignupState signupState;
+//        SignupInputBoundary userSignupUseCaseInteractor = new SignupInteractor(userDataAccessObject, outputBoundary, factory);
+//
+//        PasswordCheckerInputBoundary passwordCheckerUseCaseInteractor = new PasswordCheckerInteractor(new PasswordCheckerDataAccess());
+//        SignupController signupController = new SignupController(userSignupUseCaseInteractor,passwordCheckerUseCaseInteractor);
 
-            @Override
-            public void save(User user) {
-            }
-        };
-        SignupOutputBoundary outputBoundary = new SignupPresenter();
-        UserFactory factory = new CommonUserFactory();
-        SignupState signupState;
-        SignupInputBoundary userSignupUseCaseInteractor = new SignupInteractor(userDataAccessObject, outputBoundary, factory);
-
-        PasswordCheckerInputBoundary passwordCheckerUseCaseInteractor = new PasswordCheckerInteractor(new PasswordCheckerDataAccess());
-        SignupController signupController = new SignupController(userSignupUseCaseInteractor,passwordCheckerUseCaseInteractor);
-
-        LoginDataAccessInterface loginDataAccessInterface = new LoginDataAccessInterface() {
-            @Override
-            public boolean existsByName(String username) {
-                return false;
-            }
-
-            @Override
-            public void save(User user) {
-            }
-
-            @Override
-            public User get(String username) {
-                return null;
-            }
-        };
-        LoginOutputBoundary loginOutputBoundary = new LoginPresenter();
-        LoginInputBoundary userLoginUseCaseInteractor = new LoginInteractor(loginDataAccessInterface, loginOutputBoundary);
-        LoginController loginController = new LoginController(userLoginUseCaseInteractor);
+//        LoginDataAccessInterface loginDataAccessInterface = new LoginDataAccessInterface() {
+//            @Override
+//            public boolean existsByName(String username) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void save(User user) {
+//            }
+//
+//            @Override
+//            public User get(String username) {
+//                return null;
+//            }
+//        };
+//        LoginOutputBoundary loginOutputBoundary = new LoginPresenter();
+//        LoginInputBoundary userLoginUseCaseInteractor = new LoginInteractor(loginDataAccessInterface, loginOutputBoundary);
+//        LoginController loginController = new LoginController(userLoginUseCaseInteractor);
 
 
         SmallJFrame app = new SmallJFrame("iKunnect Client");
@@ -103,9 +121,9 @@ public class TestClientUI {
 
         app.setVisible(true);
 
-
-        SignupView signupView = new SignupView(signupController, signupViewModel);
-        LoginView loginView = new LoginView(loginController,signupController, loginViewModel);
+//
+//        SignupView signupView = new SignupView(signupController, signupViewModel);
+//        LoginView loginView = new LoginView(loginController,signupController, loginViewModel);
         //views.add(signupView);
         views.add(loginView);
 

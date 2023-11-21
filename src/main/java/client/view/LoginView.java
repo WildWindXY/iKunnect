@@ -37,7 +37,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     CustomJButton exitButton = new CustomJButton();
     
 
-    private final StringBuilder passwordBuilder = new StringBuilder();
+//    private final StringBuilder passwordBuilder = new StringBuilder();
 
     LoginController loginController;
 
@@ -45,7 +45,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     LoginViewModel loginViewModel = new LoginViewModel();
 
-    public LoginView(LoginController loginController, SignupController signupController, LoginViewModel LoginViewModel) {
+    public LoginView(LoginController loginController, SignupController signupController, LoginViewModel loginViewModel) {
         this.loginController = loginController;
         this.signupController = signupController;
         initComponents();
@@ -100,6 +100,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         passwordField.addKeyListener(new KeyAdapter() {
+            private final StringBuilder passwordBuilder = new StringBuilder();
 
             private boolean deleteFirstChar = false;
 
@@ -147,17 +148,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         signupButton.addActionListener(e -> {
-            passwordBuilder.delete(0, passwordBuilder.length());
-            passwordField.setText("");
-            String password = LoginViewModel.getState().getPassword();
-            System.out.println("Sign up:"+password+" Is password valid? :"+signupController.checkPassword(password));
+            loginController.executeSignup();
+            System.out.println("Sign up");
         });
 
         loginButton.addActionListener(e -> {
-            final LoginState currentState = LoginViewModel.getState();
+            final LoginState currentState = loginViewModel.getState();
             loginController.execute(currentState.getUsername(), currentState.getPassword());
-
-
+            System.out.println("Log in");
         });
 
         exitButton.addActionListener(e -> {

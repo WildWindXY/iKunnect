@@ -1,5 +1,6 @@
 package client.app;
 
+import client.data_access.password_checker.PasswordCheckerDataAccess;
 import client.entity.CommonUserFactory;
 import client.entity.UserFactory;
 import client.interface_adapter.*;
@@ -7,6 +8,8 @@ import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Signup.SignupController;
 import client.interface_adapter.Signup.SignupPresenter;
 import client.interface_adapter.Signup.SignupViewModel;
+import client.use_case.PasswordChecker.PasswordCheckerInputBoundary;
+import client.use_case.PasswordChecker.PasswordCheckerInteractor;
 import client.use_case.Signup.SignupDataAccessInterface;
 import client.use_case.Signup.SignupInputBoundary;
 import client.use_case.Signup.SignupInteractor;
@@ -44,6 +47,7 @@ public class SignupUseCaseFactory {
         SignupInputBoundary userSignupInteractor = new SignupInteractor(
                 userDataAccessObject, signupOutputBoundary, userFactory);
 
-        return new SignupController(userSignupInteractor);
+        PasswordCheckerInputBoundary passwordCheckerUseCaseInteractor = new PasswordCheckerInteractor(new PasswordCheckerDataAccess());
+        return new SignupController(userSignupInteractor, passwordCheckerUseCaseInteractor);
     }
 }
