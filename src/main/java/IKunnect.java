@@ -1,9 +1,12 @@
 //import org.apache.logging.log4j.Logger;
 
-import client.use_case.Translate.*;
 import client.data_access.translate.TranslateDataAccess;
+import client.use_case.Translate.TranslateDataAccessInterface;
+import client.use_case.Translate.TranslationOutputBoundary;
+import client.use_case.Translate.TranslationOutputData;
 
-public class IKunnect implements TranslationOutputBoundary {
+public class IKunnect implements TranslationOutputBoundary {//TODO: Why here? so wierd.
+
     public static void main(String[] args) {
         // print default text encode mode
         TranslateDataAccessInterface translateDataAccess = new TranslateDataAccess();
@@ -13,7 +16,6 @@ public class IKunnect implements TranslationOutputBoundary {
 
     @Override
     public void presentTranslationResult(TranslationOutputData outputData) {
-        System.out.println(outputData.getDetectedLanguage()+outputData.getTranslatedText());
+        System.out.println(outputData.getDetectedLanguage() + outputData.getTranslatedText());
     }
-
 }
