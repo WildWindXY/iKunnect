@@ -1,11 +1,7 @@
 package client.use_case.Login;
 
-import client.entity.User;
+import common.packet.PacketServerLoginResponse;
 
 public interface LoginDataAccessInterface {
-    boolean existsByName(String identifier);
-
-    void save(User user);
-
-    User get(String username);
+    PacketServerLoginResponse login(String username, String password);
 }

@@ -16,28 +16,29 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
     public static final String VIEW_NAME = "Sign Up";
-    //private JPanel LoginMain;
-    private StringBuilder usernameBuilder;
-    private StringBuilder passwordBuilder;
     JPanel topPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
-
     InputFieldJLabel enterUsernameLabel = new InputFieldJLabel();
     InputFieldJLabel enterPasswordLabel = new InputFieldJLabel();
     InputFieldJLabel repeatPasswordLabel = new InputFieldJLabel();
-
     CustomUsernameJTextField usernameField = new CustomUsernameJTextField();
     CustomJPasswordField passwordField = new CustomJPasswordField();
     CustomJPasswordField passwordRepeatField = new CustomJPasswordField();
     CustomJButton signupButton = new CustomJButton();
     CustomJButton loginButton = new CustomJButton();
     CustomJButton exitButton = new CustomJButton();
+    //private JPanel LoginMain;
+    private StringBuilder usernameBuilder;
+    private StringBuilder passwordBuilder;
 
 
     public SignupView(SignupController controller, SignupViewModel signupViewModel) {
@@ -193,22 +194,22 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 //            System.out.println("SignupButton Clicked");
 //            final SignupState currentState = SignupViewModel.getState();
 //            controller.execute(currentState.getUsername(), currentState.getPassword(), currentState.getRepeatPassword());
-            new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    if (evt.getSource().equals(signupButton)) {
-                        SignupState currentState = signupViewModel.getState();
-                        controller.execute(
-                                currentState.getUsername(),
-                                currentState.getPassword(),
-                                currentState.getRepeatPassword()
-                        );
-                        passwordBuilder.delete(0, passwordBuilder.length());
-                        passwordField.setText("");
-                        String password = signupViewModel.getState().getPassword();
-                        System.out.println("Sign up:"+password+" Is password valid? :"+ controller.checkPassword(password));
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(signupButton)) {
+                            SignupState currentState = signupViewModel.getState();
+                            controller.execute(
+                                    currentState.getUsername(),
+                                    currentState.getPassword(),
+                                    currentState.getRepeatPassword()
+                            );
+                            passwordBuilder.delete(0, passwordBuilder.length());
+                            passwordField.setText("");
+                            String password = signupViewModel.getState().getPassword();
+                            System.out.println("Sign up:" + password + " Is password valid? :" + controller.checkPassword(password));
+                        }
                     }
                 }
-            }
         );
 
         loginButton.addActionListener(e -> {

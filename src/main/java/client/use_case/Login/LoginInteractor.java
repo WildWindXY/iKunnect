@@ -1,36 +1,27 @@
 package client.use_case.Login;
 
-import client.entity.User;
+import common.packet.PacketServerLoginResponse;
 
-public class LoginInteractor implements LoginInputBoundary{
+public class LoginInteractor implements LoginInputBoundary {
     final LoginDataAccessInterface userDataAccessObject;
     final LoginOutputBoundary loginPresenter;
 
-    public LoginInteractor(LoginDataAccessInterface userDataAccessInterface,
-                           LoginOutputBoundary loginOutputBoundary) {
+    public LoginInteractor(LoginDataAccessInterface userDataAccessInterface, LoginOutputBoundary loginOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
         this.loginPresenter = loginOutputBoundary;
     }
 
     @Override
     public void execute(LoginInputData loginInputData) {
-        String username = loginInputData.getUsername();
-        String password = loginInputData.getPassword();
-        if (!userDataAccessObject.existsByName(username)) {
-            loginPresenter.prepareFailView(username + ": Account does not exist.");
+        PacketServerLoginResponse packet = userDataAccessObject.login(loginInputData.getUsername(), loginInputData.getPassword());
+        if (packet.getStatus() == PacketServerLoginResponse.Status.SUCCESS) {
+            LoginOutputData loginOutputData = new LoginOutputData(loginInputData.getUsername(), false);
+            loginPresenter.prepareSuccessView(loginOutputData);
         } else {
-            String pwd = userDataAccessObject.get(username).getPassword();
-            if (!password.equals(pwd)) {
-                loginPresenter.prepareFailView("Incorrect password for " + username + ".");
-            } else {
-
-                User user = userDataAccessObject.get(loginInputData.getUsername());
-
-                LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
-                loginPresenter.prepareSuccessView(loginOutputData);
-            }
+            loginPresenter.prepareFailView(packet.toString());
         }
     }
+
     @Override
     public void executeSignup() {
         loginPresenter.prepareSignupView();

@@ -1,27 +1,19 @@
 package client.app;
 
-import client.*;
-import client.app.*;
-import client.data_access.*;
+import client.data_access.ServerDataAccessObject;
 import client.data_access.receive_message.ReceiveMessageDataAccess;
 import client.data_access.send_message.SendMessageDataAccess;
 import client.data_access.translate.TranslateDataAccess;
-import client.data_access.user_data.FileUserDataAccessObject;
-import client.entity.*;
 import client.interface_adapter.Logged_in.LoggedInViewModel;
-import client.interface_adapter.Login.*;
-import client.interface_adapter.Main.*;
-import client.interface_adapter.Signup.*;
+import client.interface_adapter.Login.LoginViewModel;
+import client.interface_adapter.Main.MainViewModel;
+import client.interface_adapter.Signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
-import client.use_case.SendMessage.SendMessageDataAccessInterface;
 import client.view.*;
 import client.view.components.frames.SmallJFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 import static utils.MessageEncryptionUtils.initKey;
 
@@ -41,13 +33,6 @@ public class IntegratedClientApp {
         LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
         MainViewModel mainViewModel = new MainViewModel();
 
-        FileUserDataAccessObject fileUserDataAccessObject;
-        try {
-            fileUserDataAccessObject = new FileUserDataAccessObject("./users.csv", new CommonUserFactory());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
         String serverAddress = "localhost";
         int serverPort = 0x2304;
         try {
@@ -61,24 +46,24 @@ public class IntegratedClientApp {
         TranslateDataAccess translateDataAccessObject = new TranslateDataAccess();
 
         // Create and add your views to the card layout
-        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, fileUserDataAccessObject);
-        signupView.setPreferredSize(new Dimension(550,500));
-        views.add(signupView, signupView.VIEW_NAME);
+        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, serverDataAccessObject);
+        signupView.setPreferredSize(new Dimension(550, 500));
+        views.add(signupView, SignupView.VIEW_NAME);
 
-        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, fileUserDataAccessObject);
-        loginView.setPreferredSize(new Dimension(550,500));
-        views.add(loginView, loginView.VIEW_NAME);
+        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject);
+        loginView.setPreferredSize(new Dimension(550, 500));
+        views.add(loginView, LoginView.VIEW_NAME);
 
         LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
-        views.add(loggedInView, loggedInView.VIEW_NAME);
+        views.add(loggedInView, LoggedInView.VIEW_NAME);
 
         MainView mainView = MainUseCaseFactory.create(loginViewModel.getState().getUsername(), sendDataAccessObject, receiveDataAccessObject, translateDataAccessObject, mainViewModel);
         mainView.setPreferredSize(new Dimension(1200, 800)); // Set the preferred size
-        views.add(mainView, mainView.VIEW_NAME);
+        views.add(mainView, MainView.VIEW_NAME);
 
 
         // Set the initial active view
-        viewManagerModel.setActiveView(loginView.VIEW_NAME);
+        viewManagerModel.setActiveView(LoginView.VIEW_NAME);
         viewManagerModel.firePropertyChanged();
 
         // Add the views to your JFrame and configure the JFrame
