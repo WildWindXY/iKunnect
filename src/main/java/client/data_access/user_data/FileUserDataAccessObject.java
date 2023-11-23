@@ -2,8 +2,8 @@ package client.data_access.user_data;
 
 import client.entity.User;
 import client.entity.UserFactory;
-import client.use_case.Login.LoginDataAccessInterface;
-import client.use_case.Signup.SignupDataAccessInterface;
+import client.use_case.login.LoginDataAccessInterface;
+import client.use_case.signup.SignupDataAccessInterface;
 
 import java.io.*;
 import java.time.LocalDateTime;

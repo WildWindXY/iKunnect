@@ -1,7 +1,7 @@
 package client.data_access.user_data;
 
 import client.entity.User;
-import client.use_case.Signup.SignupDataAccessInterface;
+import client.use_case.signup.SignupDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.Map;

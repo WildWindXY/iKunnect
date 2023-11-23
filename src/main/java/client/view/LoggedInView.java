@@ -1,7 +1,7 @@
 package client.view;
 
-import client.interface_adapter.Logged_in.LoggedInState;
-import client.interface_adapter.Logged_in.LoggedInViewModel;
+import client.interface_adapter.logged_in.LoggedInState;
+import client.interface_adapter.logged_in.LoggedInViewModel;
 
 import javax.swing.*;
 import java.awt.*;

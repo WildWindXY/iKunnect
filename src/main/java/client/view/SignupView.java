@@ -1,10 +1,10 @@
 package client.view;
 
-import client.interface_adapter.Login.LoginViewModel;
-import client.interface_adapter.Signup.SignupController;
-import client.interface_adapter.Signup.SignupState;
-import client.interface_adapter.Signup.SignupViewModel;
-import client.view.components.buttons.CustomJButton;
+import client.interface_adapter.login.LoginViewModel;
+import client.interface_adapter.signup.SignupController;
+import client.interface_adapter.signup.SignupState;
+import client.interface_adapter.signup.SignupViewModel;
+import client.view.components.buttons.LoginSignupButton;
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;
 import client.view.components.textfields.CustomUsernameJTextField;
@@ -35,9 +35,9 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     CustomUsernameJTextField usernameField = new CustomUsernameJTextField();
     CustomJPasswordField passwordField = new CustomJPasswordField();
     CustomJPasswordField passwordRepeatField = new CustomJPasswordField();
-    CustomJButton signupButton = new CustomJButton();
-    CustomJButton loginButton = new CustomJButton();
-    CustomJButton exitButton = new CustomJButton();
+    LoginSignupButton signupButton = new LoginSignupButton();
+    LoginSignupButton loginButton = new LoginSignupButton();
+    LoginSignupButton exitButton = new LoginSignupButton();
 
 
     public SignupView(SignupController controller, SignupViewModel signupViewModel) {

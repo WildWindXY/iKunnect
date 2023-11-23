@@ -2,17 +2,16 @@ package client.app;
 
 import client.entity.CommonUserFactory;
 import client.entity.UserFactory;
-import client.interface_adapter.Main.MainViewModel;
-import client.interface_adapter.Signup.SignupViewModel;
+import client.interface_adapter.main.MainViewModel;
+import client.interface_adapter.signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
-import client.interface_adapter.Logged_in.LoggedInViewModel;
-import client.interface_adapter.Login.LoginController;
-import client.interface_adapter.Login.LoginPresenter;
-import client.interface_adapter.Login.LoginViewModel;
-import client.use_case.Login.LoginInputBoundary;
-import client.use_case.Login.LoginInteractor;
-import client.use_case.Login.LoginOutputBoundary;
-import client.use_case.Login.LoginDataAccessInterface;
+import client.interface_adapter.login.LoginController;
+import client.interface_adapter.login.LoginPresenter;
+import client.interface_adapter.login.LoginViewModel;
+import client.use_case.login.LoginInputBoundary;
+import client.use_case.login.LoginInteractor;
+import client.use_case.login.LoginOutputBoundary;
+import client.use_case.login.LoginDataAccessInterface;
 import client.view.LoginView;
 
 import javax.swing.*;

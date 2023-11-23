@@ -1,25 +1,9 @@
 package client.view;
 
-import client.data_access.ServerDataAccessObject;
-import client.data_access.receive_message.ReceiveMessageDataAccess;
-import client.data_access.send_message.SendMessageDataAccess;
-import client.data_access.translate.TranslateDataAccess;
-import client.interface_adapter.Login.LoginController;
-import client.interface_adapter.Main.MainController;
-import client.interface_adapter.Main.MainViewModel;
-import client.interface_adapter.ReceiveMessage.ReceiveMessagePresenter;
-import client.interface_adapter.SendMessage.SendMessagePresenter;
-import client.interface_adapter.SendMessage.SendMessageState;
-import client.interface_adapter.Translation.TranslationPresenter;
-import client.use_case.ReceiveMessage.ReceiveMessageDataAccessInterface;
-import client.use_case.ReceiveMessage.ReceiveMessageInteractor;
-import client.use_case.ReceiveMessage.ReceiveMessageOutputBoundary;
-import client.use_case.SendMessage.SendMessageDataAccessInterface;
-import client.use_case.SendMessage.SendMessageInteractor;
-import client.use_case.Translate.TranslateDataAccessInterface;
-import client.use_case.Translate.TranslationInputBoundary;
-import client.use_case.Translate.TranslationInteractor;
-import client.view.components.frames.SmallJFrame;
+import client.data_access.options.OptionsState;
+import client.interface_adapter.main.MainController;
+import client.interface_adapter.main.MainViewModel;
+import client.interface_adapter.sendMessage.SendMessageState;
 import client.view.components.jlist.ChannelsListCellRenderer;
 import client.view.components.panels.MessagesJPanel;
 import client.view.components.popupMenu.ChannelPopup;
@@ -30,6 +14,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -42,8 +27,6 @@ import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static utils.MessageEncryptionUtils.initKey;
-
 public class MainView extends JPanel implements ActionListener, PropertyChangeListener {
 
     public static final String VIEW_NAME = "Main Window";
@@ -51,40 +34,57 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     //--------------------- Styles ---------------------
 
     //--------------------- Colors ---------------------
-    Color topPanelColor = Color.decode("#D7EAFA");
-    Color optionsColor = Color.decode("#2C343B");
-    Color channelsColor = Color.decode("#F4F9FC");
-    Color messagesColor = Color.decode("#F6F9FC");
-    Color inputFieldColor = Color.decode("#FBFCFD");
+    public static final Color topPanelColor = Color.decode("#D7EAFA");
+    public static final Color optionsColor = Color.decode("#2C343B");
+
+    public static final Color optionsHoverColor = Color.decode("#3f4b55");
+    public static final Color optionsClickColor = Color.decode("#5a6a78");
+    public static final Color channelsColor = Color.decode("#F4F9FC");
+    public static final Color messagesColor = Color.decode("#F6F9FC");
+    public static final Color inputFieldColor = Color.decode("#FBFCFD");
+
+    public static final Color topPanelColorHC = Color.decode("#D7EAFA");
+    public static final Color optionsColorHC = Color.decode("#2C343B");
+
+    public static final Color optionsHoverColorHC = Color.decode("#3f4b55");
+    public static final Color optionsClickColorHC = Color.decode("#5a6a78");
+    public static final Color channelsColorHC = Color.decode("#F4F9FC");
+    public static final Color messagesColorHC = Color.decode("#F6F9FC");
+    public static final Color inputFieldColorHC = Color.decode("#FBFCFD");
 
     //--------------------- Fonts ---------------------
-    Font channelsFont = new Font("Helvetica", Font.PLAIN, 20);
-    Font channelLabelFont = new Font("Helvetica", Font.ITALIC, 24);
+    public static final Font channelsFont = new Font("Helvetica", Font.PLAIN, 20);
+    public static final Font channelLabelFont = new Font("Helvetica", Font.ITALIC, 24);
 
-    Font titleFont = new Font("Helvetica", Font.BOLD | Font.ITALIC, 24);
+    public static final Font titleFont = new Font("Helvetica", Font.BOLD | Font.ITALIC, 24);
 
-    private final Font messagesFont = new Font("Helvetica", Font.PLAIN, 20);
+    public static final Font messagesFont = new Font("Helvetica", Font.PLAIN, 20);
+    public static final Font channelsFontHC = new Font("Helvetica", Font.PLAIN, 20);
+    public static final Font channelLabelFontHC = new Font("Helvetica", Font.ITALIC, 24);
+    public static final Font titleFontHC = new Font("Helvetica", Font.BOLD | Font.ITALIC, 24);
+
+    public static final Font messagesFontHC = new Font("Helvetica", Font.PLAIN, 20);
 
     //--------------------- Border ---------------------
-    Border mainBorder = new LineBorder(Color.decode("#A4C1DB"));
+    public static final Border mainBorder = new LineBorder(Color.decode("#A4C1DB"));
 
     //--------------------- Components ---------------------
     private final JPanel basePanel = new JPanel();
-    //JPopupMenu popupMenu = new JPopupMenu();
     private final JPanel topPanel = new JPanel();
 
     private JLabel titleLabel = new JLabel();
     private final JPanel optionsPanel = new JPanel();
+    private JButton options;
     private final JScrollPane channelsScrollPane = new JScrollPane();
     private JList<String> channels = new JList<>();
     private final JPanel chatPanel = new JPanel();
     private JLabel channelLabel = new JLabel();
     private final JScrollPane messagesScrollPane = new JScrollPane();
     private final JPanel messagesPanel = new JPanel();
-    JPanel messageOptions = new JPanel();
-    JPanel inputFieldWrapper = new JPanel(new BorderLayout(0, 0));
-    JPanel moreOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    JButton moreOptionsButton;
+    private final JPanel messageOptions = new JPanel();
+    private final JPanel inputFieldWrapper = new JPanel(new BorderLayout(0, 0));
+    private final JPanel moreOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    private JButton moreOptionsButton;
     boolean inputFieldIsVisible = true;
     JScrollPane inputFieldScrollPane = new JScrollPane();
     JTextArea inputField = new JTextArea();
@@ -123,10 +123,12 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         initTopPanel();
 
         initPanel(optionsPanel, 50, 680, optionsColor);
+        setOptionsPanelLayout();
+        initOptionsButton();
+        addOptionsButtonToPanel();
+
         initChannelsScrollPane();
-
         addTestChannels(channelsFont, channelsColor);
-
         initPanel(chatPanel, 700, 680, messagesColor);
         setCurrentChannelLabel();
         addChannelSelectListener();
@@ -148,6 +150,60 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         initChatPanel();
         addToBasePanel();
         addBaseToFrame();
+    }
+
+    private void setOptionsPanelLayout() {
+        optionsPanel.setLayout(new BorderLayout());
+    }
+
+    private void initOptionsButton() {
+        ImageIcon icon = new ImageIcon("src/main/resources/hamburger.png");
+        Image img = icon.getImage();
+        Image resizedImg = img.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(resizedImg);
+        options = new JButton(icon);
+        options.setUI(new BasicButtonUI() {
+            @Override
+            public void paintButtonPressed(Graphics g, AbstractButton b) {
+
+            }
+        });
+        options.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                options.setBackground(optionsHoverColor);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                options.setBackground(optionsColor);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                options.setBackground(optionsClickColor);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (options.contains(e.getPoint())) {
+                    options.setBackground(optionsHoverColor);
+                }
+            }
+
+        });
+
+        options.setPreferredSize(new Dimension(75, 75));
+        options.setBorderPainted(false);
+        options.setBackground(optionsColor);
+        options.addActionListener(e -> {
+            System.out.println("Options Button");
+            mainController.openOptionsMenu();
+        });
+    }
+
+    private void addOptionsButtonToPanel() {
+        optionsPanel.add(options, BorderLayout.SOUTH);
     }
 
     private void addToInputFieldWrapper(JComponent component) {
@@ -307,10 +363,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         listOfMessages[0] = catIpsum;
         int i = 0;
         for (String listOfMessage : listOfMessages) {
-            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, 0,  i++ % 2));
+            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, 0, i++ % 2));
         }
-        messagesPanel.add(new PlainTextMessage("cxk", "测试插入", 0,0),2);
-        messagesPanel.add(new PlainTextMessage("You", "测试插入", 0, 1),2);
+        messagesPanel.add(new PlainTextMessage("cxk", "测试插入", 0, 0), 2);
+        messagesPanel.add(new PlainTextMessage("You", "测试插入", 0, 1), 2);
     }
 
     private void initMessagesPanel() {
@@ -465,23 +521,22 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
             //Username Label
             if (isLeft) {
-                username=username+" "+formattedDate + " ";
+                username = username + " " + formattedDate + " ";
                 usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
                 labelWrapper.setBackground(leftColor);
             } else {
-                username = formattedDate+" You" +" ";
+                username = formattedDate + " You" + " ";
                 usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.RIGHT));
                 labelWrapper.setBackground(rightColor);
             }
-            int WIDTH = Math.min(Math.max(getTextWidth(content),getTextWidth(username)), 450);
+            int WIDTH = Math.min(Math.max(getTextWidth(content), getTextWidth(username)), 450);
 
             labelWrapper.add(usernameLabel);
             labelWrapper.setPreferredSize(new Dimension(WIDTH, 25));
             labelWrapper.setBorder(mainBorder);
             usernameLabel.setFont(labelFont);
-
 
 
             //Text
@@ -668,18 +723,26 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SendMessageState state = (SendMessageState) evt.getNewValue();
-        PlainTextMessage m = null;
-        if (state.getSender().isEmpty()) {
-            m = new PlainTextMessage("You", state.getMessage(), state.getTimestamp(), 1);
-        } else {
-            m = new PlainTextMessage(state.getSender(), state.getMessage(), state.getTimestamp(), 0);
+        String eventName = evt.getPropertyName();
+        switch (eventName) {
+            case "sendMessageState":
+                SendMessageState sendMessageState = (SendMessageState) evt.getNewValue();
+                PlainTextMessage m = null;
+                if (sendMessageState.getSender().isEmpty()) {
+                    m = new PlainTextMessage("You", sendMessageState.getMessage(), sendMessageState.getTimestamp(), 1);
+                } else {
+                    m = new PlainTextMessage(sendMessageState.getSender(), sendMessageState.getMessage(), sendMessageState.getTimestamp(), 0);
+                }
+                messagesPanel.add(m);
+                messagesPanel.revalidate();
+                SwingUtilities.invokeLater(() -> {
+                    JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
+                    verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+                });
+            case "optionsState":
+                OptionsState optionsState = (OptionsState) evt.getNewValue();
+                boolean hc = optionsState.getHighContrast();
+                System.out.println("MainView " + hc);
         }
-        messagesPanel.add(m);
-        messagesPanel.revalidate();
-        SwingUtilities.invokeLater(() -> {
-            JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
-            verticalScrollBar.setValue(verticalScrollBar.getMaximum());
-        });
     }
 }
