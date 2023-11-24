@@ -42,7 +42,7 @@ public class MainController {
     }
 
     public void openOptionsMenu(){
-        JFrame f = new JFrame();
+        JFrame f = new JFrame("Options");
         JPanel p = new JPanel();
         JButton b = initHighContrastButton();
         p.setLayout(new GridBagLayout());
@@ -68,7 +68,7 @@ public class MainController {
                 System.out.println("MainController -> optionsInteractor -> invalid action");
             } else{
                 boolean highContrast = val == 1;
-                System.out.println("High Contrast is: " + highContrast);
+                System.out.println("Main Controller HC " + highContrast);
                 //TODO remove options feature complete
             }
         });

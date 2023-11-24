@@ -1,5 +1,6 @@
 package client.app;
 
+import client.data_access.options.OptionsState;
 import client.interface_adapter.main.MainController;
 import client.interface_adapter.main.MainViewModel;
 import client.interface_adapter.options.OptionsPresenter;
@@ -30,17 +31,16 @@ public class MainUseCaseFactory {
                                             TranslateDataAccessInterface translateDataAccessObject,
                                             OptionsDataAccessInterface optionsDataAccessObject,
                                             MainViewModel mainViewModel) {
-        MainController mainController = createMainUseCaser(myUsername, sendMessageDataAccessObject, receiveMessageDataAccessObject, translateDataAccessObject, optionsDataAccessObject, mainViewModel);
-        MainView mainView = new MainView(mainController, mainViewModel);
-        return mainView;
+        MainController mainController = createMainUseCase(myUsername, sendMessageDataAccessObject, receiveMessageDataAccessObject, translateDataAccessObject, optionsDataAccessObject, mainViewModel);
+        return new MainView(mainController, mainViewModel, optionsDataAccessObject.get(OptionsDataAccessInterface.HIGH_CONTRAST));
     }
 
-    private static MainController createMainUseCaser(String myUsername,
-                                                     SendMessageDataAccessInterface sendMessageDataAccessObject,
-                                                     ReceiveMessageDataAccessInterface receiveMessageDataAccessObject,
-                                                     TranslateDataAccessInterface translateDataAccessObject,
-                                                     OptionsDataAccessInterface optionsDataAccessObject,
-                                                     MainViewModel mainViewModel) {
+    private static MainController createMainUseCase(String myUsername,
+                                                    SendMessageDataAccessInterface sendMessageDataAccessObject,
+                                                    ReceiveMessageDataAccessInterface receiveMessageDataAccessObject,
+                                                    TranslateDataAccessInterface translateDataAccessObject,
+                                                    OptionsDataAccessInterface optionsDataAccessObject,
+                                                    MainViewModel mainViewModel) {
         SendMessageOutputBoundary sendMessageOutputBoundary = new SendMessagePresenter(mainViewModel);
         ReceiveMessageOutputBoundary receiveMessageOutputBoundary = new ReceiveMessagePresenter(mainViewModel);
         OptionsOutputBoundary optionsOutputBoundary = new OptionsPresenter(mainViewModel);

@@ -19,8 +19,8 @@ public class OptionsInteractor implements OptionsInputBoundary {
         switch(action){
             case TOGGLE_HIGH_CONTRAST:
                 System.out.println("Interactor Toggle High Contrast");
-                OptionsOutputData outputData = optionsDataAccessObject.get(optionsDataAccessObject.HIGH_CONTRAST);
                 optionsDataAccessObject.toggle(optionsDataAccessObject.HIGH_CONTRAST);
+                OptionsOutputData outputData = optionsDataAccessObject.get(optionsDataAccessObject.HIGH_CONTRAST);
                 optionsOutputBoundary.setHighContrast(outputData);
                 return outputData.getHighContrast()? 1 : 0;
                 //TODO return void after feature complete
