@@ -1,17 +1,10 @@
 package client.view;
 
-<<<<<<< HEAD
 import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Signup.SignupController;
 import client.view.components.buttons.CustomJButton;
-=======
-import client.interface_adapter.login.LoginController;
-import client.interface_adapter.login.LoginState;
-import client.interface_adapter.login.LoginViewModel;
-import client.view.components.buttons.LoginSignupButton;
->>>>>>> ui_development_jiayou_liu
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;
 import client.view.components.textfields.CustomUsernameJTextField;
@@ -39,9 +32,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     CustomUsernameJTextField usernameField = new CustomUsernameJTextField();
     CustomJPasswordField passwordField = new CustomJPasswordField();
-    LoginSignupButton signupButton = new LoginSignupButton();
-    LoginSignupButton loginButton = new LoginSignupButton();
-    LoginSignupButton exitButton = new LoginSignupButton();
+    CustomJButton signupButton = new CustomJButton();
+    CustomJButton loginButton = new CustomJButton();
+    CustomJButton exitButton = new CustomJButton();
     
 
 //    private final StringBuilder passwordBuilder = new StringBuilder();
@@ -160,15 +153,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         loginButton.addActionListener(e -> {
-<<<<<<< HEAD
             final LoginState currentState = loginViewModel.getState();
             loginController.execute(currentState.getUsername(), currentState.getPassword());
             System.out.println("Log in");
-=======
-            LoginState currentState = loginViewModel.getState();
-            controller.execute(currentState.getUsername(), currentState.getPassword());
-            System.out.println("login button clicked");
->>>>>>> ui_development_jiayou_liu
         });
 
         exitButton.addActionListener(e -> {

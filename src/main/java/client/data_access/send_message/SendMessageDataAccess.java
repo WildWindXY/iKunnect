@@ -1,19 +1,11 @@
 package client.data_access.send_message;
 
 import client.data_access.ServerDataAccessObject;
-<<<<<<< HEAD
 import client.use_case.SendMessage.SendMessageDataAccessInterface;
 import client.use_case.SendMessage.SendMessageInputData;
 import client.use_case.SendMessage.SendMessageOutputData;
 import common.packet.PacketClientTextMessage;
 import common.packet.PacketServerTextMessageResponse;
-=======
-import client.use_case.sendMessage.SendMessageDataAccessInterface;
-import client.use_case.sendMessage.SendMessageInputData;
-import client.use_case.sendMessage.SendMessageOutputData;
-import common.packet.PacketClientMessage;
-import common.packet.PacketServerSendMessageResponse;
->>>>>>> ui_development_jiayou_liu
 
 import static utils.MessageEncryptionUtils.AES_encrypt;
 

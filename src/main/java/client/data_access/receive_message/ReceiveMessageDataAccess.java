@@ -1,8 +1,9 @@
 package client.data_access.receive_message;
 
 import client.data_access.ServerDataAccessObject;
-import client.use_case.receiveMessage.ReceiveMessageDataAccessInterface;
-import client.use_case.receiveMessage.ReceiveMessageOutputData;
+import client.use_case.ReceiveMessage.ReceiveMessageDataAccessInterface;
+import client.use_case.ReceiveMessage.ReceiveMessageOutputData;
+import client.use_case.SendMessage.SendMessageOutputData;
 import common.packet.PacketServerMessage;
 
 import static utils.MessageEncryptionUtils.AES_decrypt;

@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 public class ImageFittingComponent extends JComponent {
 
-    private final BufferedImage image;
+    private BufferedImage image;
 
     public ImageFittingComponent(String imagePath) throws IOException {
         // Load the image from the file
