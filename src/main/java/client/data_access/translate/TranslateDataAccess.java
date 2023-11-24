@@ -1,9 +1,9 @@
 package client.data_access.translate;
 
-import client.use_case.Translate.TranslateDataAccessInterface;
+import client.use_case.translate.TranslateDataAccessInterface;
 import client.entity.TranslationRequest;
 import client.entity.TranslationResponse;
-import client.use_case.Translate.TranslationOutputData;
+import client.use_case.translate.TranslationOutputData;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;

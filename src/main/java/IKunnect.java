@@ -1,5 +1,9 @@
 //import org.apache.logging.log4j.Logger;
 
+<<<<<<< HEAD
+=======
+import client.use_case.translate.*;
+>>>>>>> ui_development_jiayou_liu
 import client.data_access.translate.TranslateDataAccess;
 import client.use_case.Translate.TranslateDataAccessInterface;
 import client.use_case.Translate.TranslationOutputBoundary;
