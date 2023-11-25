@@ -33,7 +33,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
         username = new JLabel();
 
         JPanel buttons = new JPanel();
-        logOut = new JButton(loggedInViewModel.LOGOUT_BUTTON_LABEL);
+        logOut = new JButton(LoggedInViewModel.LOGOUT_BUTTON_LABEL);
         buttons.add(logOut);
 
         logOut.addActionListener(this);

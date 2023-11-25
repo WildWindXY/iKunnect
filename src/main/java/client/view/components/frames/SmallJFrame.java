@@ -16,7 +16,7 @@ public class SmallJFrame extends JFrame {
         getContentPane().add(view);
     }
 
-    public void prepare(){
+    public void init(){
         pack();
         setVisible(true);
         Dimension windowSize = new Dimension();

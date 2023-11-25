@@ -1,35 +1,21 @@
 package client.view;
 
-import client.data_access.ServerDataAccessObject;
-import client.data_access.receive_message.ReceiveMessageDataAccess;
-import client.data_access.send_message.SendMessageDataAccess;
-import client.data_access.translate.TranslateDataAccess;
-import client.interface_adapter.Login.LoginController;
+import client.data_access.options.OptionsState;
 import client.interface_adapter.Main.MainController;
 import client.interface_adapter.Main.MainViewModel;
-import client.interface_adapter.ReceiveMessage.ReceiveMessagePresenter;
-import client.interface_adapter.SendMessage.SendMessagePresenter;
 import client.interface_adapter.SendMessage.SendMessageState;
-import client.interface_adapter.Translation.TranslationPresenter;
-import client.use_case.ReceiveMessage.ReceiveMessageDataAccessInterface;
-import client.use_case.ReceiveMessage.ReceiveMessageInteractor;
-import client.use_case.ReceiveMessage.ReceiveMessageOutputBoundary;
-import client.use_case.SendMessage.SendMessageDataAccessInterface;
-import client.use_case.SendMessage.SendMessageInteractor;
-import client.use_case.Translate.TranslateDataAccessInterface;
-import client.use_case.Translate.TranslationInputBoundary;
-import client.use_case.Translate.TranslationInteractor;
-import client.view.components.frames.SmallJFrame;
-import client.view.components.jlist.ChannelsListCellRenderer;
+import client.use_case.options.OptionsOutputData;
+import client.view.components.image.ImageFittingComponent;
 import client.view.components.panels.MessagesJPanel;
-import client.view.components.popupMenu.ChannelPopup;
-import client.view.components.popupMenu.UserIconPopup;
 import utils.InputUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicMenuItemUI;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -39,10 +25,9 @@ import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static utils.MessageEncryptionUtils.initKey;
 
 public class MainView extends JPanel implements ActionListener, PropertyChangeListener {
 
@@ -51,58 +36,107 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     //--------------------- Styles ---------------------
 
     //--------------------- Colors ---------------------
-    Color topPanelColor = Color.decode("#D7EAFA");
-    Color optionsColor = Color.decode("#2C343B");
-    Color channelsColor = Color.decode("#F4F9FC");
-    Color messagesColor = Color.decode("#F6F9FC");
-    Color inputFieldColor = Color.decode("#FBFCFD");
+    public static final Color topPanelColor = Color.decode("#D7EAFA");
+    public static final Color scrollBarThumbColor = Color.decode("#EDF7FF");
+    public static final Color optionsColor = Color.decode("#2C343B");
+    public static final Color optionsHoverColor = Color.decode("#3f4b55");
+    public static final Color optionsClickColor = Color.decode("#5a6a78");
+    public static final Color channelsColor = Color.decode("#F4F9FC");
+    public static final Color messagesColor = Color.decode("#F6F9FC");
+    public static final Color inputFieldColor = Color.decode("#FBFCFD");
+    public static final Color moreOptionsColor = messagesColor;
+    public static final Color moreOptionsHoverColor = Color.decode("#D4EDFF");
+    public static final Color moreOptionsClickColor = Color.decode("#F8FCFF");
+    public static final Color mainBorderColor = Color.decode("#A4C1DB");
+    public static final Color scrollBarBorderColor = Color.decode("#CAE5FC");
+    public static final Color channelsSelectedColor = Color.decode("#E8F6FF");
+
+
+    //--------------------- High Contrast Colors ---------------------
+    public static final Color topPanelColorHC = Color.decode("#00000");
+
+    public static final Color scrollBarThumbColorHC = Color.decode("#FFFFFF");
+    public static final Color optionsColorHC = Color.decode("#000000");
+    public static final Color optionsHoverColorHC = Color.decode("#00FFFF");
+    public static final Color optionsClickColorHC = Color.decode("#FFFFFF");
+    public static final Color channelsColorHC = Color.decode("#000000");
+    public static final Color messagesColorHC = Color.decode("#000000");
+    public static final Color inputFieldColorHC = Color.decode("#00000");
+    public static final Color HCTextColor = Color.decode("#FFFFFF");
+    public static final Color HCLeftMessageColor = Color.decode("#000080");
+    public static final Color HCRightMessageColor = Color.decode("#000000");
+
+    public static final Color moreOptionsColorHC = optionsColorHC;
+    public static final Color moreOptionsHoverColorHC = optionsHoverColorHC;
+    public static final Color moreOptionsClickColorHC = optionsClickColorHC;
+    public static final Color mainBorderHCColor = Color.decode("#FFFFFF");
+    public static final Color channelsSelectedColorHC = Color.decode("#FFFFFF");
+
 
     //--------------------- Fonts ---------------------
-    Font channelsFont = new Font("Helvetica", Font.PLAIN, 20);
-    Font channelLabelFont = new Font("Helvetica", Font.ITALIC, 24);
+    public static final Font channelsFont = new Font("Helvetica", Font.PLAIN, 20);
+    public static final Font channelLabelFont = new Font("Helvetica", Font.ITALIC, 24);
 
-    Font titleFont = new Font("Helvetica", Font.BOLD | Font.ITALIC, 24);
+    public static final Font titleFont = new Font("Helvetica", Font.BOLD | Font.ITALIC, 24);
 
-    private final Font messagesFont = new Font("Helvetica", Font.PLAIN, 20);
+    public static final Font messagesFont = new Font("Helvetica", Font.PLAIN, 20);
+    public static final Font channelsFontHC = new Font("Helvetica", Font.PLAIN, 20);
+    public static final Font channelLabelFontHC = new Font("Helvetica", Font.ITALIC, 24);
+    public static final Font titleFontHC = new Font("Helvetica", Font.BOLD | Font.ITALIC, 24);
+
+    public static final Font messagesFontHC = new Font("Helvetica", Font.PLAIN, 20);
+
+    public static final Font jMenuItemFont = new Font("Helvetica", Font.PLAIN, 20);
+
 
     //--------------------- Border ---------------------
-    Border mainBorder = new LineBorder(Color.decode("#A4C1DB"));
+    public static final Border mainBorder = new LineBorder(mainBorderColor);
+    public static final Border mainBorderHC = new LineBorder(mainBorderHCColor);
 
     //--------------------- Components ---------------------
-    private final JPanel basePanel = new JPanel();
-    //JPopupMenu popupMenu = new JPopupMenu();
-    private final JPanel topPanel = new JPanel();
+    private JPanel basePanel;
+    private JPanel topPanel;
+    private JLabel titleLabel;
+    private JPanel optionsPanel;
+    private JButton options;
+    private JScrollPane channelsScrollPane;
+    private JList<String> channels;
+    private JPanel chatPanel;
+    private JLabel channelLabel;
+    private JScrollPane messagesScrollPane;
+    private JPanel messagesPanel;
+    private JPanel messageOptions;
+    private JPanel inputFieldWrapper;
+    private JPanel moreOptionsPanel;
+    private JButton moreOptionsButton;
+    private JScrollPane inputFieldScrollPane;
+    private JTextArea inputField;
 
-    private JLabel titleLabel = new JLabel();
-    private final JPanel optionsPanel = new JPanel();
-    private final JScrollPane channelsScrollPane = new JScrollPane();
-    private JList<String> channels = new JList<>();
-    private final JPanel chatPanel = new JPanel();
-    private JLabel channelLabel = new JLabel();
-    private final JScrollPane messagesScrollPane = new JScrollPane();
-    private final JPanel messagesPanel = new JPanel();
-    JPanel messageOptions = new JPanel();
-    JPanel inputFieldWrapper = new JPanel(new BorderLayout(0, 0));
-    JPanel moreOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    JButton moreOptionsButton;
-    boolean inputFieldIsVisible = true;
-    JScrollPane inputFieldScrollPane = new JScrollPane();
-    JTextArea inputField = new JTextArea();
+    private JButton moreOptions1 = new JButton("Button 1");
+    private JButton moreOptions2 = new JButton("Button 2");
+    private JButton moreOptions3 = new JButton("Button 3");
 
-    private final JButton moreOptions1 = new JButton("Button 1");
-    private final JButton moreOptions2 = new JButton("Button 2");
-    private final JButton moreOptions3 = new JButton("Button 3");
+    //--------------------- CA Engine ---------------------
 
     private final MainController mainController;
     private final MainViewModel mainViewModel;
-    private PropertyChangeEvent evt;
+    private final OptionsState optionsState;
 
-    public MainView(MainController controller, MainViewModel viewModel) {
+    //--------------------- Values ---------------------
+    boolean inputFieldIsVisible = true;
+    private boolean HC;
+    private String inputFieldTemp = "";
+
+    public MainView(MainController controller, MainViewModel viewModel, OptionsOutputData outputData) {
         this.mainController = controller;
         this.mainViewModel = viewModel;
         this.mainViewModel.addPropertyChangeListener(this);
+        this.optionsState = new OptionsState();
+        optionsState.setHighContrast(outputData.getHighContrast());
+        UIManager.put("PopupMenu.background", new Color(0));
+        UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
 
-        initComponents();
+        initComponents(optionsState);
         Runnable receive = () -> {
             while (true) {
                 mainController.getMessage();
@@ -114,20 +148,35 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     }
 
-    public void initComponents() {
+    public void initComponents(OptionsState optionsState) {
+        if (inputField != null) {
+            inputFieldTemp = inputField.getText();
+        }
+        HC = optionsState.getHighContrast();
+
+        initAttributes();
+        removeAll();
         setEnabled(true);
         setLayout(new GridBagLayout());
         createBasePanel();
+        moreOptions3.addActionListener(e -> {
+            basePanel.removeAll();
+            basePanel.revalidate();
+            basePanel.repaint();
+        });
 
         setTitleLabel();
         initTopPanel();
 
-        initPanel(optionsPanel, 50, 680, optionsColor);
+        //initPanel(optionsPanel, 50, 680, optionsColor);
+        initOptionsPanel();
+        setOptionsPanelLayout();
+        initOptionsButton();
+        addOptionsButtonToPanel();
+
         initChannelsScrollPane();
-
-        addTestChannels(channelsFont, channelsColor);
-
-        initPanel(chatPanel, 700, 680, messagesColor);
+        addTestChannels();
+        initChatPanel();
         setCurrentChannelLabel();
         addChannelSelectListener();
         addChannelRightClickListener();
@@ -145,9 +194,93 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         initInputFieldScrollPane();
         initMoreOptionsPanel();
 
-        initChatPanel();
+        addToChatPanel();
         addToBasePanel();
         addBaseToFrame();
+
+        basePanel.revalidate();
+        basePanel.repaint();
+    }
+
+    private void initOptionsPanel() {
+        optionsPanel.setPreferredSize(new Dimension(50, 680));
+        //optionsPanel.setMaximumSize(new Dimension(50, Integer.MAX_VALUE));
+        optionsPanel.setBorder(HC ? mainBorderHC : mainBorder);
+        optionsPanel.setBackground(HC ? optionsColorHC : optionsColor);
+    }
+
+    private void initAttributes() {
+        basePanel = new JPanel();
+        topPanel = new JPanel();
+
+        titleLabel = new JLabel();
+        optionsPanel = new JPanel();
+        channelsScrollPane = new JScrollPane();
+        channels = new JList<>();
+        chatPanel = new JPanel();
+        channelLabel = new JLabel();
+        messagesScrollPane = new JScrollPane();
+        messagesPanel = new JPanel();
+        messageOptions = new JPanel();
+        inputFieldWrapper = new JPanel(new BorderLayout(0, 0));
+        moreOptionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        inputFieldIsVisible = true;
+        inputFieldScrollPane = new JScrollPane();
+        inputField = new JTextArea(inputFieldTemp);
+
+        moreOptions1 = new JButton("Button 1");
+        moreOptions2 = new JButton("Button 2");
+        moreOptions3 = new JButton("Button 3");
+    }
+
+    private void setOptionsPanelLayout() {
+        optionsPanel.setLayout(new BorderLayout());
+    }
+
+    private void initOptionsButton() {
+        options = new JButton(new ImageIcon(new ImageIcon("src/main/resources/hamburger.png").getImage().getScaledInstance(50, 50, 4)));
+        options.setUI(new BasicButtonUI() {
+            @Override
+            public void paintButtonPressed(Graphics g, AbstractButton b) {
+
+            }
+        });
+        options.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                options.setBackground(HC ? optionsHoverColorHC : optionsHoverColor);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                options.setBackground(HC ? optionsColorHC : optionsColor);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                options.setBackground(HC ? optionsClickColorHC : optionsClickColor);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (options.contains(e.getPoint())) {
+                    options.setBackground(HC ? optionsHoverColorHC : optionsHoverColor);
+                }
+            }
+
+        });
+
+        options.setPreferredSize(new Dimension(75, 75));
+        options.setBorderPainted(false);
+        options.setBackground(HC ? optionsColorHC : optionsColor);
+        options.addActionListener(e -> {
+            System.out.println("Options Button");
+            mainController.openOptionsMenu();
+        });
+    }
+
+    private void addOptionsButtonToPanel() {
+        optionsPanel.add(options, BorderLayout.SOUTH);
     }
 
     private void addToInputFieldWrapper(JComponent component) {
@@ -155,7 +288,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     private void initMoreOptionsPanel() {
-        moreOptionsPanel.setBackground(messagesColor);
+        moreOptionsPanel.setBackground(HC ? messagesColorHC : messagesColor);
         moreOptionsPanel.add(moreOptions1);
         moreOptionsPanel.add(moreOptions2);
         moreOptionsPanel.add(moreOptions3);
@@ -167,7 +300,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     private void setTitleLabel() {
         titleLabel = new JLabel("iKunnect");
-        titleLabel.setFont(titleFont);
+        titleLabel.setFont(HC ? titleFontHC : titleFont);
+        if (HC) {
+            titleLabel.setForeground(HCTextColor);
+        }
         titleLabel.setPreferredSize(new Dimension(300, 37));
     }
 
@@ -180,10 +316,15 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     private void initChatPanel() {
+        chatPanel.setPreferredSize(new Dimension(700, 680));
+        chatPanel.setBorder(HC ? mainBorderHC : mainBorder);
+        chatPanel.setBackground(HC ? messagesColorHC : messagesColor);
+    }
+
+    private void addToChatPanel() {
         chatPanel.add(messagesScrollPane);
         chatPanel.add(messageOptions);
         chatPanel.add(inputFieldWrapper);
-        //chatPanel.add(inputFieldScrollPane);
     }
 
     public void showMoreOptions() {
@@ -229,7 +370,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     int index = channels.locationToIndex(e.getPoint());
                     channels.setSelectedIndex(index);
-                    ChannelPopup channelPopup = new ChannelPopup();
+                    ChannelPopup channelPopup = new ChannelPopup(HC);
                     channelPopup.show(channels, e.getX(), e.getY());
                 }
             }
@@ -246,9 +387,12 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                     if (content.isEmpty()) {
                         Toolkit.getDefaultToolkit().beep();
                     } else {
+                        System.out.println("Send message with content, channel name, etc.");
                         System.out.println(content);
                         inputField.setText(null);
                         mainController.sendMessage(content, channelLabel.getText());
+
+
                     }
                 }
             }
@@ -258,40 +402,152 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     private void initInputFieldScrollPane() {
         inputFieldScrollPane.setViewportView(inputField);
         inputFieldScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        inputFieldScrollPane.getVerticalScrollBar().setBackground(messagesColor);
-        inputFieldScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Set vertical scrolling speed
+        JScrollBar verticalScrollBar = inputFieldScrollPane.getVerticalScrollBar();
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                trackColor = HC ? inputFieldColorHC : inputFieldColor;
+                thumbColor = HC ? scrollBarThumbColorHC : scrollBarThumbColor;
+            }
+
+            @Override
+            protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Set the border color
+                g2.setColor(HC ? null : scrollBarBorderColor);
+                g2.drawRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width - 1, thumbBounds.height - 1, 5, 5);
+
+                // Set the inside color
+                g2.setColor(HC ? scrollBarThumbColorHC : scrollBarThumbColor);
+                g2.fillRoundRect(thumbBounds.x + 1, thumbBounds.y + 1, thumbBounds.width - 2, thumbBounds.height - 2, 5, 5);
+
+                g2.dispose();
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return createZeroButton();
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return createZeroButton();
+            }
+        });
         inputFieldScrollPane.setLayout(new ScrollPaneLayout());
         inputFieldScrollPane.setPreferredSize(new Dimension(720, 125));
     }
 
     private void initInputField() {
         inputField.setPreferredSize(new Dimension(720, 115));
-        inputField.setBackground(inputFieldColor);
-        inputField.setFont(messagesFont);
-        inputField.setBorder(mainBorder);
+        inputField.setBackground(HC ? inputFieldColorHC : inputFieldColor);
+        inputField.setFont(HC ? messagesFontHC : messagesFont);
+        if (HC) {
+            inputField.setForeground(HCTextColor);
+        }
+        inputField.setBorder(HC ? mainBorderHC : mainBorder);
         inputField.setLineWrap(true);
         inputField.setWrapStyleWord(true);
+        inputField.setSelectionColor(HC ? Color.WHITE : Color.decode("#CCEBFF"));
+        inputField.setSelectedTextColor(Color.BLACK);
     }
 
     private void initMoreOptionsButton() {
-        moreOptionsButton = new JButton("More Options");
-        moreOptionsButton.setBackground(messagesColor);
+        moreOptionsButton = new JButton("+");
+        moreOptionsButton.setFont(new Font("Helvetica", Font.PLAIN, 24));
+        moreOptionsButton.setForeground(HC ? Color.WHITE : null);
+        moreOptionsButton.setBackground(HC ? messagesColorHC : messagesColor);
         moreOptionsButton.setPreferredSize(new Dimension(30, 30));
         addMoreOptionsButtonListener();
         messageOptions.setLayout(new FlowLayout(FlowLayout.LEFT));
         messageOptions.add(moreOptionsButton);
         messageOptions.setPreferredSize(new Dimension(720, 40));
-        messageOptions.setBackground(messagesColor);
+        messageOptions.setBackground(HC ? messagesColorHC : messagesColor);
+        moreOptionsButton.setBorder(HC ? mainBorderHC : mainBorder);
+        moreOptionsButton.setUI(new BasicButtonUI() {
+            @Override
+            public void paintButtonPressed(Graphics g, AbstractButton b) {
+            }
+        });
+        moreOptionsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                moreOptionsButton.setBackground(HC ? moreOptionsHoverColorHC : moreOptionsHoverColor);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                moreOptionsButton.setBackground(HC ? moreOptionsColorHC : moreOptionsColor);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                moreOptionsButton.setBackground(HC ? moreOptionsClickColorHC : moreOptionsClickColor);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (moreOptionsButton.contains(e.getPoint())) {
+                    moreOptionsButton.setBackground(HC ? moreOptionsHoverColorHC : moreOptionsHoverColor);
+                }
+            }
+
+        });
     }
 
     private void initMessagesScrollPane() {
         messagesScrollPane.setViewportView(messagesPanel);
         messagesScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        messagesScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Set vertical scrolling speed
-        messagesScrollPane.getVerticalScrollBar().setBackground(messagesColor);
         messagesScrollPane.setLayout(new ScrollPaneLayout());
         messagesScrollPane.setPreferredSize(new Dimension(720, 450));
+        JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
+        verticalScrollBar.setUnitIncrement(16); // Set vertical scrolling speed
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                trackColor = HC ? messagesColorHC : messagesColor;
+                thumbColor = HC ? scrollBarThumbColorHC : scrollBarThumbColor;
+            }
+
+            @Override
+            protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Set the border color
+                g2.setColor(HC ? null : scrollBarBorderColor);
+                g2.drawRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width - 1, thumbBounds.height - 1, 5, 5);
+
+                // Set the inside color
+                g2.setColor(HC ? scrollBarThumbColorHC : scrollBarThumbColor);
+                g2.fillRoundRect(thumbBounds.x + 1, thumbBounds.y + 1, thumbBounds.width - 2, thumbBounds.height - 2, 5, 5);
+
+                g2.dispose();
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return createZeroButton();
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return createZeroButton();
+            }
+        });
     }
+
+    private JButton createZeroButton() {
+        JButton button = new JButton("zero button");
+        Dimension zeroDim = new Dimension(0, 0);
+        button.setPreferredSize(zeroDim);
+        button.setMinimumSize(zeroDim);
+        button.setMaximumSize(zeroDim);
+        return button;
+    }
+
 
     private void addTestMessages() {
         String[] listOfMessages = new String[10];
@@ -304,35 +560,38 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         listOfMessages[0] = catIpsum;
         int i = 0;
         for (String listOfMessage : listOfMessages) {
-            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, 0,  i++ % 2));
+            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, 0, i++ % 2));
         }
-        messagesPanel.add(new PlainTextMessage("cxk", "测试插入", 0,0),2);
-        messagesPanel.add(new PlainTextMessage("You", "测试插入", 0, 1),2);
+        messagesPanel.add(new PlainTextMessage("cxk", "测试插入", 0, 0), 2);
+        messagesPanel.add(new PlainTextMessage("You", "测试插入", 0, 1), 2);
     }
 
     private void initMessagesPanel() {
         messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
-        messagesPanel.setBackground(messagesColor);
+        messagesPanel.setBackground(HC ? messagesColorHC : messagesColor);
     }
 
     private void addMessageSpacer() {
         JPanel p = new JPanel();
         p.setPreferredSize(new Dimension(700, 20));
-        p.setBackground(messagesColor);
+        p.setBackground(HC ? messagesColorHC : messagesColor);
         messagesPanel.add(p);
     }
 
     private void setCurrentChannelLabel() {
         channelLabel = new JLabel("Current Channel Name");
-        channelLabel.setFont(channelLabelFont);
+        channelLabel.setFont(HC ? channelLabelFont : channelLabelFontHC);
+        if (HC) {
+            channelLabel.setForeground(HCTextColor);
+        }
         JPanel channelLabelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         channelLabelWrapper.add(channelLabel);
         channelLabelWrapper.setPreferredSize(new Dimension(700, 40));
-        channelLabelWrapper.setBackground(messagesColor);
+        channelLabelWrapper.setBackground(HC ? messagesColorHC : messagesColor);
         chatPanel.add(channelLabelWrapper);
     }
 
-    private void addTestChannels(Font channelsFont, Color channelsColor) {
+    private void addTestChannels() {
         String[] listOfChannels = new String[20];
 
         for (int i = 0; i < 20; ) {
@@ -341,41 +600,75 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
         channels = new JList<>(listOfChannels);
         channels.setCellRenderer(new ChannelsListCellRenderer(50)); // Set the height of each cell to 20 pixels
-        channels.setFont(channelsFont);
-        channels.setBackground(channelsColor);
+        channels.setFont(HC ? channelsFontHC : channelsFont);
+        if (HC) {
+            channels.setForeground(HCTextColor);
+        }
+        channels.setBackground(HC ? channelsColorHC : channelsColor);
         channels.setLayoutOrientation(JList.VERTICAL);
         channels.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
 
         channelsScrollPane.setViewportView(channels);
-        channelsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        channelsScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Set vertical scrolling speed
-        channelsScrollPane.getVerticalScrollBar().setBackground(channelsColor);
+
     }
 
     private void initChannelsScrollPane() {
         channelsScrollPane.setPreferredSize(new Dimension(350, 680));
-        channelsScrollPane.setBorder(mainBorder);
-        channelsScrollPane.setBackground(channelsColor);
+        channelsScrollPane.setBorder(HC ? mainBorderHC : mainBorder);
+        channelsScrollPane.setBackground(HC ? channelsColorHC : channelsColor);
         channelsScrollPane.setLayout(new ScrollPaneLayout());
-    }
+        JScrollBar verticalScrollBar = channelsScrollPane.getVerticalScrollBar();
 
-    private void initPanel(JPanel options, int width, int height, Color optionsColor) {
-        options.setPreferredSize(new Dimension(width, height));
-        options.setBorder(mainBorder);
-        options.setBackground(optionsColor);
+        channelsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        verticalScrollBar.setUnitIncrement(16); // Set vertical scrolling speed
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                trackColor = HC ? channelsColorHC : channelsColor;
+                thumbColor = HC ? scrollBarThumbColorHC : scrollBarThumbColor;
+            }
+
+            @Override
+            protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Set the border color
+                g2.setColor(HC ? null : scrollBarBorderColor);
+                g2.drawRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width - 1, thumbBounds.height - 1, 5, 5);
+
+                // Set the inside color
+                g2.setColor(HC ? scrollBarThumbColorHC : scrollBarThumbColor);
+                g2.fillRoundRect(thumbBounds.x + 1, thumbBounds.y + 1, thumbBounds.width - 2, thumbBounds.height - 2, 5, 5);
+
+                g2.dispose();
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return createZeroButton();
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return createZeroButton();
+            }
+        });
     }
 
     private void initTopPanel() {
         topPanel.add(titleLabel, BorderLayout.WEST);
-        topPanel.setPreferredSize(new Dimension(1000, 62));
-        topPanel.setBorder(mainBorder);
+        topPanel.setMinimumSize(new Dimension(600, 70));
+        //topPanel.setPreferredSize(new Dimension(1000, 70));
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 15));
-        topPanel.setBackground(topPanelColor);
+        topPanel.setBorder(HC ? mainBorderHC : mainBorder);
+        topPanel.setBackground(HC ? topPanelColorHC : topPanelColor);
+
     }
 
     private void createBasePanel() {
         basePanel.setLayout(new GridBagLayout());
-        basePanel.setBorder(mainBorder);
+        basePanel.setBorder(HC ? mainBorderHC : mainBorder);
     }
 
 //    public static void main(String[] args) {
@@ -420,7 +713,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         JComponent userIcon;
         JPanel labelWrapper = new JPanel();
         JLabel usernameLabel;
-        JTextArea contentTextArea;
+        JTextArea messageContentText;
 
         JPanel contentWrapper;
 
@@ -450,7 +743,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                 public void mouseClicked(MouseEvent e) {
                     if (e.getButton() == MouseEvent.BUTTON3) {
                         System.out.println("right click");
-                        UserIconPopup iconPopup = new UserIconPopup();
+                        UserIconPopup iconPopup = new UserIconPopup(HC);
                         iconPopup.show(userIcon, e.getX(), e.getY());
                     }
                 }
@@ -458,70 +751,72 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             userIconWrapper = new JPanel();
             userIconWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
             userIconWrapper.add(userIcon);
-            userIconWrapper.setBackground(leftColor);
+            userIconWrapper.setBackground(HC ? messagesColorHC : messagesColor);
 
             //Username Label
             if (isLeft) {
-                username=username+" "+formattedDate + " ";
+                username = username + " " + formattedDate + " ";
                 usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
-                labelWrapper.setBackground(leftColor);
+                labelWrapper.setBackground(HC ? leftColorHC : leftColor);
             } else {
-                username = formattedDate+" You" +" ";
+                username = formattedDate + " You" + " ";
                 usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.RIGHT));
-                labelWrapper.setBackground(rightColor);
+                labelWrapper.setBackground(HC ? rightColorHC : rightColor);
             }
-            int WIDTH = Math.min(Math.max(getTextWidth(content),getTextWidth(username)), 450);
+            int WIDTH = Math.min(Math.max(getTextWidth(content), getTextWidth(username)), 450);
 
             labelWrapper.add(usernameLabel);
             labelWrapper.setPreferredSize(new Dimension(WIDTH, 25));
-            labelWrapper.setBorder(mainBorder);
+            labelWrapper.setBorder(HC ? mainBorderHC : mainBorder);
             usernameLabel.setFont(labelFont);
 
 
-
             //Text
-            contentTextArea = new JTextArea(content);
-            contentTextArea.setEditable(false);
+            messageContentText = new JTextArea(content);
 
-            contentTextArea.setLineWrap(true);
-            contentTextArea.setWrapStyleWord(true);
-            contentTextArea.setBorder(mainBorder);
-            contentTextArea.setFont(messagesFont);
+            messageContentText.setSelectionColor(HC ? Color.BLACK : Color.decode("#CCEBFF"));
+            messageContentText.setSelectedTextColor(HC ? Color.WHITE : Color.BLACK);
+            messageContentText.setEditable(false);
+
+            messageContentText.setLineWrap(true);
+            messageContentText.setWrapStyleWord(true);
+            messageContentText.setBorder(mainBorder);
+            messageContentText.setFont(messagesFont);
             if (!isLeft) {
-                contentTextArea.setBackground(rightColor);
+                messageContentText.setBackground(HC ? rightColorHC : rightColor);
             } else {
-                contentTextArea.setBackground(leftColor);
+                messageContentText.setBackground(HC ? leftColorHC : leftColor);
             }
-            contentTextArea.addMouseListener(new MouseAdapter() {
+            messageContentText.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getButton() == MouseEvent.BUTTON3) {
                         System.out.println("right click");
-                        if (contentTextArea.getSelectionStart() != contentTextArea.getSelectionEnd()) {
-                            String selection = contentTextArea.getSelectedText();
+                        if (messageContentText.getSelectionStart() != messageContentText.getSelectionEnd()) {
+                            String selection = messageContentText.getSelectedText();
                             System.out.println(selection);
                             PlainTextMessagePopup messagePopup = new PlainTextMessagePopup(true, selection);
-                            messagePopup.show(contentTextArea, e.getX(), e.getY());
+                            messagePopup.show(messageContentText, e.getX(), e.getY());
                         } else {
-                            PlainTextMessagePopup messagePopup = new PlainTextMessagePopup(false, contentTextArea.getText());
-                            messagePopup.show(contentTextArea, e.getX(), e.getY());
+                            PlainTextMessagePopup messagePopup = new PlainTextMessagePopup(false, messageContentText.getText());
+                            messagePopup.show(messageContentText, e.getX(), e.getY());
                         }
                     }
                 }
             });
 
             //Text Padding
-            contentTextArea.setBorder(new EmptyBorder(10, 10, 10, 10));
+            messageContentText.setBorder(new EmptyBorder(10, 10, 10, 10));
             //Text Wrapper
             JPanel textWrapper = new JPanel(new BorderLayout());
-            textWrapper.setBorder(mainBorder);
-            textWrapper.add(contentTextArea);
+            textWrapper.setBorder(HC ? mainBorderHC : mainBorder);
+            textWrapper.add(messageContentText);
 
             //Setting height
             int prefHeight = getHeight(content);
-            contentTextArea.setPreferredSize(new Dimension(WIDTH, prefHeight));
+            messageContentText.setPreferredSize(new Dimension(WIDTH, prefHeight));
             userIconWrapper.setPreferredSize(new Dimension(userIconWrapper.getPreferredSize().width, prefHeight + 30));
 
             //Wrapping username label and text message together into a large panel
@@ -529,19 +824,23 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             contentWrapper.setLayout(new BoxLayout(contentWrapper, BoxLayout.Y_AXIS));
             contentWrapper.add(labelWrapper);
             contentWrapper.add(textWrapper);
-            Dimension d = contentTextArea.getPreferredSize();
+            Dimension d = messageContentText.getPreferredSize();
             contentWrapper.setPreferredSize(new Dimension(d.width, prefHeight + 70));
 
             if (isLeft) {
                 setLayout(new FlowLayout(FlowLayout.LEFT));
                 add(userIconWrapper);
                 add(contentWrapper);
+                messageContentText.setForeground(HC ? HCLeftMessageColor : null);
+                usernameLabel.setForeground(HC ? HCLeftMessageColor : null);
             } else {
                 setLayout(new FlowLayout(FlowLayout.RIGHT));
                 add(contentWrapper);
                 add(userIconWrapper);
+                messageContentText.setForeground(HC ? HCRightMessageColor : null);
+                usernameLabel.setForeground(HC ? HCRightMessageColor : null);
             }
-            setBackground(leftColor);
+            setBackground(HC ? messagesColorHC : messagesColor);
             setBorder(null);
         }
 
@@ -594,10 +893,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         }
 
         private void updateContentSize() {
-            int newHeight = getHeight(contentTextArea.getText());
-            contentTextArea.setPreferredSize(new Dimension(contentTextArea.getWidth(), newHeight));
+            int newHeight = getHeight(messageContentText.getText());
+            messageContentText.setPreferredSize(new Dimension(messageContentText.getWidth(), newHeight));
 
-            Dimension d = contentTextArea.getPreferredSize();
+            Dimension d = messageContentText.getPreferredSize();
             contentWrapper.setPreferredSize(new Dimension(d.width, newHeight + 70));
 
             userIconWrapper.setPreferredSize(new Dimension(userIconWrapper.getPreferredSize().width, newHeight + 30));
@@ -607,7 +906,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         }
 
         private void addText(String content) {
-            contentTextArea.setText(contentTextArea.getText() + "\n\n" + content);
+            messageContentText.setText(messageContentText.getText() + "\n\n" + content);
             updateContentSize();
         }
 
@@ -626,6 +925,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                         System.out.println("No Text Selected");
                     }
                     JMenuItem copyText = new JMenuItem("Copy");
+
+                    copyText.setFont(jMenuItemFont);
+                    copyText.setUI(new CustomMenuItemUI());
+                    
                     copyText.addActionListener(e -> {
                         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                         StringSelection stringSelection = new StringSelection(selectedText);
@@ -637,6 +940,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                     JMenuItem forward = new JMenuItem("Forward");
                     JMenuItem copyMessage = new JMenuItem("Copy Message");
 
+
                     copyMessage.addActionListener(e -> {
                         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                         StringSelection stringSelection = new StringSelection(selectedText);
@@ -647,6 +951,15 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                     translate.addActionListener(e -> {
                         addText(mainController.translateMessage(selectedText));
                     });
+
+                    forward.setFont(jMenuItemFont);
+                    copyMessage.setFont(jMenuItemFont);
+                    translate.setFont(jMenuItemFont);
+
+                    forward.setUI(new CustomMenuItemUI());
+                    copyMessage.setUI(new CustomMenuItemUI());
+                    translate.setUI(new CustomMenuItemUI());
+
                     add(forward);
                     add(copyMessage);
                     add(translate);
@@ -657,6 +970,135 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     }
 
+    class ChannelPopup extends JPopupMenu {
+
+        public ChannelPopup(boolean HC) {
+            super();
+
+            JMenuItem renameChannel = new JMenuItem("Rename Channel");
+            JMenuItem hideChannel = new JMenuItem("Hide Channel");
+            JMenuItem leaveChannel = new JMenuItem("Leave Channel");
+
+            renameChannel.setFont(jMenuItemFont);
+            hideChannel.setFont(jMenuItemFont);
+            leaveChannel.setFont(jMenuItemFont);
+
+            renameChannel.setUI(new CustomMenuItemUI());
+            hideChannel.setUI(new CustomMenuItemUI());
+            leaveChannel.setUI(new CustomMenuItemUI());
+            
+            add(renameChannel);
+            add(hideChannel);
+            add(leaveChannel);
+        }
+    }
+
+    class UserIconPopup extends JPopupMenu {
+        public UserIconPopup(boolean HC) {
+            super();
+
+            JMenuItem viewProfile = new JMenuItem("View Profile");
+            JMenuItem sendMessage = new JMenuItem("Send Message");
+            JMenuItem addFriend = new JMenuItem("Add Friend");
+
+            viewProfile.setFont(jMenuItemFont);
+            sendMessage.setFont(jMenuItemFont);
+            addFriend.setFont(jMenuItemFont);
+            setBackground(null);
+            viewProfile.setUI(new CustomMenuItemUI());
+            sendMessage.setUI(new CustomMenuItemUI());
+            addFriend.setUI(new CustomMenuItemUI());
+
+            add(viewProfile);
+            add(sendMessage);
+            add(addFriend);
+
+
+        }
+    }
+
+
+    class CustomMenuItemUI extends BasicMenuItemUI {
+        @Override
+        protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
+            ButtonModel model = menuItem.getModel();
+            Color color = model.isArmed() ? (HC? moreOptionsHoverColorHC:moreOptionsHoverColor) : (HC?moreOptionsColorHC:moreOptionsColor); // Set your desired colors
+            g.setColor(color);
+            g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
+        }
+
+        @Override
+        protected void paintText(Graphics g, JMenuItem menuItem, Rectangle textRect, String text) {
+            Color textColor = HC ? Color.WHITE : Color.BLACK;
+            Font originalFont = menuItem.getFont();
+
+            // Set custom font (optional)
+            Font customFont = new Font("Helvetica", Font.PLAIN, 20);
+            menuItem.setFont(customFont);
+
+            g.setColor(textColor);
+            super.paintText(g, menuItem, textRect, text);
+
+            // Reset the font to the original after painting
+            menuItem.setFont(originalFont);
+        }
+    }
+
+    class ChannelsListCellRenderer extends DefaultListCellRenderer {
+        private final int height;
+        private String username = null;
+
+        public ChannelsListCellRenderer(int height) {
+            this.height = height;
+        }
+
+        public ChannelsListCellRenderer(int height, String username) {
+            this.height = height;
+            this.username = username;
+        }
+
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                      boolean isSelected, boolean cellHasFocus) {
+            JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            // Set the height of each cell
+            label.setPreferredSize(new Dimension(255, height));
+
+            // Add vertical spacing between cells (optional)
+            label.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+            // Create a panel to hold multiple components inside each cell
+            JPanel panel = new JPanel();
+            panel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
+            panel.setBorder(BorderFactory.createLineBorder(Color.decode("#E8F3FD")));
+
+            //Load image from server using username/uuid???
+            String imagePath = "src/main/resources/userIcon.jpg";
+            //Default UserIcon
+            JComponent imageFittingComponent = new JLabel("Image Failed To Load");
+            try {
+                imageFittingComponent = new ImageFittingComponent(imagePath);
+            } catch (IOException ignored) {
+            }
+
+            imageFittingComponent.setPreferredSize(new Dimension(50, 50));
+
+            // Add components to the panel
+            panel.add(imageFittingComponent);
+            panel.add(label);
+
+            // Set the background and selection colors
+            panel.setBackground(isSelected ? (HC ? channelsSelectedColorHC : channelsSelectedColor) : (HC ? channelsColorHC : channelsColor));
+            label.setBackground(isSelected ? (HC ? channelsSelectedColorHC : channelsSelectedColor) : (HC ? channelsColorHC : channelsColor));
+            label.setForeground(isSelected ? (HC ? Color.BLACK : null) : (HC ? HCTextColor : null));
+
+            // Return the panel as the renderer component for the cell
+            return panel;
+
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -665,18 +1107,28 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SendMessageState state = (SendMessageState) evt.getNewValue();
-        PlainTextMessage m = null;
-        if (state.getSender().isEmpty()) {
-            m = new PlainTextMessage("You", state.getMessage(), state.getTimestamp(), 1);
-        } else {
-            m = new PlainTextMessage(state.getSender(), state.getMessage(), state.getTimestamp(), 0);
+        String eventName = evt.getPropertyName();
+        switch (eventName) {
+            case "sendMessageState":
+                SendMessageState sendMessageState = (SendMessageState) evt.getNewValue();
+                PlainTextMessage m = null;
+                if (sendMessageState.getSender().isEmpty()) {
+                    m = new PlainTextMessage("You", sendMessageState.getMessage(), sendMessageState.getTimestamp(), 1);
+                } else {
+                    m = new PlainTextMessage(sendMessageState.getSender(), sendMessageState.getMessage(), sendMessageState.getTimestamp(), 0);
+                }
+                messagesPanel.add(m);
+                messagesPanel.revalidate();
+                SwingUtilities.invokeLater(() -> {
+                    JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
+                    verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+                });
+            case "optionsState":
+                OptionsState optionsState = (OptionsState) evt.getNewValue();
+                boolean hc = optionsState.getHighContrast();
+                System.out.println("MainView HC " + hc);
+                initComponents(optionsState);
+
         }
-        messagesPanel.add(m);
-        messagesPanel.revalidate();
-        SwingUtilities.invokeLater(() -> {
-            JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
-            verticalScrollBar.setValue(verticalScrollBar.getMaximum());
-        });
     }
 }

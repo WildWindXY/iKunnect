@@ -4,7 +4,8 @@ import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Signup.SignupController;
-import client.view.components.buttons.CustomJButton;
+import client.use_case.options.OptionsOutputData;
+import client.view.components.buttons.loginSignupButton;
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;
 import client.view.components.textfields.CustomUsernameJTextField;
@@ -32,9 +33,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     CustomUsernameJTextField usernameField = new CustomUsernameJTextField();
     CustomJPasswordField passwordField = new CustomJPasswordField();
-    CustomJButton signupButton = new CustomJButton();
-    CustomJButton loginButton = new CustomJButton();
-    CustomJButton exitButton = new CustomJButton();
+    loginSignupButton signupButton = new loginSignupButton();
+    loginSignupButton loginButton = new loginSignupButton();
+    loginSignupButton exitButton = new loginSignupButton();
     
 
 //    private final StringBuilder passwordBuilder = new StringBuilder();
@@ -45,10 +46,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     LoginViewModel loginViewModel = new LoginViewModel();
 
-    public LoginView(LoginController loginController, SignupController signupController, LoginViewModel loginViewModel) {
+    private boolean HC = false;
+
+    public LoginView(LoginController loginController, SignupController signupController, LoginViewModel loginViewModel, OptionsOutputData outputData) {
+
+        HC = outputData.getHighContrast();
         this.loginController = loginController;
         this.signupController = signupController;
-        initComponents();
+        initComponents(HC);
         
         loginViewModel.addPropertyChangeListener(this);
 
@@ -171,7 +176,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     }
 
-    private void initComponents() {
+    private void initComponents(boolean HC) {
 
 
         //======== Main Window ========
