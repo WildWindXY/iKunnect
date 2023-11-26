@@ -238,7 +238,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     private void initOptionsButton() {
-        options = new JButton(new ImageIcon(new ImageIcon("src/main/resources/hamburger.png").getImage().getScaledInstance(50, 50, 4)));
+        options = new JButton(new ImageIcon(new ImageIcon(HC?"src/main/resources/hamburgerHC.png":"src/main/resources/hamburger.png").getImage().getScaledInstance(50, 50, 4)));
         options.setUI(new BasicButtonUI() {
             @Override
             public void paintButtonPressed(Graphics g, AbstractButton b) {
@@ -457,7 +457,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     private void initMoreOptionsButton() {
         moreOptionsButton = new JButton("+");
         moreOptionsButton.setFont(new Font("Helvetica", Font.PLAIN, 24));
-        moreOptionsButton.setForeground(HC ? Color.WHITE : null);
+        moreOptionsButton.setForeground(HC ? Color.decode("#DCDCDC") : null);
         moreOptionsButton.setBackground(HC ? messagesColorHC : messagesColor);
         moreOptionsButton.setPreferredSize(new Dimension(30, 30));
         addMoreOptionsButtonListener();
