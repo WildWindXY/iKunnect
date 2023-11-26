@@ -21,6 +21,8 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import static client.view.MainView.messagesColor;
+
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
     public static final String VIEW_NAME = "log in";
     //private JPanel LoginMain;
@@ -48,10 +50,10 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     private boolean HC = false;
 
-    public LoginView(LoginController loginController, SignupController signupController, LoginViewModel loginViewModel, OptionsOutputData outputData) {
+    public LoginView(LoginController controller, SignupController signupController, LoginViewModel loginViewModel, OptionsOutputData outputData) {
 
         HC = outputData.getHighContrast();
-        this.loginController = loginController;
+        this.loginController = controller;
         this.signupController = signupController;
         initComponents(HC);
         
@@ -153,13 +155,13 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         signupButton.addActionListener(e -> {
-            loginController.executeSignup();
+            controller.executeSignup();
             System.out.println("Sign up");
         });
 
         loginButton.addActionListener(e -> {
             final LoginState currentState = loginViewModel.getState();
-            loginController.execute(currentState.getUsername(), currentState.getPassword());
+            controller.execute(currentState.getUsername(), currentState.getPassword());
             System.out.println("Log in");
         });
 
@@ -218,6 +220,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         //======== topPanel========
         {
+            topPanel.setBackground(messagesColor);
             topPanel.setPreferredSize(new Dimension(600, 300));
             topPanel.setLayout(new GridBagLayout());
             topPanel.add(enterUsernameLabel, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
@@ -229,6 +232,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         add(topPanel, new GridConstraints(1, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(2, 1), null, null));
         //======== buttonPanel ========
         {
+            buttonPanel.setBackground(messagesColor);
             buttonPanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
 
             buttonPanel.add(signupButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
@@ -237,7 +241,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
             buttonPanel.add(exitButton, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         }
-
+        setBackground(messagesColor);
         add(buttonPanel, new GridConstraints(4, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(2, 1), null, null));
     }
 
