@@ -1,5 +1,7 @@
 package common.packet;
 
+import utils.Tuple;
+
 import java.util.HashMap;
 
 /**
@@ -7,7 +9,7 @@ import java.util.HashMap;
  */
 @SuppressWarnings("record")
 public class PacketServerGetFriendListResponse implements Packet {
-    private final HashMap<Integer, String> friends;
+    private final HashMap<Integer, Tuple<String, Integer>> friends;
     private final Status status;
 
     /**
@@ -16,7 +18,7 @@ public class PacketServerGetFriendListResponse implements Packet {
      * @param friends The HashMap containing the user's friends (Key: friend's user ID, Value: friend's username).
      * @param status  The status of the response (SUCCESS, NOT_LOGGED_IN, SERVER_ERROR).
      */
-    public PacketServerGetFriendListResponse(HashMap<Integer, String> friends, Status status) {
+    public PacketServerGetFriendListResponse(HashMap<Integer, Tuple<String, Integer>> friends, Status status) {
         this.friends = friends;
         this.status = status;
     }
@@ -26,7 +28,7 @@ public class PacketServerGetFriendListResponse implements Packet {
      *
      * @return The HashMap containing the user's friends (Key: friend's user ID, Value: friend's username). Null if status is not SUCCESS.
      */
-    public HashMap<Integer, String> getFriends() {
+    public HashMap<Integer, Tuple<String, Integer>> getFriends() {
         return friends;
     }
 

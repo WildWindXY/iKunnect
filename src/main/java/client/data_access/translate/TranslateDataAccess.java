@@ -52,7 +52,7 @@ public class TranslateDataAccess implements TranslateDataAccessInterface {
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
                     String inputLine;
                     StringBuilder response = new StringBuilder();
 

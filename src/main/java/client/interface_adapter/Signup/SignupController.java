@@ -20,6 +20,10 @@ public class SignupController {
         System.out.println("SignupController.execute()");
     }
 
+    public void executeLogin(){
+        userSignupUseCaseInteractor.executeLogin();
+    }
+
     public boolean checkPassword(String password) {
         return passwordCheckerUseCaseInteractor.execute(new PasswordCheckerInputData(password));
     }

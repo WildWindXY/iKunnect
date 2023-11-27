@@ -1,6 +1,7 @@
 package client.app;
 
 import client.data_access.ServerDataAccessObject;
+import client.data_access.options.OptionsDataAccess;
 import client.data_access.receive_message.ReceiveMessageDataAccess;
 import client.data_access.send_message.SendMessageDataAccess;
 import client.data_access.translate.TranslateDataAccess;
@@ -20,6 +21,7 @@ import static utils.MessageEncryptionUtils.initKey;
 public class IntegratedClientApp {
 
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.uiScale", "1.2");
         // Initialize your JFrame and CardLayout
         SmallJFrame app = new SmallJFrame("Integrated Client App");
         CardLayout cardLayout = new CardLayout();
@@ -44,20 +46,21 @@ public class IntegratedClientApp {
         SendMessageDataAccess sendDataAccessObject = new SendMessageDataAccess(serverDataAccessObject);
         ReceiveMessageDataAccess receiveDataAccessObject = new ReceiveMessageDataAccess(serverDataAccessObject);
         TranslateDataAccess translateDataAccessObject = new TranslateDataAccess();
+        OptionsDataAccess optionsDataAccessObject = new OptionsDataAccess();
 
         // Create and add your views to the card layout
-        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, mainViewModel, signupViewModel, serverDataAccessObject);
+        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, serverDataAccessObject, optionsDataAccessObject);
         signupView.setPreferredSize(new Dimension(550, 500));
         views.add(signupView, SignupView.VIEW_NAME);
 
-        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject);
+        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject, optionsDataAccessObject);
         loginView.setPreferredSize(new Dimension(550, 500));
         views.add(loginView, LoginView.VIEW_NAME);
 
         LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
         views.add(loggedInView, LoggedInView.VIEW_NAME);
 
-        MainView mainView = MainUseCaseFactory.create(loginViewModel.getState().getUsername(), sendDataAccessObject, receiveDataAccessObject, translateDataAccessObject, mainViewModel);
+        MainView mainView = MainUseCaseFactory.create(loginViewModel.getState().getUsername(), sendDataAccessObject, receiveDataAccessObject, translateDataAccessObject, optionsDataAccessObject, mainViewModel);
         mainView.setPreferredSize(new Dimension(1200, 800)); // Set the preferred size
         views.add(mainView, MainView.VIEW_NAME);
 
@@ -69,9 +72,11 @@ public class IntegratedClientApp {
         // Add the views to your JFrame and configure the JFrame
         app.add(views);
         app.pack();
-        app.prepare();
-//        app.setSize(new Dimension(550, 500));
+        app.init();
+        //app.setSize(new Dimension(550, 500));
         app.setSize(new Dimension(1200, 800));
+        app.setResizable(false);
+        app.setLocationRelativeTo(null);
         app.setVisible(true);
     }
 }
