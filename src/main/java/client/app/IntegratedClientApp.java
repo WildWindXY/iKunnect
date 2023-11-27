@@ -21,7 +21,7 @@ import static utils.MessageEncryptionUtils.initKey;
 public class IntegratedClientApp {
 
     public static void main(String[] args) {
-        System.setProperty("sun.java2d.uiScale", "1.0");
+        System.setProperty("sun.java2d.uiScale", "1.2");
         // Initialize your JFrame and CardLayout
         SmallJFrame app = new SmallJFrame("Integrated Client App");
         CardLayout cardLayout = new CardLayout();
