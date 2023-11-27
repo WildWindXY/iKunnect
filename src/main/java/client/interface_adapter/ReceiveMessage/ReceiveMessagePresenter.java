@@ -21,13 +21,13 @@ public class ReceiveMessagePresenter implements ReceiveMessageOutputBoundary {
 
     @Override
     public void presentSendMessageResult(ReceiveMessageOutputData outputData) {
-        SendMessageState state = mainViewModel.getState();
+        SendMessageState state = mainViewModel.getSendMessageState();
         state.setMessage(outputData.getMessage());
         state.setTimestamp(outputData.getTimestamp());
         state.setSuccess(true);
         state.setSender(outputData.getSenderID());
-        mainViewModel.setState(state);
-        mainViewModel.firePropertyChanged();
+        mainViewModel.setSendMessageState(state);
+        mainViewModel.fireSendMessagePropertyChanged();
         System.out.println(outputData.getTimestamp()+" "+outputData.getMessage());
 
     }

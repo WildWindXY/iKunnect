@@ -24,7 +24,7 @@ public class HashExample {
                 hexString.append(hex);
             }
 
-            return hexString.toString().substring(0, 10);
+            return hexString.substring(0, 10);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Hash algorithm not found", e);
         }

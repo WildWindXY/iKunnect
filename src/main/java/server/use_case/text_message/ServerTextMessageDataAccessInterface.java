@@ -12,7 +12,7 @@ import server.entity.ServerUser;
  */
 public interface ServerTextMessageDataAccessInterface {
 
-    public PacketIn<PacketClientTextMessage> getPacketClientTextMessage() throws InterruptedException;
+    PacketIn<PacketClientTextMessage> getPacketClientTextMessage() throws InterruptedException;
 
     /**
      * Retrieves a user based on the provided username.

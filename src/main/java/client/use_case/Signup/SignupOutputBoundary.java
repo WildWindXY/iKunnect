@@ -5,4 +5,6 @@ public interface SignupOutputBoundary {
     void prepareFailView(String s);
 
     void prepareSuccessView(SignupOutputData signupOutputData);
+
+    void prepareLoginView();
 }

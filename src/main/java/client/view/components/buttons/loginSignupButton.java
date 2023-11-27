@@ -3,8 +3,8 @@ package client.view.components.buttons;
 import javax.swing.*;
 import java.awt.*;
 
-public class CustomJButton extends JButton {
-    public CustomJButton(){
+public class loginSignupButton extends JButton {
+    public loginSignupButton(){
         super();
         Font buttonFont = new Font("Helvetica",Font.PLAIN,20);
         setFont(buttonFont);

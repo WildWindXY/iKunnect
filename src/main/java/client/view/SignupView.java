@@ -4,7 +4,8 @@ import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Signup.SignupController;
 import client.interface_adapter.Signup.SignupState;
 import client.interface_adapter.Signup.SignupViewModel;
-import client.view.components.buttons.CustomJButton;
+import client.use_case.options.OptionsOutputData;
+import client.view.components.buttons.loginSignupButton;
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;
 import client.view.components.textfields.CustomUsernameJTextField;
@@ -23,6 +24,8 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import static client.view.MainView.messagesColor;
+
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
     public static final String VIEW_NAME = "Sign Up";
     JPanel topPanel = new JPanel();
@@ -33,16 +36,20 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     CustomUsernameJTextField usernameField = new CustomUsernameJTextField();
     CustomJPasswordField passwordField = new CustomJPasswordField();
     CustomJPasswordField passwordRepeatField = new CustomJPasswordField();
-    CustomJButton signupButton = new CustomJButton();
-    CustomJButton loginButton = new CustomJButton();
-    CustomJButton exitButton = new CustomJButton();
+    loginSignupButton signupButton = new loginSignupButton();
+    loginSignupButton loginButton = new loginSignupButton();
+    loginSignupButton exitButton = new loginSignupButton();
     //private JPanel LoginMain;
-    private StringBuilder usernameBuilder;
-    private StringBuilder passwordBuilder;
+    private final StringBuilder usernameBuilder;
+    private final StringBuilder passwordBuilder;
+
+    private boolean HC = false;
 
 
-    public SignupView(SignupController controller, SignupViewModel signupViewModel) {
-        initComponents();
+    public SignupView(SignupController controller, SignupViewModel signupViewModel, OptionsOutputData outputData) {
+
+        this.HC = HC;
+        initComponents(HC);
 
         signupViewModel.addPropertyChangeListener(this);
         this.usernameBuilder = new StringBuilder();
@@ -190,30 +197,23 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
             }
         });
 
-        signupButton.addActionListener(
-//            System.out.println("SignupButton Clicked");
-//            final SignupState currentState = SignupViewModel.getState();
-//            controller.execute(currentState.getUsername(), currentState.getPassword(), currentState.getRepeatPassword());
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(signupButton)) {
-                            SignupState currentState = signupViewModel.getState();
-                            controller.execute(
-                                    currentState.getUsername(),
-                                    currentState.getPassword(),
-                                    currentState.getRepeatPassword()
-                            );
-                            passwordBuilder.delete(0, passwordBuilder.length());
-                            passwordField.setText("");
-                            String password = signupViewModel.getState().getPassword();
-                            System.out.println("Sign up:" + password + " Is password valid? :" + controller.checkPassword(password));
-                        }
-                    }
-                }
-        );
+        signupButton.addActionListener(e -> {
+            SignupState currentState = signupViewModel.getState();
+            controller.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword(),
+                    currentState.getRepeatPassword()
+            );
+            passwordBuilder.delete(0, passwordBuilder.length());
+            passwordField.setText("");
+            String password = signupViewModel.getState().getPassword();
+            System.out.println("Sign up:" + password + " Is password valid? :" + controller.checkPassword(password));
+        });
+
 
         loginButton.addActionListener(e -> {
             System.out.println("LoginButton Clicked");
+            controller.executeLogin();
 
         });
 
@@ -243,8 +243,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         }
     }
 
-    private void initComponents() {
-
+    private void initComponents(boolean HC) {
 
         //======== Main Window ========
 
@@ -288,6 +287,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
         //======== topPanel========
         {
+            topPanel.setBackground(messagesColor);
             topPanel.setPreferredSize(new Dimension(600, 300));
             topPanel.setLayout(new GridBagLayout());
             topPanel.add(enterUsernameLabel, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
@@ -300,15 +300,13 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         add(topPanel, new GridConstraints(1, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(2, 1), null, null));
         //======== buttonPanel ========
         {
+            buttonPanel.setBackground(messagesColor);
             buttonPanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
-
             buttonPanel.add(signupButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-
             buttonPanel.add(loginButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-
             buttonPanel.add(exitButton, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         }
-
+        setBackground(messagesColor);
         add(buttonPanel, new GridConstraints(4, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(2, 1), null, null));
     }
 

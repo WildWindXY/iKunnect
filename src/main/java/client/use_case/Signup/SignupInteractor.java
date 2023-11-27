@@ -31,4 +31,9 @@ public class SignupInteractor implements SignupInputBoundary {
             }
         }
     }
+
+    @Override
+    public void executeLogin() {
+        userPresenter.prepareLoginView();
+    }
 }
