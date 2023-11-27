@@ -278,11 +278,11 @@ public class ServerUsers implements IFile<ServerUsers> {
          * @return The HashMap representing the user's friend list (Key: friend ID, Value: friend username).
          */
         @Override
-        public HashMap<Integer, String> getFriendList() {
-            HashMap<Integer, String> map = new HashMap<>();
+        public HashMap<Integer, Tuple<String, Integer>> getFriendList() {
+            HashMap<Integer, Tuple<String, Integer>> map = new HashMap<>();
             for (Friend friend : friends) {
                 if (friend.isFriend) {
-                    map.put(friend.friendId, getUser(friend.friendId).getUsername());
+                    map.put(friend.friendId, new Tuple<>(getUser(friend.friendId).getUsername(), getChatId(friend.friendId)));
                 }
             }
             return map;

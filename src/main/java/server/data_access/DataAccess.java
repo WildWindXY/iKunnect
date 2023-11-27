@@ -14,9 +14,12 @@ import server.use_case.server_shutdown.ServerShutdownDataAccessInterface;
 import server.use_case.signup.ServerSignupDataAccessInterface;
 import server.use_case.terminal_message.TerminalMessageDataAccessInterface;
 import server.use_case.text_message.ServerTextMessageDataAccessInterface;
+import utils.Triple;
 import utils.Tuple;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class DataAccess implements TerminalMessageDataAccessInterface, ServerShutdownDataAccessInterface, ServerSignupDataAccessInterface, ServerLoginDataAccessInterface, ServerGetFriendListDataAccessInterface, ServerFriendRequestDataAccessInterface, ServerTextMessageDataAccessInterface {
@@ -197,6 +200,11 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
     @Override
     public ServerChat getChat(int id) {
         return fileManager.getChat(id);
+    }
+
+    @Override
+    public HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(List<Integer> friendIds) {
+        return fileManager.getChats(friendIds);
     }
 
     @Override

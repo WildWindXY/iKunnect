@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import server.data_access.local.FileManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ServerChats implements IFile<ServerChats> {
@@ -28,6 +29,14 @@ public class ServerChats implements IFile<ServerChats> {
 
     public static void save() {
         FileManager.registerModifiedFile(instance);
+    }
+
+    public HashMap<Integer, List<Integer>> getChatMessageIds(List<Integer> chatIds) {
+        HashMap<Integer, List<Integer>> chats = new HashMap<>();
+        for (int id : chatIds) {
+            chats.put(id, getChat(id).getMessages());
+        }
+        return chats;
     }
 
     public ServerChat create() {

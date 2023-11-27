@@ -69,6 +69,10 @@ public class ServerMessages implements IFile<ServerMessages> {
             return senderId;
         }
 
+        public long getTimestamp() {
+            return timestamp;
+        }
+
         public String getText() {
             return text;
         }
