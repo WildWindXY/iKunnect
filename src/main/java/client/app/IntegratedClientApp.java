@@ -46,7 +46,7 @@ public class IntegratedClientApp {
         TranslateDataAccess translateDataAccessObject = new TranslateDataAccess();
 
         // Create and add your views to the card layout
-        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, serverDataAccessObject);
+        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, mainViewModel, signupViewModel, serverDataAccessObject);
         signupView.setPreferredSize(new Dimension(550, 500));
         views.add(signupView, SignupView.VIEW_NAME);
 

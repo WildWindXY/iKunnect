@@ -2,6 +2,8 @@ package client.interface_adapter.Signup;
 
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.Login.LoginViewModel;
+import client.interface_adapter.Main.MainViewModel;
+import client.interface_adapter.SendMessage.SendMessageState;
 import client.interface_adapter.ViewManagerModel;
 import client.use_case.Signup.SignupOutputBoundary;
 import client.use_case.Signup.SignupOutputData;
@@ -13,15 +15,17 @@ import java.time.format.DateTimeFormatter;
 public class SignupPresenter implements SignupOutputBoundary {
 
     private final SignupViewModel signupViewModel;
-    private final LoginViewModel loginViewModel;
+//    private final LoginViewModel loginViewModel;
+    private final MainViewModel mainViewModel;
     private ViewManagerModel viewManagerModel;
 
     public SignupPresenter(ViewManagerModel viewManagerModel,
                            SignupViewModel signupViewModel,
-                           LoginViewModel loginViewModel) {
+                           MainViewModel mainViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.signupViewModel = signupViewModel;
-        this.loginViewModel = loginViewModel;
+//        this.loginViewModel = loginViewModel;
+        this.mainViewModel = mainViewModel;
     }
 
     @Override
@@ -30,13 +34,21 @@ public class SignupPresenter implements SignupOutputBoundary {
         LocalDateTime responseTime = LocalDateTime.parse(response.getCreationTime());
         response.setCreationTime(responseTime.format(DateTimeFormatter.ofPattern("hh:mm:ss")));
 
-        LoginState loginState = loginViewModel.getState();
-        loginState.setUsername(response.getUsername());
-        this.loginViewModel.setState(loginState);
-        loginViewModel.firePropertyChanged();
+//        LoginState loginState = loginViewModel.getState();
+//        loginState.setUsername(response.getUsername());
+//        this.loginViewModel.setState(loginState);
+//        loginViewModel.firePropertyChanged();
+//
+//        viewManagerModel.setActiveView(loginViewModel.getViewName());
+//        viewManagerModel.firePropertyChanged();
+        SendMessageState sendMessageState = mainViewModel.getState();
+//        sendMessageState.setSender(response.getUsername());
+        mainViewModel.setState(sendMessageState);
+        mainViewModel.firePropertyChanged();
 
-        viewManagerModel.setActiveView(loginViewModel.getViewName());
+        viewManagerModel.setActiveView(mainViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
+
     }
 
     @Override
