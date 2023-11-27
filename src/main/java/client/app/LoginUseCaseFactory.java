@@ -46,7 +46,7 @@ public class LoginUseCaseFactory {
         return new LoginView(loginController, signupController, loginViewModel, optionsDataAccessObject.get(OptionsDataAccessInterface.HIGH_CONTRAST));
     }
 
-    private static LoginController createLoginUseCase(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel, SignupViewModel signupViewModel, MainViewModel mainViewModel, ServerDataAccessObject serverDataAccessObject) {
+    public static LoginController createLoginUseCase(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel, SignupViewModel signupViewModel, MainViewModel mainViewModel, ServerDataAccessObject serverDataAccessObject) {
         LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, signupViewModel, mainViewModel, loginViewModel);
         return new LoginController(new LoginInteractor(serverDataAccessObject, loginOutputBoundary));
     }
