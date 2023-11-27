@@ -6,6 +6,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import server.data_access.DataAccess;
 import server.entity.*;
+import utils.FileUtils;
 import utils.TextUtils;
 import utils.Tuple;
 
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class FileManager {
     private static final ConcurrentLinkedQueue<IFile<?>> modifiedFiles = new ConcurrentLinkedQueue<>();
-    private static final String TEST_PATH = "E:\\Desktop\\data\\";
+    private static final String TEST_PATH = FileUtils.getJarPath();
     private final DataAccess dataAccess;
     private final ServerUsers serverUsers;
 
@@ -31,9 +32,9 @@ public class FileManager {
     private final Timer timer;
 
     public FileManager(DataAccess dataAccess) {
-        File dir = new File("E:\\Desktop\\data");
+        File dir = new File(TEST_PATH);
         if (!dir.exists() && !dir.mkdir()) {
-            dataAccess.addTerminalMessage(TextUtils.error("Warning: Unable to create dir at: E:\\Desktop\\data, system closing..."));
+            dataAccess.addTerminalMessage(TextUtils.error("Warning: Unable to create dir at: " + TEST_PATH + ", system closing..."));
             System.exit(0x2304);
         }
         this.dataAccess = dataAccess;
