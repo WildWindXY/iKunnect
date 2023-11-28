@@ -1,7 +1,7 @@
 import common.packet.Packet;
+import common.packet.PacketClientGetFriendList;
 import common.packet.PacketClientLogin;
 import common.packet.PacketClientSignup;
-import common.packet.PacketClientTextMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -30,13 +30,11 @@ public class TestClient {
 
         send(new PacketClientSignup(username, password));
         send(new PacketClientLogin(username, password));
-        send(new PacketClientTextMessage(0, 0, "hello"));
-        send(new PacketClientTextMessage(0, 1, "hello"));
+        send(new PacketClientGetFriendList());
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
         new TestClient("user1", "user");
-        new TestClient("user2", "user");
     }
 
     private void send(Packet packet) throws InterruptedException, IOException {

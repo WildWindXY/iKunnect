@@ -6,15 +6,16 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import server.data_access.DataAccess;
 import server.entity.*;
+import utils.FileUtils;
 import utils.TextUtils;
+import utils.Triple;
 import utils.Tuple;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class FileManager {
     private static final ConcurrentLinkedQueue<IFile<?>> modifiedFiles = new ConcurrentLinkedQueue<>();
-    private static final String TEST_PATH = "E:\\Desktop\\data\\";
+    private static final String TEST_PATH = FileUtils.getJarPath();
     private final DataAccess dataAccess;
     private final ServerUsers serverUsers;
 
@@ -31,9 +32,9 @@ public class FileManager {
     private final Timer timer;
 
     public FileManager(DataAccess dataAccess) {
-        File dir = new File("E:\\Desktop\\data");
+        File dir = new File(TEST_PATH);
         if (!dir.exists() && !dir.mkdir()) {
-            dataAccess.addTerminalMessage(TextUtils.error("Warning: Unable to create dir at: E:\\Desktop\\data, system closing..."));
+            dataAccess.addTerminalMessage(TextUtils.error("Warning: Unable to create dir at: " + TEST_PATH + ", system closing..."));
             System.exit(0x2304);
         }
         this.dataAccess = dataAccess;
@@ -99,6 +100,20 @@ public class FileManager {
 
     public ServerChat getChat(int id) {
         return serverChats.getChat(id);
+    }
+
+    public HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(Collection<Integer> chatIds) {
+        HashMap<Integer, List<Integer>> map = serverChats.getChatMessageIds(chatIds);
+        HashMap<Integer, List<Triple<Long, Integer, String>>> chats = new HashMap<>();
+        for (int chatId : map.keySet()) {
+            List<Triple<Long, Integer, String>> messages = new ArrayList<>();
+            for (int messageId : map.get(chatId)) {
+                ServerMessages.TextMessage textMessage = serverMessages.getMessage(messageId);
+                messages.add(new Triple<>(textMessage.getTimestamp(), textMessage.getSenderId(), textMessage.getText()));
+            }
+            chats.put(chatId, messages);
+        }
+        return chats;
     }
 
     public int addMessage(int senderId, String text) {

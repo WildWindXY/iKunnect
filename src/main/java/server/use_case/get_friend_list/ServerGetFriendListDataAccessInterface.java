@@ -4,6 +4,12 @@ import common.packet.Packet;
 import common.packet.PacketClientGetFriendList;
 import server.data_access.network.ConnectionInfo;
 import server.entity.PacketIn;
+import server.entity.ServerUser;
+import utils.Triple;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * The ServerGetFriendListDataAccessInterface interface defines the methods for accessing data related to getting a user's friend list.
@@ -26,4 +32,8 @@ public interface ServerGetFriendListDataAccessInterface {
      * @param info   The ConnectionInfo of the target connection.
      */
     void sendTo(Packet packet, ConnectionInfo info);
+
+    ServerUser getUserById(int id);
+
+    HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(Collection<Integer> friendIds);
 }

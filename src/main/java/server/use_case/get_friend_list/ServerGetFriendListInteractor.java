@@ -6,8 +6,12 @@ import server.data_access.network.ConnectionInfo;
 import server.entity.PacketIn;
 import server.use_case.ServerThreadPool;
 import utils.TextUtils;
+import utils.Triple;
+import utils.Tuple;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The ServerGetFriendListInteractor class represents the use case for retrieving a user's friend list.
@@ -47,15 +51,21 @@ public class ServerGetFriendListInteractor implements ServerGetFriendListInputBo
         try {
             if (packetIn.getConnectionInfo().getStatus() != ConnectionInfo.Status.LOGGED) {
                 getFriendListPresenter.addMessage("GetFriendList Failed: connection with id " + info.getConnectionId() + " haven't logged in yet.");
-                serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, PacketServerGetFriendListResponse.Status.NOT_LOGGED_IN), info);
+                serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, null, PacketServerGetFriendListResponse.Status.NOT_LOGGED_IN), info);
             } else {
-                HashMap<Integer, String> map = info.getUser().getFriendList();
-                getFriendListPresenter.addMessage("GetFriendList Success: user " + info.getUser().getUsername() + "'s friend list is " + map);
-                serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(map, PacketServerGetFriendListResponse.Status.SUCCESS), info);
+                Map<Integer, Integer> friendAndChatIds = info.getUser().getFriendList();
+                HashMap<Integer, List<Triple<Long, Integer, String>>> chats = serverGetFriendListDataAccessInterface.getChats(friendAndChatIds.values());
+                HashMap<Integer, Tuple<String, Integer>> friends = new HashMap<>();
+                for (int friendId : friendAndChatIds.keySet()) {
+                    friends.put(friendId, new Tuple<>(serverGetFriendListDataAccessInterface.getUserById(friendId).getUsername(), friendAndChatIds.get(friendId)));
+                }
+                getFriendListPresenter.addMessage("GetFriendList Success: user " + info.getUser().getUsername() + "'s friend list is " + friends + " with chat list " + chats);
+                serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(friends, chats, PacketServerGetFriendListResponse.Status.SUCCESS), info);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             getFriendListPresenter.addMessage(TextUtils.error("GetFriendList Failed: " + e.getMessage()));
-            serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, PacketServerGetFriendListResponse.Status.SERVER_ERROR), info);
+            serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, null, PacketServerGetFriendListResponse.Status.SERVER_ERROR), info);
         }
     }
 }
