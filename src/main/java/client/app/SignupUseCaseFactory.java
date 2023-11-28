@@ -14,7 +14,7 @@ import client.use_case.Signup.SignupDataAccessInterface;
 import client.use_case.Signup.SignupInputBoundary;
 import client.use_case.Signup.SignupInteractor;
 import client.use_case.Signup.SignupOutputBoundary;
-import client.use_case.options.OptionsDataAccessInterface;
+import client.use_case.HighContrast.HighContrastDataAccessInterface;
 import client.view.SignupView;
 
 import javax.swing.*;
@@ -30,11 +30,11 @@ public class SignupUseCaseFactory {
             LoginViewModel loginViewModel,
             SignupViewModel signupViewModel,
             SignupDataAccessInterface userDataAccessObject,
-            OptionsDataAccessInterface optionsDataAccessObject) {
+            HighContrastDataAccessInterface optionsDataAccessObject) {
 
         try {
             SignupController signupController = createUserSignupUseCase(viewManagerModel, signupViewModel, loginViewModel, userDataAccessObject);
-            return new SignupView(signupController, signupViewModel, optionsDataAccessObject.get(OptionsDataAccessInterface.HIGH_CONTRAST));
+            return new SignupView(signupController, signupViewModel, optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST));
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Could not open user data file.");
         }

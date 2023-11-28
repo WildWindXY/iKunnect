@@ -1,10 +1,10 @@
 package client.view;
 
-import client.data_access.options.OptionsState;
+import client.data_access.high_contrast.HighContrastState;
 import client.interface_adapter.Main.MainController;
 import client.interface_adapter.Main.MainViewModel;
 import client.interface_adapter.SendMessage.SendMessageState;
-import client.use_case.options.OptionsOutputData;
+import client.use_case.HighContrast.HighContrastOutputData;
 import client.view.components.image.ImageFittingComponent;
 import client.view.components.panels.MessagesJPanel;
 import utils.InputUtils;
@@ -120,23 +120,23 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     private final MainController mainController;
     private final MainViewModel mainViewModel;
-    private final OptionsState optionsState;
+    private final HighContrastState highContrastState;
 
     //--------------------- Values ---------------------
     boolean inputFieldIsVisible = true;
     private boolean HC;
     private String inputFieldTemp = "";
 
-    public MainView(MainController controller, MainViewModel viewModel, OptionsOutputData outputData) {
+    public MainView(MainController controller, MainViewModel viewModel, HighContrastOutputData outputData) {
         this.mainController = controller;
         this.mainViewModel = viewModel;
         this.mainViewModel.addPropertyChangeListener(this);
-        this.optionsState = new OptionsState();
-        optionsState.setHighContrast(outputData.getHighContrast());
+        this.highContrastState = new HighContrastState();
+        highContrastState.setHighContrast(outputData.getHighContrast());
         UIManager.put("PopupMenu.background", new Color(0));
         UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
 
-        initComponents(optionsState);
+        initComponents(highContrastState);
         Runnable receive = () -> {
             while (true) {
                 mainController.getMessage();
@@ -148,11 +148,11 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     }
 
-    public void initComponents(OptionsState optionsState) {
+    public void initComponents(HighContrastState highContrastState) {
         if (inputField != null) {
             inputFieldTemp = inputField.getText();
         }
-        HC = optionsState.getHighContrast();
+        HC = highContrastState.getHighContrast();
 
         initAttributes();
         removeAll();
@@ -238,7 +238,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     private void initOptionsButton() {
-        options = new JButton(new ImageIcon(new ImageIcon(HC?"src/main/resources/hamburgerHC.png":"src/main/resources/hamburger.png").getImage().getScaledInstance(50, 50, 4)));
+        options = new JButton(new ImageIcon(new ImageIcon(HC ? "src/main/resources/hamburgerHC.png" : "src/main/resources/hamburger.png").getImage().getScaledInstance(50, 50, 4)));
         options.setUI(new BasicButtonUI() {
             @Override
             public void paintButtonPressed(Graphics g, AbstractButton b) {
@@ -928,7 +928,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
                     copyText.setFont(jMenuItemFont);
                     copyText.setUI(new CustomMenuItemUI());
-                    
+
                     copyText.addActionListener(e -> {
                         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                         StringSelection stringSelection = new StringSelection(selectedText);
@@ -986,7 +986,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             renameChannel.setUI(new CustomMenuItemUI());
             hideChannel.setUI(new CustomMenuItemUI());
             leaveChannel.setUI(new CustomMenuItemUI());
-            
+
             add(renameChannel);
             add(hideChannel);
             add(leaveChannel);
@@ -1022,7 +1022,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         @Override
         protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
             ButtonModel model = menuItem.getModel();
-            Color color = model.isArmed() ? (HC? moreOptionsHoverColorHC:moreOptionsHoverColor) : (HC?moreOptionsColorHC:moreOptionsColor); // Set your desired colors
+            Color color = model.isArmed() ? (HC ? moreOptionsHoverColorHC : moreOptionsHoverColor) : (HC ? moreOptionsColorHC : moreOptionsColor); // Set your desired colors
             g.setColor(color);
             g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
         }
@@ -1109,7 +1109,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     public void propertyChange(PropertyChangeEvent evt) {
         String eventName = evt.getPropertyName();
         switch (eventName) {
-            case "sendMessageState":
+            case "sendMessageState" -> {
                 SendMessageState sendMessageState = (SendMessageState) evt.getNewValue();
                 PlainTextMessage m = null;
                 if (sendMessageState.getSender().isEmpty()) {
@@ -1123,11 +1123,16 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                     JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
                     verticalScrollBar.setValue(verticalScrollBar.getMaximum());
                 });
-            case "optionsState":
-                OptionsState optionsState = (OptionsState) evt.getNewValue();
-                boolean hc = optionsState.getHighContrast();
+            }
+            case "highContrastState" -> {
+                HighContrastState highContrastState = (HighContrastState) evt.getNewValue();
+                boolean hc = highContrastState.getHighContrast();
                 System.out.println("MainView HC " + hc);
-                initComponents(optionsState);
+                initComponents(highContrastState);
+            }
+            case "addFriend" -> {
+                //TODO Add Friend Success
+            }
 
         }
     }

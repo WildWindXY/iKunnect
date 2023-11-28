@@ -1,5 +1,6 @@
 package client.data_access;
 
+import client.use_case.AddFriend.AddFriendDataAccessInterface;
 import client.use_case.Login.LoginDataAccessInterface;
 import client.use_case.Signup.SignupDataAccessInterface;
 import common.packet.*;
@@ -10,7 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ServerDataAccessObject implements SignupDataAccessInterface, LoginDataAccessInterface {
+public class ServerDataAccessObject implements SignupDataAccessInterface, LoginDataAccessInterface, AddFriendDataAccessInterface {
 
     private final LinkedBlockingQueue<Packet> receivedPacket = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketServerLoginResponse> loginResponses = new LinkedBlockingQueue<>();
@@ -141,5 +142,10 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void addFriend(String username) {
+        sendPacket(new PacketClientFriendRequest(username));
     }
 }

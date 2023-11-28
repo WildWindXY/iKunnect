@@ -7,6 +7,7 @@ import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Main.MainViewModel;
 import client.interface_adapter.Signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
+import client.use_case.HighContrast.HighContrastDataAccessInterface;
 import client.use_case.Login.*;
 import client.view.LoginView;
 import common.packet.PacketServerLoginResponse;
@@ -111,6 +112,7 @@ class LoginUseCaseFactoryTest {
     private SignupViewModel signupViewModel;
     private MainViewModel mainViewModel;
     private ServerDataAccessObject serverDataAccessObject;
+    private HighContrastDataAccessInterface highContrastDataAccessObject;
 
     @BeforeEach
     public void setUp() {
@@ -119,11 +121,13 @@ class LoginUseCaseFactoryTest {
         signupViewModel = mock(SignupViewModel.class);
         mainViewModel = mock(MainViewModel.class);
         serverDataAccessObject = mock(ServerDataAccessObject.class);
+        highContrastDataAccessObject = mock(HighContrastDataAccessInterface.class);
+
     }
 
     @Test
     public void testCreate() {
-        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject);
+        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject, highContrastDataAccessObject);
 
         Assertions.assertNotNull(loginView);
         // Additional assertions to check if the created objects are properly initialized

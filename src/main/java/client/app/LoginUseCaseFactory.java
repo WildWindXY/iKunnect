@@ -1,7 +1,6 @@
 package client.app;
 
 import client.data_access.ServerDataAccessObject;
-import client.data_access.options.OptionsDataAccess;
 import client.data_access.password_checker.PasswordCheckerDataAccess;
 import client.entity.CommonUserFactory;
 import client.entity.UserFactory;
@@ -20,7 +19,7 @@ import client.use_case.PasswordChecker.PasswordCheckerInteractor;
 import client.use_case.Signup.SignupInputBoundary;
 import client.use_case.Signup.SignupInteractor;
 import client.use_case.Signup.SignupOutputBoundary;
-import client.use_case.options.OptionsDataAccessInterface;
+import client.use_case.HighContrast.HighContrastDataAccessInterface;
 import client.view.LoginView;
 
 public class LoginUseCaseFactory {
@@ -36,14 +35,14 @@ public class LoginUseCaseFactory {
                                    SignupViewModel signupViewModel,
                                    MainViewModel mainViewModel,
                                    ServerDataAccessObject serverDataAccessObject,
-                                   OptionsDataAccessInterface optionsDataAccessObject) {
+                                   HighContrastDataAccessInterface highContrastDataAccessObject) {
         LoginController loginController = createLoginUseCase(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject);
         SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel, signupViewModel, mainViewModel);
         UserFactory userFactory = new CommonUserFactory();
         SignupInputBoundary userSignupInteractor = new SignupInteractor(serverDataAccessObject, signupOutputBoundary, userFactory);
         PasswordCheckerInputBoundary passwordCheckerUseCaseInteractor = new PasswordCheckerInteractor(new PasswordCheckerDataAccess());
         SignupController signupController = new SignupController(userSignupInteractor, passwordCheckerUseCaseInteractor);
-        return new LoginView(loginController, signupController, loginViewModel, optionsDataAccessObject.get(OptionsDataAccessInterface.HIGH_CONTRAST));
+        return new LoginView(loginController, signupController, loginViewModel, highContrastDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST));
     }
 
     public static LoginController createLoginUseCase(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel, SignupViewModel signupViewModel, MainViewModel mainViewModel, ServerDataAccessObject serverDataAccessObject) {

@@ -1,11 +1,15 @@
 package client.app;
 
-import client.data_access.options.OptionsState;
+import client.interface_adapter.AddFriend.AddFriendPresenter;
 import client.interface_adapter.Main.MainController;
 import client.interface_adapter.Main.MainViewModel;
 import client.interface_adapter.ReceiveMessage.ReceiveMessagePresenter;
 import client.interface_adapter.SendMessage.*;
-import client.interface_adapter.options.OptionsPresenter;
+import client.interface_adapter.options.HighContrastPresenter;
+import client.use_case.AddFriend.AddFriendDataAccessInterface;
+import client.use_case.AddFriend.AddFriendInputBoundary;
+import client.use_case.AddFriend.AddFriendInteractor;
+import client.use_case.AddFriend.AddFriendOutputBoundary;
 import client.use_case.ReceiveMessage.ReceiveMessageDataAccessInterface;
 import client.use_case.ReceiveMessage.ReceiveMessageInputBoundary;
 import client.use_case.ReceiveMessage.ReceiveMessageInteractor;
@@ -17,10 +21,10 @@ import client.use_case.SendMessage.SendMessageOutputBoundary;
 import client.use_case.Translate.TranslateDataAccessInterface;
 import client.use_case.Translate.TranslationInputBoundary;
 import client.use_case.Translate.TranslationInteractor;
-import client.use_case.options.OptionsDataAccessInterface;
-import client.use_case.options.OptionsInputBoundary;
-import client.use_case.options.OptionsInteractor;
-import client.use_case.options.OptionsOutputBoundary;
+import client.use_case.HighContrast.HighContrastDataAccessInterface;
+import client.use_case.HighContrast.HighContrastInputBoundary;
+import client.use_case.HighContrast.HighContrastInteractor;
+import client.use_case.HighContrast.HighContrastOutputBoundary;
 import client.view.MainView;
 
 public class MainUseCaseFactory {
@@ -29,25 +33,29 @@ public class MainUseCaseFactory {
                                             SendMessageDataAccessInterface sendMessageDataAccessObject,
                                             ReceiveMessageDataAccessInterface receiveMessageDataAccessObject,
                                             TranslateDataAccessInterface translateDataAccessObject,
-                                            OptionsDataAccessInterface optionsDataAccessObject,
+                                            HighContrastDataAccessInterface highContrastDataAccessObject,
+                                            AddFriendDataAccessInterface addFriendDataAccessObject,
                                             MainViewModel mainViewModel) {
-        MainController mainController = createMainUseCase(myUsername, sendMessageDataAccessObject, receiveMessageDataAccessObject, translateDataAccessObject, optionsDataAccessObject, mainViewModel);
-        return new MainView(mainController, mainViewModel, optionsDataAccessObject.get(OptionsDataAccessInterface.HIGH_CONTRAST));
+        MainController mainController = createMainUseCase(myUsername, sendMessageDataAccessObject, receiveMessageDataAccessObject, translateDataAccessObject, highContrastDataAccessObject, addFriendDataAccessObject, mainViewModel);
+        return new MainView(mainController, mainViewModel, highContrastDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST));
     }
 
     private static MainController createMainUseCase(String myUsername,
                                                     SendMessageDataAccessInterface sendMessageDataAccessObject,
                                                     ReceiveMessageDataAccessInterface receiveMessageDataAccessObject,
                                                     TranslateDataAccessInterface translateDataAccessObject,
-                                                    OptionsDataAccessInterface optionsDataAccessObject,
+                                                    HighContrastDataAccessInterface highContrastDataAccessObject,
+                                                    AddFriendDataAccessInterface addFriendDataAccessObject,
                                                     MainViewModel mainViewModel) {
         SendMessageOutputBoundary sendMessageOutputBoundary = new SendMessagePresenter(mainViewModel);
         ReceiveMessageOutputBoundary receiveMessageOutputBoundary = new ReceiveMessagePresenter(mainViewModel);
-        OptionsOutputBoundary optionsOutputBoundary = new OptionsPresenter(mainViewModel);
+        HighContrastOutputBoundary highContrastOutputBoundary = new HighContrastPresenter(mainViewModel);
+        AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(mainViewModel);
         SendMessageInputBoundary sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccessObject, sendMessageOutputBoundary);
         ReceiveMessageInputBoundary receiveMessageInteractor = new ReceiveMessageInteractor(receiveMessageDataAccessObject, receiveMessageOutputBoundary);
         TranslationInputBoundary translationInteractor = new TranslationInteractor(translateDataAccessObject);
-        OptionsInputBoundary optionsInteractor = new OptionsInteractor(optionsDataAccessObject, optionsOutputBoundary);
-        return new MainController(myUsername, sendMessageInteractor, receiveMessageInteractor, translationInteractor, optionsInteractor);
+        HighContrastInputBoundary highContrastInteractor = new HighContrastInteractor(highContrastDataAccessObject, highContrastOutputBoundary);
+        AddFriendInputBoundary addFriendInteractor = new AddFriendInteractor(addFriendDataAccessObject, addFriendOutputBoundary);
+        return new MainController(myUsername, sendMessageInteractor, receiveMessageInteractor, translationInteractor, highContrastInteractor, addFriendInteractor);
     }
 }

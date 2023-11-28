@@ -1,11 +1,13 @@
 package client.interface_adapter.Main;
 
-import client.use_case.options.OptionsInputBoundary;
+import client.use_case.AddFriend.AddFriendInputBoundary;
 import client.use_case.ReceiveMessage.ReceiveMessageInputBoundary;
 import client.use_case.SendMessage.SendMessageInputBoundary;
 import client.use_case.SendMessage.SendMessageInputData;
 import client.use_case.Translate.TranslationInputBoundary;
 import client.use_case.Translate.TranslationInputData;
+import client.use_case.HighContrast.HighContrastInputBoundary;
+import client.use_case.HighContrast.HighContrastInteractor;
 import client.view.MainView;
 
 import javax.swing.*;
@@ -16,57 +18,113 @@ public class MainController {
     private final SendMessageInputBoundary sendMessageInteractor;
     private final ReceiveMessageInputBoundary receiveMessageInteractor;
     private final TranslationInputBoundary translationInteractor;
-    private final OptionsInputBoundary optionsInteractor;
+    private final HighContrastInputBoundary highContrastInteractor;
+
+    private final AddFriendInputBoundary addFriendInteractor;
     private final String myUsername;
 
-    public MainController(String myUsername, SendMessageInputBoundary sendMessageInteractor, ReceiveMessageInputBoundary receiveMessageInteractor, TranslationInputBoundary translationInteractor, OptionsInputBoundary optionsInteractor){
+    private JFrame f;
+    private JFrame addFriendInput;
+
+    public MainController(String myUsername, SendMessageInputBoundary sendMessageInteractor, ReceiveMessageInputBoundary receiveMessageInteractor, TranslationInputBoundary translationInteractor, HighContrastInputBoundary highContrastInteractor, AddFriendInputBoundary addFriendInterator) {
         this.sendMessageInteractor = sendMessageInteractor;
         this.receiveMessageInteractor = receiveMessageInteractor;
         this.translationInteractor = translationInteractor;
-        this.optionsInteractor = optionsInteractor;
+        this.highContrastInteractor = highContrastInteractor;
+        this.addFriendInteractor = addFriendInterator;
         this.myUsername = myUsername;
     }
 
-    public void sendMessage(String message, String receiver){
+    public void sendMessage(String message, String receiver) {
         SendMessageInputData in = new SendMessageInputData(message, myUsername, receiver);
         sendMessageInteractor.execute(in);
     }
 
-    public void getMessage(){
+    public void getMessage() {
         receiveMessageInteractor.execute();
     }
 
-    public String translateMessage(String message){
+    public String translateMessage(String message) {
         TranslationInputData in = new TranslationInputData(message);
         return translationInteractor.execute(in);
     }
 
-    public void openOptionsMenu(){
-        JFrame f = new JFrame();
-        JPanel p = new JPanel();
-        JButton b = initHighContrastButton();
-        p.setLayout(new GridBagLayout());
-        p.setBackground(MainView.messagesColor);
-        p.add(b);
-        f.setVisible(true);
-        f.add(p);
-        f.pack();
-        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        f.setLocationRelativeTo(null);
-        f.setSize(new Dimension(400, 300));
-        f.setResizable(false);
+    public void openOptionsMenu() {
+        if (f == null || !f.isDisplayable()) {
+            f = new JFrame("options");
+            JPanel p = new JPanel();
+            JButton highContrastButton = initHighContrastButton();
+            JButton addFriendButton = initAddFriendButton();
+            addFriendButton.setPreferredSize(highContrastButton.getPreferredSize());
+            p.setLayout(new FlowLayout(FlowLayout.CENTER));
+            p.setBackground(MainView.messagesColor);
+            p.add(highContrastButton);
+            p.add(addFriendButton);
+            f.setVisible(true);
+            f.add(p);
+            f.pack();
+            f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            f.setLocationRelativeTo(null);
+            f.setSize(new Dimension(400, 300));
+            f.setResizable(false);
+        } else {f.toFront();}
+
+    }
+
+    private JButton initAddFriendButton() {
+        JButton b = new JButton("Add Friend");
+        Font highContrastUIButtonFont = new Font("Helvetica", Font.BOLD, 24);
+        b.setFont(highContrastUIButtonFont);
+        b.addActionListener(e -> {
+            System.out.println("Add Friend Button");
+
+            if (addFriendInput == null || !addFriendInput.isDisplayable()) {
+                addFriendInput = new JFrame("Add Friend");
+                JPanel p0 = new JPanel(new GridBagLayout());
+                JPanel p = new JPanel();
+                //p.setLayout(new GridBagLayout());
+                p.setLayout(new FlowLayout());
+                p.setBackground(MainView.messagesColor);
+                JLabel label = new JLabel("Enter Username");
+                label.setFont(highContrastUIButtonFont);
+                JTextArea textArea = new JTextArea();
+                textArea.setFont(highContrastUIButtonFont);
+                textArea.setPreferredSize(new Dimension(200,label.getPreferredSize().height));
+                JButton submit = new JButton("Add");
+                submit.setFont(highContrastUIButtonFont);
+                submit.addActionListener(e1 -> {
+                    String s = textArea.getText().strip();
+                    textArea.setText("");
+                    addFriendInteractor.execute(s);
+                });
+
+                p.add(label);
+                p.add(textArea);
+                p.add(submit);
+                p0.add(p);
+                p0.setBackground(MainView.messagesColor);
+                addFriendInput.setVisible(true);
+                addFriendInput.add(p0);
+                addFriendInput.pack();
+                addFriendInput.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                addFriendInput.setLocationRelativeTo(null);
+                addFriendInput.setSize(new Dimension(600, 200));
+                addFriendInput.setResizable(false);
+            } else {addFriendInput.toFront();}
+        });
+        return b;
     }
 
     private JButton initHighContrastButton() {
         JButton b = new JButton("Toggle High Contrast UI");
-        Font highContrastUIButtonFont = new Font("Helvetica", Font.BOLD,24);
+        Font highContrastUIButtonFont = new Font("Helvetica", Font.BOLD, 24);
         b.setFont(highContrastUIButtonFont);
         b.addActionListener(e -> {
             System.out.println("Toggle High Contrast Button");
-            int val = optionsInteractor.execute(optionsInteractor.TOGGLE_HIGH_CONTRAST);
-            if(val == optionsInteractor.INVALID_OPTION){
-                System.out.println("MainController -> optionsInteractor -> invalid action");
-            } else{
+            int val = highContrastInteractor.execute(highContrastInteractor.TOGGLE_HIGH_CONTRAST);
+            if (val == highContrastInteractor.INVALID_OPTION) {
+                System.out.println("MainController -> highContrastInteractor -> invalid action");
+            } else {
                 boolean highContrast = val == 1;
                 System.out.println("Main Controller HC " + highContrast);
                 //TODO remove options feature complete

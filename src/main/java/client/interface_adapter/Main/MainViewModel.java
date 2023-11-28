@@ -1,6 +1,6 @@
 package client.interface_adapter.Main;
 
-import client.data_access.options.OptionsState;
+import client.data_access.high_contrast.HighContrastState;
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.SendMessage.SendMessageState;
 
@@ -13,7 +13,7 @@ public class MainViewModel {
     private SendMessageState sendMessageState = new SendMessageState();
 
     private LoginState loginState = new LoginState();
-    private OptionsState optionsState = new OptionsState();
+    private HighContrastState highContrastState = new HighContrastState();
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -27,9 +27,14 @@ public class MainViewModel {
         support.firePropertyChange("loginState", null, this.loginState);
     }
 
-    public void fireOptionsPropertyChanged() {
-        System.out.println("MainViewModel fireOptionsPropertyChanged");
-        support.firePropertyChange("optionsState", null, this.optionsState);
+    public void fireHighContrastPropertyChanged() {
+        System.out.println("MainViewModel fireHighContrastPropertyChanged");
+        support.firePropertyChange("highContrastState", null, this.highContrastState);
+    }
+
+    public void fireAddFriendPropertyChanged(){
+        System.out.println("MainViewModel fireAddFriendPropertyChanged");
+        support.firePropertyChange("addFriend", null, null);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -42,7 +47,7 @@ public class MainViewModel {
 
     public LoginState getLoginState(){return this.loginState;}
 
-    public OptionsState getOptionsState(){return optionsState;}
+    public HighContrastState getOptionsState(){return highContrastState;}
     public String getViewName() {
         return "Main Window";
     }
@@ -53,5 +58,5 @@ public class MainViewModel {
 
     public void setLoginState(LoginState loginState){this.loginState = loginState;}
 
-    public void setOptionsState(OptionsState optionsState) {this.optionsState = optionsState;}
+    public void setOptionsState(HighContrastState highContrastState) {this.highContrastState = highContrastState;}
 }

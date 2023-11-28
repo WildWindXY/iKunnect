@@ -1,13 +1,13 @@
-package client.data_access.options;
+package client.data_access.high_contrast;
 
-public class OptionsState {
+public class HighContrastState {
     private boolean highContrast = false;
-    public OptionsState(OptionsState copy) {
+    public HighContrastState(HighContrastState copy) {
         this.highContrast = copy.highContrast;
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
-    public OptionsState() {
+    public HighContrastState() {
     }
 
     public boolean getHighContrast() {
