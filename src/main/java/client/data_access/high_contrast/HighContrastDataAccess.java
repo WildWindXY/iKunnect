@@ -1,7 +1,7 @@
 package client.data_access.high_contrast;
 
-import client.use_case.HighContrast.HighContrastDataAccessInterface;
-import client.use_case.HighContrast.HighContrastOutputData;
+import client.use_case.high_contrast.HighContrastDataAccessInterface;
+import client.use_case.high_contrast.HighContrastOutputData;
 
 import java.io.IOException;
 import java.nio.file.Files;

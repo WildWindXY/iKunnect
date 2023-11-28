@@ -1,11 +1,10 @@
 import client.entity.UserFactory;
-import client.use_case.Signup.*;
+import client.use_case.signup.*;
 import common.packet.PacketServerSignupResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
+
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class SignupInteractorTest {
 

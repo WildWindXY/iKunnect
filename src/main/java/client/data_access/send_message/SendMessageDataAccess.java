@@ -1,9 +1,9 @@
 package client.data_access.send_message;
 
 import client.data_access.ServerDataAccessObject;
-import client.use_case.SendMessage.SendMessageDataAccessInterface;
-import client.use_case.SendMessage.SendMessageInputData;
-import client.use_case.SendMessage.SendMessageOutputData;
+import client.use_case.send_message.SendMessageDataAccessInterface;
+import client.use_case.send_message.SendMessageInputData;
+import client.use_case.send_message.SendMessageOutputData;
 import common.packet.PacketClientTextMessage;
 import common.packet.PacketServerTextMessageResponse;
 

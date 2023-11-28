@@ -1,15 +1,12 @@
-package client.interface_adapter.Login;
+package client.interface_adapter.login;
 
 import client.interface_adapter.Logged_in.LoggedInState;
 import client.interface_adapter.Logged_in.LoggedInViewModel;
-import client.interface_adapter.Main.MainViewModel;
-import client.interface_adapter.SendMessage.SendMessageState;
-import client.interface_adapter.Signup.SignupViewModel;
+import client.interface_adapter.main.MainViewModel;
+import client.interface_adapter.signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
-import client.use_case.Login.LoginOutputBoundary;
-import client.use_case.Login.LoginOutputData;
-import client.use_case.Signup.SignupOutputBoundary;
-import client.use_case.Signup.SignupOutputData;
+import client.use_case.login.LoginOutputBoundary;
+import client.use_case.login.LoginOutputData;
 
 
 //public class LoginPresenter implements LoginOutputBoundary {

@@ -1,12 +1,10 @@
-package client.interface_adapter.Signup;
+package client.interface_adapter.signup;
 
-import client.interface_adapter.Login.LoginState;
-import client.interface_adapter.Login.LoginViewModel;
-import client.interface_adapter.Main.MainViewModel;
-import client.interface_adapter.SendMessage.SendMessageState;
+import client.interface_adapter.main.MainViewModel;
+import client.interface_adapter.send_message.SendMessageState;
 import client.interface_adapter.ViewManagerModel;
-import client.use_case.Signup.SignupOutputBoundary;
-import client.use_case.Signup.SignupOutputData;
+import client.use_case.signup.SignupOutputBoundary;
+import client.use_case.signup.SignupOutputData;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -1,8 +1,8 @@
-package client.interface_adapter.Main;
+package client.interface_adapter.main;
 
 import client.data_access.high_contrast.HighContrastState;
-import client.interface_adapter.Login.LoginState;
-import client.interface_adapter.SendMessage.SendMessageState;
+import client.interface_adapter.login.LoginState;
+import client.interface_adapter.send_message.SendMessageState;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

@@ -1,10 +1,10 @@
 package client.view;
 
 import client.data_access.high_contrast.HighContrastState;
-import client.interface_adapter.Main.MainController;
-import client.interface_adapter.Main.MainViewModel;
-import client.interface_adapter.SendMessage.SendMessageState;
-import client.use_case.HighContrast.HighContrastOutputData;
+import client.interface_adapter.main.MainController;
+import client.interface_adapter.main.MainViewModel;
+import client.interface_adapter.send_message.SendMessageState;
+import client.use_case.high_contrast.HighContrastOutputData;
 import client.view.components.image.ImageFittingComponent;
 import client.view.components.panels.MessagesJPanel;
 import utils.InputUtils;

@@ -1,4 +1,4 @@
-package client.use_case.Signup;
+package client.use_case.signup;
 
 public class SignupOutputData {
 

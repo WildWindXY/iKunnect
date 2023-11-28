@@ -1,9 +1,9 @@
-package client.interface_adapter.Signup;
+package client.interface_adapter.signup;
 
-import client.use_case.PasswordChecker.PasswordCheckerInputBoundary;
-import client.use_case.PasswordChecker.PasswordCheckerInputData;
-import client.use_case.Signup.SignupInputBoundary;
-import client.use_case.Signup.SignupInputData;
+import client.use_case.password_checker.PasswordCheckerInputBoundary;
+import client.use_case.password_checker.PasswordCheckerInputData;
+import client.use_case.signup.SignupInputBoundary;
+import client.use_case.signup.SignupInputData;
 
 public class SignupController {
     final SignupInputBoundary userSignupUseCaseInteractor;

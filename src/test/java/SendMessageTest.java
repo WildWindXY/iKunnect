@@ -1,12 +1,3 @@
-import client.data_access.ServerDataAccessObject;
-import client.data_access.send_message.SendMessageDataAccess;
-import client.interface_adapter.SendMessage.SendMessagePresenter;
-import client.use_case.SendMessage.SendMessageDataAccessInterface;
-import client.use_case.SendMessage.SendMessageInputData;
-import client.use_case.SendMessage.SendMessageInteractor;
-
-import static utils.MessageEncryptionUtils.initKey;
-
 public class SendMessageTest {
 
     @org.junit.Test

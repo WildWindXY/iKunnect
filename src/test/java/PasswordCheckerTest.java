@@ -1,6 +1,6 @@
-import client.use_case.PasswordChecker.PasswordCheckerDataAccessInterface;
-import client.use_case.PasswordChecker.PasswordCheckerInputData;
-import client.use_case.PasswordChecker.PasswordCheckerInteractor;
+import client.use_case.password_checker.PasswordCheckerDataAccessInterface;
+import client.use_case.password_checker.PasswordCheckerInputData;
+import client.use_case.password_checker.PasswordCheckerInteractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;

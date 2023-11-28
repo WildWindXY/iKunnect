@@ -1,24 +1,14 @@
 package client.data_access.password_checker;
 
-import client.use_case.PasswordChecker.PasswordCheckerDataAccessInterface;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import client.use_case.password_checker.PasswordCheckerDataAccessInterface;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 public class PasswordCheckerDataAccess implements PasswordCheckerDataAccessInterface {
     @Override

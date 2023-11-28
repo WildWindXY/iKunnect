@@ -1,9 +1,7 @@
-package client.interface_adapter.Login;
+package client.interface_adapter.login;
 
-import client.use_case.Login.LoginInputBoundary;
-import client.use_case.Login.LoginInputData;
-import client.use_case.Signup.SignupInputBoundary;
-import client.use_case.Signup.SignupInputData;
+import client.use_case.login.LoginInputBoundary;
+import client.use_case.login.LoginInputData;
 
 public class LoginController {
     final LoginInputBoundary loginUseCaseInteractor;

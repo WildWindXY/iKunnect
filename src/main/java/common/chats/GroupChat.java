@@ -1,1 +1,0 @@
-//TODO: This might not be common, since server and client only agrees on packets.

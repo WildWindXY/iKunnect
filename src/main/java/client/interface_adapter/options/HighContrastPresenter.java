@@ -1,9 +1,9 @@
 package client.interface_adapter.options;
 
 import client.data_access.high_contrast.HighContrastState;
-import client.interface_adapter.Main.MainViewModel;
-import client.use_case.HighContrast.HighContrastOutputBoundary;
-import client.use_case.HighContrast.HighContrastOutputData;
+import client.interface_adapter.main.MainViewModel;
+import client.use_case.high_contrast.HighContrastOutputBoundary;
+import client.use_case.high_contrast.HighContrastOutputData;
 
 public class HighContrastPresenter implements HighContrastOutputBoundary {
     private final MainViewModel mainViewModel;
