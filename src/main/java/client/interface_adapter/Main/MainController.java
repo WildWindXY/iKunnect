@@ -1,13 +1,12 @@
-package client.interface_adapter.Main;
+package client.interface_adapter.main;
 
-import client.use_case.AddFriend.AddFriendInputBoundary;
-import client.use_case.ReceiveMessage.ReceiveMessageInputBoundary;
-import client.use_case.SendMessage.SendMessageInputBoundary;
-import client.use_case.SendMessage.SendMessageInputData;
-import client.use_case.Translate.TranslationInputBoundary;
-import client.use_case.Translate.TranslationInputData;
-import client.use_case.HighContrast.HighContrastInputBoundary;
-import client.use_case.HighContrast.HighContrastInteractor;
+import client.use_case.add_friend.AddFriendInputBoundary;
+import client.use_case.receive_message.ReceiveMessageInputBoundary;
+import client.use_case.send_message.SendMessageInputBoundary;
+import client.use_case.send_message.SendMessageInputData;
+import client.use_case.translate.TranslationInputBoundary;
+import client.use_case.translate.TranslationInputData;
+import client.use_case.high_contrast.HighContrastInputBoundary;
 import client.view.MainView;
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package client.use_case.Template;
+package client.use_case.template;
 
 public interface TemplateInputBoundary {
 }

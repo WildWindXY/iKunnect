@@ -1,4 +1,4 @@
-package client.use_case.Login;
+package client.use_case.login;
 
 public interface LoginInputBoundary {
     void execute(LoginInputData loginInputData);

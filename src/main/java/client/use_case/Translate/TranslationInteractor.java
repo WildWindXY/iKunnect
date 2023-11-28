@@ -1,4 +1,4 @@
-package client.use_case.Translate;
+package client.use_case.translate;
 
 public class TranslationInteractor implements TranslationInputBoundary{
     private final TranslateDataAccessInterface translationDataAccessObject;

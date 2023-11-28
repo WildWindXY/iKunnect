@@ -1,10 +1,10 @@
 package client.view;
 
-import client.interface_adapter.Login.LoginController;
-import client.interface_adapter.Login.LoginState;
-import client.interface_adapter.Login.LoginViewModel;
-import client.interface_adapter.Signup.SignupController;
-import client.use_case.HighContrast.HighContrastOutputData;
+import client.interface_adapter.login.LoginController;
+import client.interface_adapter.login.LoginState;
+import client.interface_adapter.login.LoginViewModel;
+import client.interface_adapter.signup.SignupController;
+import client.use_case.high_contrast.HighContrastOutputData;
 import client.view.components.buttons.loginSignupButton;
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;

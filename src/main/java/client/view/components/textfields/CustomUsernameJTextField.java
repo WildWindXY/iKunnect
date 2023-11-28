@@ -1,13 +1,8 @@
 package client.view.components.textfields;
 
-import client.interface_adapter.Signup.SignupState;
-import utils.InputUtils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class CustomUsernameJTextField extends JTextField {
 

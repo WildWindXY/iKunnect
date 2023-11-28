@@ -1,8 +1,8 @@
 package client.data_access;
 
-import client.use_case.AddFriend.AddFriendDataAccessInterface;
-import client.use_case.Login.LoginDataAccessInterface;
-import client.use_case.Signup.SignupDataAccessInterface;
+import client.use_case.add_friend.AddFriendDataAccessInterface;
+import client.use_case.login.LoginDataAccessInterface;
+import client.use_case.signup.SignupDataAccessInterface;
 import common.packet.*;
 
 import java.io.IOException;

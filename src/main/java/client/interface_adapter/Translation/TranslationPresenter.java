@@ -1,7 +1,7 @@
-package client.interface_adapter.Translation;
+package client.interface_adapter.translation;
 
-import client.use_case.Translate.TranslationOutputBoundary;
-import client.use_case.Translate.TranslationOutputData;
+import client.use_case.translate.TranslationOutputBoundary;
+import client.use_case.translate.TranslationOutputData;
 
 public class TranslationPresenter implements TranslationOutputBoundary {
     @Override

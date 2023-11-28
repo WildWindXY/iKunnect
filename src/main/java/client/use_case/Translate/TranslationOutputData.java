@@ -1,4 +1,4 @@
-package client.use_case.Translate;
+package client.use_case.translate;
 
 public class TranslationOutputData {
     private final String translatedText;

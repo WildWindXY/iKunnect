@@ -1,20 +1,18 @@
 import client.app.LoginUseCaseFactory;
 import client.data_access.ServerDataAccessObject;
-import client.interface_adapter.Login.LoginController;
-import client.interface_adapter.Login.LoginPresenter;
-import client.interface_adapter.Login.LoginState;
-import client.interface_adapter.Login.LoginViewModel;
-import client.interface_adapter.Main.MainViewModel;
-import client.interface_adapter.Signup.SignupViewModel;
+import client.interface_adapter.login.LoginController;
+import client.interface_adapter.login.LoginPresenter;
+import client.interface_adapter.login.LoginViewModel;
+import client.interface_adapter.main.MainViewModel;
+import client.interface_adapter.signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
-import client.use_case.HighContrast.HighContrastDataAccessInterface;
-import client.use_case.Login.*;
+import client.use_case.high_contrast.HighContrastDataAccessInterface;
+import client.use_case.login.*;
 import client.view.LoginView;
 import common.packet.PacketServerLoginResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;

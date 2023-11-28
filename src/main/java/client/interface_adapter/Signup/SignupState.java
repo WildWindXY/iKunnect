@@ -1,4 +1,4 @@
-package client.interface_adapter.Signup;
+package client.interface_adapter.signup;
 
 public class SignupState {
     private String username = "";

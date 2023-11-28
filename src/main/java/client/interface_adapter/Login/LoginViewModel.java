@@ -1,4 +1,4 @@
-package client.interface_adapter.Login;
+package client.interface_adapter.login;
 
 import client.interface_adapter.ViewModel;
 

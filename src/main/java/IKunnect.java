@@ -1,9 +1,9 @@
 //import org.apache.logging.log4j.Logger;
 
 import client.data_access.translate.TranslateDataAccess;
-import client.use_case.Translate.TranslateDataAccessInterface;
-import client.use_case.Translate.TranslationOutputBoundary;
-import client.use_case.Translate.TranslationOutputData;
+import client.use_case.translate.TranslateDataAccessInterface;
+import client.use_case.translate.TranslationOutputBoundary;
+import client.use_case.translate.TranslationOutputData;
 
 public class IKunnect implements TranslationOutputBoundary {//TODO: Why here? so wierd.
 
