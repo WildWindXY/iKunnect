@@ -9,9 +9,9 @@ import utils.TextUtils;
 import utils.Triple;
 import utils.Tuple;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The ServerGetFriendListInteractor class represents the use case for retrieving a user's friend list.
@@ -53,16 +53,17 @@ public class ServerGetFriendListInteractor implements ServerGetFriendListInputBo
                 getFriendListPresenter.addMessage("GetFriendList Failed: connection with id " + info.getConnectionId() + " haven't logged in yet.");
                 serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, null, PacketServerGetFriendListResponse.Status.NOT_LOGGED_IN), info);
             } else {
-                HashMap<Integer, Tuple<String, Integer>> friends = info.getUser().getFriendList();
-                List<Integer> friendIds = new ArrayList<>();
-                for (Tuple<String, Integer> tuple : friends.values()) {
-                    friendIds.add(tuple.second());
+                Map<Integer, Integer> friendAndChatIds = info.getUser().getFriendList();
+                HashMap<Integer, List<Triple<Long, Integer, String>>> chats = serverGetFriendListDataAccessInterface.getChats(friendAndChatIds.values());
+                HashMap<Integer, Tuple<String, Integer>> friends = new HashMap<>();
+                for (int friendId : friendAndChatIds.keySet()) {
+                    friends.put(friendId, new Tuple<>(serverGetFriendListDataAccessInterface.getUserById(friendId).getUsername(), friendAndChatIds.get(friendId)));
                 }
-                HashMap<Integer, List<Triple<Long, Integer, String>>> chats = serverGetFriendListDataAccessInterface.getChats(friendIds);
-                getFriendListPresenter.addMessage("GetFriendList Success: user " + info.getUser().getUsername() + "'s friend list is " + friends);
+                getFriendListPresenter.addMessage("GetFriendList Success: user " + info.getUser().getUsername() + "'s friend list is " + friends + " with chat list " + chats);
                 serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(friends, chats, PacketServerGetFriendListResponse.Status.SUCCESS), info);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             getFriendListPresenter.addMessage(TextUtils.error("GetFriendList Failed: " + e.getMessage()));
             serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, null, PacketServerGetFriendListResponse.Status.SERVER_ERROR), info);
         }

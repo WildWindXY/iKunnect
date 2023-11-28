@@ -101,7 +101,7 @@ public class FileManager {
         return serverChats.getChat(id);
     }
 
-    public HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(List<Integer> chatIds) {
+    public HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(Collection<Integer> chatIds) {
         HashMap<Integer, List<Integer>> map = serverChats.getChatMessageIds(chatIds);
         HashMap<Integer, List<Triple<Long, Integer, String>>> chats = new HashMap<>();
         for (int chatId : map.keySet()) {

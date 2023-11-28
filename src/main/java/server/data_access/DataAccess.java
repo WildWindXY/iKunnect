@@ -18,6 +18,7 @@ import utils.Triple;
 import utils.Tuple;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -203,7 +204,7 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
     }
 
     @Override
-    public HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(List<Integer> friendIds) {
+    public HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(Collection<Integer> friendIds) {
         return fileManager.getChats(friendIds);
     }
 

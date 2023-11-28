@@ -4,8 +4,10 @@ import common.packet.Packet;
 import common.packet.PacketClientGetFriendList;
 import server.data_access.network.ConnectionInfo;
 import server.entity.PacketIn;
+import server.entity.ServerUser;
 import utils.Triple;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,5 +33,7 @@ public interface ServerGetFriendListDataAccessInterface {
      */
     void sendTo(Packet packet, ConnectionInfo info);
 
-    HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(List<Integer> friendIds);
+    ServerUser getUserById(int id);
+
+    HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(Collection<Integer> friendIds);
 }

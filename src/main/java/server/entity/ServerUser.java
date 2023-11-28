@@ -79,7 +79,7 @@ public interface ServerUser {
      * @return The HashMap representing the user's friend list (Key: friend ID, Value: friend username).
      */
 
-    HashMap<Integer, Tuple<String, Integer>> getFriendList();
+    HashMap<Integer, Integer> getFriendList();
 
     /**
      * Gets the user ID.
