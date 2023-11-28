@@ -1,5 +1,7 @@
 package server.entity;
 
+import utils.Tuple;
+
 import java.util.HashMap;
 
 /**
@@ -77,7 +79,7 @@ public interface ServerUser {
      * @return The HashMap representing the user's friend list (Key: friend ID, Value: friend username).
      */
 
-    HashMap<Integer, String> getFriendList();
+    HashMap<Integer, Integer> getFriendList();
 
     /**
      * Gets the user ID.

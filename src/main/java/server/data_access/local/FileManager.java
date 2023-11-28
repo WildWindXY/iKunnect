@@ -8,14 +8,14 @@ import server.data_access.DataAccess;
 import server.entity.*;
 import utils.FileUtils;
 import utils.TextUtils;
+import utils.Triple;
 import utils.Tuple;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -100,6 +100,20 @@ public class FileManager {
 
     public ServerChat getChat(int id) {
         return serverChats.getChat(id);
+    }
+
+    public HashMap<Integer, List<Triple<Long, Integer, String>>> getChats(Collection<Integer> chatIds) {
+        HashMap<Integer, List<Integer>> map = serverChats.getChatMessageIds(chatIds);
+        HashMap<Integer, List<Triple<Long, Integer, String>>> chats = new HashMap<>();
+        for (int chatId : map.keySet()) {
+            List<Triple<Long, Integer, String>> messages = new ArrayList<>();
+            for (int messageId : map.get(chatId)) {
+                ServerMessages.TextMessage textMessage = serverMessages.getMessage(messageId);
+                messages.add(new Triple<>(textMessage.getTimestamp(), textMessage.getSenderId(), textMessage.getText()));
+            }
+            chats.put(chatId, messages);
+        }
+        return chats;
     }
 
     public int addMessage(int senderId, String text) {
