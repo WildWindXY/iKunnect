@@ -1,9 +1,9 @@
-package client.use_case.options;
+package client.use_case.HighContrast;
 
-public class OptionsOutputData {
+public class HighContrastOutputData {
     private final boolean highContrast;
 
-    public OptionsOutputData(int hc){
+    public HighContrastOutputData(int hc){
         highContrast = hc == 1;
     }
 

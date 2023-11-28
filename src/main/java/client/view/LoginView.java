@@ -4,7 +4,7 @@ import client.interface_adapter.Login.LoginController;
 import client.interface_adapter.Login.LoginState;
 import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Signup.SignupController;
-import client.use_case.options.OptionsOutputData;
+import client.use_case.HighContrast.HighContrastOutputData;
 import client.view.components.buttons.loginSignupButton;
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;
@@ -50,7 +50,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     private boolean HC = false;
 
-    public LoginView(LoginController controller, SignupController signupController, LoginViewModel loginViewModel, OptionsOutputData outputData) {
+    public LoginView(LoginController controller, SignupController signupController, LoginViewModel loginViewModel, HighContrastOutputData outputData) {
 
         HC = outputData.getHighContrast();
         this.loginController = controller;

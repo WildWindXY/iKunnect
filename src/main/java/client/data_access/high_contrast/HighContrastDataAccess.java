@@ -1,7 +1,7 @@
-package client.data_access.options;
+package client.data_access.high_contrast;
 
-import client.use_case.options.OptionsDataAccessInterface;
-import client.use_case.options.OptionsOutputData;
+import client.use_case.HighContrast.HighContrastDataAccessInterface;
+import client.use_case.HighContrast.HighContrastOutputData;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,11 +10,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OptionsDataAccess implements OptionsDataAccessInterface {
+public class HighContrastDataAccess implements HighContrastDataAccessInterface {
 
     private final String csvPath = "./options.csv";
 
-    public OptionsDataAccess() {
+    public HighContrastDataAccess() {
     }
 
     @Override
@@ -43,11 +43,11 @@ public class OptionsDataAccess implements OptionsDataAccessInterface {
 
 
     @Override
-    public OptionsOutputData get(int index) {
+    public HighContrastOutputData get(int index) {
         switch (index) {
             case HIGH_CONTRAST:
                 System.out.println("OptionsDAO get HIGH_CONTRAST");
-                return new OptionsOutputData(csvGet(index));
+                return new HighContrastOutputData(csvGet(index));
             case 2:
         }
 

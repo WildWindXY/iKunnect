@@ -4,7 +4,7 @@ import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Signup.SignupController;
 import client.interface_adapter.Signup.SignupState;
 import client.interface_adapter.Signup.SignupViewModel;
-import client.use_case.options.OptionsOutputData;
+import client.use_case.HighContrast.HighContrastOutputData;
 import client.view.components.buttons.loginSignupButton;
 import client.view.components.labels.InputFieldJLabel;
 import client.view.components.textfields.CustomJPasswordField;
@@ -46,7 +46,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private boolean HC = false;
 
 
-    public SignupView(SignupController controller, SignupViewModel signupViewModel, OptionsOutputData outputData) {
+    public SignupView(SignupController controller, SignupViewModel signupViewModel, HighContrastOutputData outputData) {
 
         this.HC = HC;
         initComponents(HC);

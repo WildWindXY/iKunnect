@@ -1,16 +1,19 @@
 package client.app;
 
 import client.data_access.ServerDataAccessObject;
-import client.data_access.options.OptionsDataAccess;
+import client.data_access.add_friend.AddFriendDataAccess;
+import client.data_access.high_contrast.HighContrastDataAccess;
 import client.data_access.receive_message.ReceiveMessageDataAccess;
 import client.data_access.send_message.SendMessageDataAccess;
 import client.data_access.translate.TranslateDataAccess;
-import client.interface_adapter.Logged_in.LoggedInViewModel;
 import client.interface_adapter.Login.LoginViewModel;
 import client.interface_adapter.Main.MainViewModel;
 import client.interface_adapter.Signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
-import client.view.*;
+import client.view.LoginView;
+import client.view.MainView;
+import client.view.SignupView;
+import client.view.ViewManager;
 import client.view.components.frames.SmallJFrame;
 
 import javax.swing.*;
@@ -32,7 +35,6 @@ public class IntegratedClientApp {
         // Initialize view models and data access objects
         LoginViewModel loginViewModel = new LoginViewModel();
         SignupViewModel signupViewModel = new SignupViewModel();
-        LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
         MainViewModel mainViewModel = new MainViewModel();
 
         String serverAddress = "localhost";
@@ -46,21 +48,20 @@ public class IntegratedClientApp {
         SendMessageDataAccess sendDataAccessObject = new SendMessageDataAccess(serverDataAccessObject);
         ReceiveMessageDataAccess receiveDataAccessObject = new ReceiveMessageDataAccess(serverDataAccessObject);
         TranslateDataAccess translateDataAccessObject = new TranslateDataAccess();
-        OptionsDataAccess optionsDataAccessObject = new OptionsDataAccess();
+        HighContrastDataAccess highContrastDataAccessObject = new HighContrastDataAccess();
+        AddFriendDataAccess addFriendDataAccessObject = new AddFriendDataAccess(serverDataAccessObject);
 
         // Create and add your views to the card layout
-        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, serverDataAccessObject, optionsDataAccessObject);
-        signupView.setPreferredSize(new Dimension(550, 500));
+        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, serverDataAccessObject, highContrastDataAccessObject);
+        //signupView.setPreferredSize(new Dimension(550, 500));
         views.add(signupView, SignupView.VIEW_NAME);
 
-        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject, optionsDataAccessObject);
-        loginView.setPreferredSize(new Dimension(550, 500));
+        LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, mainViewModel, serverDataAccessObject, highContrastDataAccessObject);
+        //loginView.setPreferredSize(new Dimension(550, 500));
         views.add(loginView, LoginView.VIEW_NAME);
 
-        LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
-        views.add(loggedInView, LoggedInView.VIEW_NAME);
 
-        MainView mainView = MainUseCaseFactory.create(loginViewModel.getState().getUsername(), sendDataAccessObject, receiveDataAccessObject, translateDataAccessObject, optionsDataAccessObject, mainViewModel);
+        MainView mainView = MainUseCaseFactory.create(loginViewModel.getState().getUsername(), sendDataAccessObject, receiveDataAccessObject, translateDataAccessObject, highContrastDataAccessObject, addFriendDataAccessObject, mainViewModel);
         mainView.setPreferredSize(new Dimension(1200, 800)); // Set the preferred size
         views.add(mainView, MainView.VIEW_NAME);
 
