@@ -1,7 +1,5 @@
 package client.interface_adapter.login;
 
-import client.interface_adapter.Logged_in.LoggedInState;
-import client.interface_adapter.Logged_in.LoggedInViewModel;
 import client.interface_adapter.main.MainViewModel;
 import client.interface_adapter.signup.SignupViewModel;
 import client.interface_adapter.ViewManagerModel;
