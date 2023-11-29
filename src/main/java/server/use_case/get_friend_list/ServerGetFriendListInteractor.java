@@ -63,7 +63,6 @@ public class ServerGetFriendListInteractor implements ServerGetFriendListInputBo
                 serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(friends, chats, PacketServerGetFriendListResponse.Status.SUCCESS), info);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             getFriendListPresenter.addMessage(TextUtils.error("GetFriendList Failed: " + e.getMessage()));
             serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, null, PacketServerGetFriendListResponse.Status.SERVER_ERROR), info);
         }

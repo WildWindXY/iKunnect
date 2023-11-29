@@ -1,5 +1,7 @@
+import org.junit.jupiter.api.Test;
+
 public class TranslationTest {
-    @org.junit.Test
+    @Test
     public void testTranslation() {
 //        TranslationPresenter translationPresenter = new TranslationPresenter();
 //        TranslateDataAccessInterface translationDataAccessObject = new TranslateDataAccess();

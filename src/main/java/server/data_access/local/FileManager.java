@@ -31,6 +31,12 @@ public class FileManager {
     private final ServerMessages serverMessages;
     private final Timer timer;
 
+    private final Thread shutdownHook = new Thread(() -> {
+        System.err.println("Emergency Saving...");
+        saveModifiedFiles();
+        System.err.println("Savings Done.");
+    });
+
     public FileManager(DataAccess dataAccess) {
         File dir = new File(TEST_PATH);
         if (!dir.exists() && !dir.mkdir()) {
@@ -48,6 +54,7 @@ public class FileManager {
                 saveModifiedFiles();
             }
         }, 1000, 1000);// execute every second
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
     /**
@@ -138,7 +145,9 @@ public class FileManager {
      * Initiates a graceful shutdown of the FileManager.
      */
     public void shutdown() {
+        Runtime.getRuntime().removeShutdownHook(shutdownHook);
         timer.cancel();
+        saveModifiedFiles();
     }
 
     private void saveModifiedFiles() {

@@ -1,6 +1,8 @@
+import org.junit.jupiter.api.Test;
+
 public class SendMessageTest {
 
-    @org.junit.Test
+    @Test
     public void testSendMessage() {
 //        try {
 //            initKey("1111222233334444");
