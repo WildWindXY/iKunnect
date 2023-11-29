@@ -1,5 +1,6 @@
 package client.interface_adapter.signup;
 
+import client.interface_adapter.login.LoginState;
 import client.interface_adapter.main.MainViewModel;
 import client.interface_adapter.send_message.SendMessageState;
 import client.interface_adapter.ViewManagerModel;
@@ -39,10 +40,16 @@ public class SignupPresenter implements SignupOutputBoundary {
 //
 //        viewManagerModel.setActiveView(loginViewModel.getViewName());
 //        viewManagerModel.firePropertyChanged();
-        SendMessageState sendMessageState = mainViewModel.getState();
-//        sendMessageState.setSender(response.getUsername());
-        mainViewModel.setState(sendMessageState);
-        mainViewModel.firePropertyChanged();
+        // TODO: Check whether we should use other states.
+//        SendMessageState sendMessageState = mainViewModel.getSendMessageState();
+////        sendMessageState.setSender(response.getUsername());
+//        mainViewModel.setSendMessageState(sendMessageState);
+//        mainViewModel.fireSendMessagePropertyChanged();
+
+        LoginState loginState = mainViewModel.getLoginState();
+        loginState.setUsername(response.getUsername());
+        mainViewModel.setLoginState(loginState);
+        mainViewModel.fireLoginPropertyChanged();
 
         viewManagerModel.setActiveView(mainViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
@@ -51,7 +58,7 @@ public class SignupPresenter implements SignupOutputBoundary {
 
     @Override
     public void prepareLoginView() {
-        viewManagerModel.setActiveView(loginViewModel.getViewName());
+        viewManagerModel.setActiveView(mainViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
