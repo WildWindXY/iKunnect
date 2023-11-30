@@ -1,5 +1,6 @@
 import client.app.LoginUseCaseFactory;
 import client.data_access.ServerDataAccessObject;
+import client.data_access.high_contrast.HighContrastDataAccess;
 import client.interface_adapter.login.LoginController;
 import client.interface_adapter.login.LoginPresenter;
 import client.interface_adapter.login.LoginViewModel;
@@ -116,7 +117,13 @@ class LoginUseCaseFactoryTest {
         signupViewModel = mock(SignupViewModel.class);
         mainViewModel = mock(MainViewModel.class);
         serverDataAccessObject = mock(ServerDataAccessObject.class);
-        highContrastDataAccessObject = mock(HighContrastDataAccessInterface.class);
+//        highContrastDataAccessObject = mock(HighContrastDataAccess.class);
+//        viewManagerModel = new ViewManagerModel();
+//        loginViewModel = new LoginViewModel();
+//        signupViewModel = new SignupViewModel();
+//        mainViewModel = new MainViewModel();
+//        serverDataAccessObject = new ServerDataAccessObject("localhost", 1233);
+        highContrastDataAccessObject = new HighContrastDataAccess();
 
     }
 
