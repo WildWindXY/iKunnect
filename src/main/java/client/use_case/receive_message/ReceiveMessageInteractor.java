@@ -16,10 +16,8 @@ public class ReceiveMessageInteractor implements ReceiveMessageInputBoundary {
     }
 
     /**
-     * Executes the process of sending a message based on the provided input data. It interacts with
-     * the data access layer to send the message and communicates the results to the output boundary.
-     *
-     * @param sendMessageInputData The input data for sending the message, including message content, sender, and receiver.
+     * Executes the receive-message use case, retrieving received messages from data access
+     * and presenting the results using the output boundary.
      */
     @Override
     public void execute() {
