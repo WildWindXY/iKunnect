@@ -1,17 +1,13 @@
 package client.use_case.receive_message;
 
 /**
- * The SendMessageDataAccessInterface represents an interface for sending messages
- * with input and output data.
- * <p>
- * Implementations of this interface are expected to provide a method for sending messages
- * based on the input data provided and returning output data in response.
+ * Defines the data access interface for receiving messages.
  */
 public interface ReceiveMessageDataAccessInterface {
     /**
-     * Sends a message based on the provided input data and returns output data.
+     * Receives a message from the data source.
      *
-     * @return The output data in response to the sent message.
+     * @return The output data containing information about the received message.
      */
     ReceiveMessageOutputData receiveMessage();
 }

@@ -1,17 +1,10 @@
 package client.use_case.receive_message;
 
-/**
- * The SendMessageOutputBoundary represents an interface for presenting the result
- * of sending a message to an external entity.
- * <p>
- * Implementations of this interface are expected to provide a method for presenting
- * the output data resulting from a message send operation.
- */
 public interface ReceiveMessageOutputBoundary {
     /**
-     * Presents the result of sending a message to an external entity.
+     * Presents the result of receiving a message to the client.
      *
-     * @param outputData The output data containing the result of the message send operation.
+     * @param outputData The output data containing details of the received message.
      */
     void presentSendMessageResult(ReceiveMessageOutputData outputData);
 }
