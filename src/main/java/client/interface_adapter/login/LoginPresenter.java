@@ -28,10 +28,7 @@ public class LoginPresenter implements LoginOutputBoundary {
     private final MainViewModel mainViewModel;
     private ViewManagerModel viewManagerModel;
 
-    public LoginPresenter(ViewManagerModel viewManagerModel,
-                          SignupViewModel signupViewModel,
-                          MainViewModel mainViewModel,
-                          LoginViewModel loginViewModel) {
+    public LoginPresenter(ViewManagerModel viewManagerModel, SignupViewModel signupViewModel, MainViewModel mainViewModel, LoginViewModel loginViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.signupViewModel = signupViewModel;
         this.mainViewModel = mainViewModel;
@@ -47,6 +44,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         //sendMessageState.setSender(response.getUsername());
 
         this.mainViewModel.initMessages(response.getFriends(), response.getChats());
+        this.mainViewModel.setMyUserId(response.getUserId());
         this.mainViewModel.setLoginState(loginState);
         this.mainViewModel.fireLoginPropertyChanged();
 

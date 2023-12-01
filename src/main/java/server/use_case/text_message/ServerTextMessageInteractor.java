@@ -70,7 +70,7 @@ public class ServerTextMessageInteractor implements ServerTextMessageInputBounda
                 }
             }
         } catch (Exception e) {
-            textMessagePresenter.addMessage(TextUtils.error("FriendRequest Failed: " + e.getMessage()));
+            textMessagePresenter.addMessage(TextUtils.error("TextMessage Error: " + e.getMessage()));
             serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessageResponse(clientMessageId, timestamp, PacketServerTextMessageResponse.Status.SERVER_ERROR), info);
         } finally {
             ServerChats.save();

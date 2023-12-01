@@ -22,8 +22,8 @@ public class ReceiveMessagePresenter implements ReceiveMessageOutputBoundary {
         SendMessageState state = mainViewModel.getSendMessageState();
         state.setMessage(outputData.getMessage());
         state.setTimestamp(outputData.getTimestamp());
-        state.setSuccess(true);
-        state.setSender(outputData.getSenderID());
+//        state.setSuccess(true);
+//        state.setSender(outputData.getSenderID());
         mainViewModel.setSendMessageState(state);
         mainViewModel.fireSendMessagePropertyChanged();
         System.out.println(outputData.getTimestamp()+" "+outputData.getMessage());

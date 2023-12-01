@@ -34,8 +34,8 @@ public class MainController {
         this.myUsername = myUsername;
     }
 
-    public void sendMessage(String message, String receiver) {
-        SendMessageInputData in = new SendMessageInputData(message, myUsername, receiver);
+    public void sendMessage(String message, int recipientID) {
+        SendMessageInputData in = new SendMessageInputData(message, myUsername, recipientID);
         sendMessageInteractor.execute(in);
     }
 

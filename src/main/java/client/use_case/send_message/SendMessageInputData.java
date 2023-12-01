@@ -3,7 +3,7 @@ package client.use_case.send_message;
 public class SendMessageInputData {
     private final String message;
     private final String senderID;
-    private final String recipientID;
+    private final int recipientID;
 
     /**
      * Constructs a SendMessageInputData object with the provided message content, sender, and receiver.
@@ -12,10 +12,10 @@ public class SendMessageInputData {
      * @param sender   The ID of the message sender.
      * @param receiver The ID of the message receiver.
      */
-    public SendMessageInputData(String message, String sender, String receiver) {
+    public SendMessageInputData(String message, String sender, int recipientID) {
         this.message = message;
         this.senderID = sender;
-        this.recipientID = receiver;
+        this.recipientID = recipientID;
     }
 
     /**
@@ -41,7 +41,7 @@ public class SendMessageInputData {
      *
      * @return The ID of the message receiver.
      */
-    public String getReceiver() {
+    public int getRecipientID() {
         return recipientID;
     }
 }

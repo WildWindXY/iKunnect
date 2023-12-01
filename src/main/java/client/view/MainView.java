@@ -132,8 +132,6 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     private boolean HC;
     private String inputFieldTemp = "";
 
-    private int currentChatId = -1;
-
     private String myUsername;
 
     public MainView(MainController controller, MainViewModel viewModel, HighContrastOutputData outputData) {
@@ -362,26 +360,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     private void addChannelSelectListener() {
         channels.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                Triple<String, Integer, Integer> chatInfo = channels.getSelectedValue();
-                //Re-render messages
-                channelLabel.setText(chatInfo.first());
-//                mainController.setChats(value); TODO: Update this later
-
-                // You might want to clear the existing messages from the messagesPanel
-                // and load the new ones for the selected channel
-                messagesPanel.removeAll();
-                // Assuming the MainController updates the state which triggers a property change event
-                // to load messages for the selected channel
-
-
-                List<Triple<Long, Integer, String>> messages = mainViewModel.getChats().get(chatInfo.third());
-                for (Triple<Long, Integer, String> messageInfo : messages) {
-                    addMessage(Objects.equals(messageInfo.second(), chatInfo.second()) ? chatInfo.first() : myUsername, messageInfo.third(), messageInfo.first());
-                }
-//                mainViewModel.setCurrentChannel(value); TODO: Update this later
-//                mainViewModel.setChannelMessages(newMessages);
-                messagesPanel.revalidate();
-                messagesPanel.repaint();
+                updateCurrentChat();
             }
         });
     }
@@ -410,11 +389,16 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                     String content = InputUtils.cleanInput(inputField.getText());
                     if (content.isEmpty()) {
                         Toolkit.getDefaultToolkit().beep();
-                    } else {
+                    } else if (mainViewModel.getCurrentChatId() != -1) {
                         System.out.println("Send message with content, channel name, etc.");
                         System.out.println(content);
                         inputField.setText(null);
-                        mainController.sendMessage(content, channelLabel.getText());
+                        for (int friendId : mainViewModel.getFriends().keySet()) {
+                            if (mainViewModel.getFriends().get(friendId).second() == mainViewModel.getCurrentChatId()) {
+                                mainController.sendMessage(content, friendId);
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -674,7 +658,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     private void setCurrentChannelLabel() {
-        channelLabel = new JLabel("Current Channel Name");
+        channelLabel = new JLabel("Add some friends!");
         channelLabel.setFont(HC ? channelLabelFont : channelLabelFontHC);
         if (HC) {
             channelLabel.setForeground(HCTextColor);
@@ -813,14 +797,17 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         switch (eventName) {
             case "sendMessageState" -> {
                 SendMessageState sendMessageState = (SendMessageState) evt.getNewValue();
-                PlainTextMessage m = null;
-                if (sendMessageState.getSender().isEmpty()) {
-                    //m = new PlainTextMessage("You", sendMessageState.getMessage(), sendMessageState.getTimestamp(), 1);
-                    m = new PlainTextMessage(myUsername, sendMessageState.getMessage(), sendMessageState.getTimestamp(), 1);
+                if (sendMessageState.getSenderId() == mainViewModel.getMyUserId()) {
+                    messagesPanel.add(new PlainTextMessage(myUsername, sendMessageState.getMessage(), sendMessageState.getTimestamp(), 1));
+                    mainViewModel.getChats().get(mainViewModel.getCurrentChatId()).add(new Triple<>(sendMessageState.getTimestamp(), sendMessageState.getSenderId(), sendMessageState.getMessage()));
                 } else {
-                    m = new PlainTextMessage(sendMessageState.getSender(), sendMessageState.getMessage(), sendMessageState.getTimestamp(), 0);
+                    Tuple<String, Integer> friendInfo = mainViewModel.getFriends().get(sendMessageState.getSenderId());
+                    if (friendInfo.second() == mainViewModel.getCurrentChatId()) {
+                        messagesPanel.add(new PlainTextMessage(friendInfo.first(), sendMessageState.getMessage(), sendMessageState.getTimestamp(), 0));
+                    }
+                    mainViewModel.getChats().get(mainViewModel.getCurrentChatId()).add(new Triple<>(sendMessageState.getTimestamp(), sendMessageState.getSenderId(), sendMessageState.getMessage()));
                 }
-                messagesPanel.add(m);
+
                 messagesPanel.revalidate();
                 SwingUtilities.invokeLater(() -> {
                     JScrollBar verticalScrollBar = messagesScrollPane.getVerticalScrollBar();
@@ -840,7 +827,6 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             case "loginState" -> {
                 System.out.println("loginState");
                 this.myUsername = mainViewModel.getUserName();
-                //this.myUsername = mainController.getMyUsername();
                 System.out.println("myUsername is: " + myUsername);
                 initChannels();
             }
@@ -863,23 +849,27 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         channels.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         channelsScrollPane.setViewportView(channels);
 
+        setCurrentChannelLabel(); //TODO: Probably due to my lack of understanding, the current chat name label went to the bottom somehow
         if (!mainViewModel.getFriends().isEmpty()) {
             channels.setSelectedIndex(0);
-            Triple<String, Integer, Integer> chatInfo = channels.getSelectedValue();
-            channelLabel.setText(chatInfo.first());
-
-            messagesPanel.removeAll();
-            List<Triple<Long, Integer, String>> messages = mainViewModel.getChats().get(chatInfo.third());
-            for (Triple<Long, Integer, String> messageInfo : messages) {
-                addMessage(Objects.equals(messageInfo.second(), chatInfo.second()) ? chatInfo.first() : myUsername, messageInfo.third(), messageInfo.first());
-            }
-            messagesPanel.revalidate();
-            messagesPanel.repaint();
+            updateCurrentChat();
         }
-        //TODO: Probably due to my lack of understanding, the current chat name label went to the bottom somehow
-        setCurrentChannelLabel();
         addChannelSelectListener();
         addChannelRightClickListener();
+    }
+
+    private void updateCurrentChat() {
+        Triple<String, Integer, Integer> chatInfo = channels.getSelectedValue();
+        channelLabel.setText(chatInfo.first());
+        mainViewModel.setCurrentChatId(chatInfo.third());
+
+        messagesPanel.removeAll();
+        List<Triple<Long, Integer, String>> messages = mainViewModel.getChats().get(chatInfo.third());
+        for (Triple<Long, Integer, String> messageInfo : messages) {
+            addMessage(Objects.equals(messageInfo.second(), chatInfo.second()) ? chatInfo.first() : myUsername, messageInfo.third(), messageInfo.first());
+        }
+        messagesPanel.revalidate();
+        messagesPanel.repaint();
     }
 
     class PlainTextMessage extends MessagesJPanel {
