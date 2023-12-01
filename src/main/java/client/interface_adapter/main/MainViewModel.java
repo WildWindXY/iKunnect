@@ -51,6 +51,9 @@ public class MainViewModel {
     public String getViewName() {
         return "Main Window";
     }
+    public String getUserName() {
+        return loginState.getUsername();
+    }
 
     public void setSendMessageState(SendMessageState sendMessageState) {
         this.sendMessageState = sendMessageState;
