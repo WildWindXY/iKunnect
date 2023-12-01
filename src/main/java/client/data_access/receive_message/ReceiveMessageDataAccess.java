@@ -3,7 +3,7 @@ package client.data_access.receive_message;
 import client.data_access.ServerDataAccessObject;
 import client.use_case.receive_message.ReceiveMessageDataAccessInterface;
 import client.use_case.receive_message.ReceiveMessageOutputData;
-import common.packet.PacketServerMessage;
+import common.packet.PacketServerTextMessage;
 
 import static utils.MessageEncryptionUtils.AES_decrypt;
 
@@ -22,7 +22,7 @@ public class ReceiveMessageDataAccess implements ReceiveMessageDataAccessInterfa
      */
     @Override
     public ReceiveMessageOutputData receiveMessage() {
-        PacketServerMessage response = serverDataAccessObject.getReceiveMessage();
+        PacketServerTextMessage response = serverDataAccessObject.getReceiveMessage();
         try {
             return new ReceiveMessageOutputData(response.getSender(), AES_decrypt(response.getEncryptedMessage()), response.getTimestamp());
         } catch (Exception e) {

@@ -1,12 +1,12 @@
 package common.packet;
 
-public class PacketServerMessage implements Packet {
+public class PacketServerTextMessage implements Packet {
     private final String message;
     private final int senderID;
 
     private final long timestamp;
 
-    public PacketServerMessage(int senderID, String message, long timestamp) {
+    public PacketServerTextMessage(int senderID, String message, long timestamp) {
         this.senderID = senderID;
         this.message = message;
         this.timestamp = timestamp;
@@ -26,6 +26,6 @@ public class PacketServerMessage implements Packet {
 
     @Override
     public String toString() {
-        return "[PacketServerMessage] senderID: " + senderID + ", timestamp: " + timestamp + ", message: " + message;
+        return "[PacketServerTextMessage] senderID: " + senderID + ", timestamp: " + timestamp + ", message: " + message;
     }
 }

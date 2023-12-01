@@ -5,7 +5,7 @@ public class PacketClientTextMessage implements Packet {
     private final int recipientID;
     private final int clientMessageId;
 
-    public PacketClientTextMessage(int clientMessageId, int recipientID, String message) {// TODO: change recipientID to chatID
+    public PacketClientTextMessage(int clientMessageId, int recipientID, String message) {
         this.clientMessageId = clientMessageId; // Allows client to check if message was sent, server would respond with the same id
         this.recipientID = recipientID;
         this.message = message;

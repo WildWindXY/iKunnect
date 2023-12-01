@@ -16,7 +16,7 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
     private final LinkedBlockingQueue<Packet> receivedPacket = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketServerLoginResponse> loginResponses = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<PacketServerSignupResponse> signupResponses = new LinkedBlockingQueue<>();
-    private final LinkedBlockingQueue<PacketServerMessage> serverMessages = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<PacketServerTextMessage> serverMessages = new LinkedBlockingQueue<>();
 
     private final LinkedBlockingQueue<PacketServerGetFriendListResponse> getFriendListResponses = new LinkedBlockingQueue<>();
 
@@ -65,8 +65,8 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
                     Packet packet = receivedPacket.take();
                     if (packet instanceof PacketDebug) {
                         System.out.println("Received from server (debug message): " + packet);
-                    } else if (packet instanceof PacketServerMessage) {
-                        serverMessages.add((PacketServerMessage) packet);
+                    } else if (packet instanceof PacketServerTextMessage) {
+                        serverMessages.add((PacketServerTextMessage) packet);
                     } else if (packet instanceof PacketServerLoginResponse) {
                         loginResponses.add((PacketServerLoginResponse) packet);
                     } else if (packet instanceof PacketServerTextMessageResponse) {
@@ -118,7 +118,7 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
         }
     }
 
-    public PacketServerMessage getReceiveMessage() {
+    public PacketServerTextMessage getReceiveMessage() {
         try {
             return serverMessages.take();
         } catch (InterruptedException e) {
