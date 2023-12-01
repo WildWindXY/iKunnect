@@ -8,7 +8,9 @@ import client.use_case.high_contrast.HighContrastOutputData;
 import client.view.components.image.ImageFittingComponent;
 import client.view.components.panels.MessagesJPanel;
 import client.view.exceptions.InvalidMessageException;
+import org.apache.logging.log4j.message.Message;
 import utils.InputUtils;
+import utils.Triple;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,6 +19,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+import java.util.HashMap;
+import java.util.List;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -361,7 +365,28 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                 System.out.println(value);
                 //Re-render messages
                 channelLabel.setText(value);
-                //TODO implement load messages from channel
+                mainController.setChats(value);
+
+                // You might want to clear the existing messages from the messagesPanel
+                // and load the new ones for the selected channel
+                messagesPanel.removeAll();
+                // Assuming the MainController updates the state which triggers a property change event
+                // to load messages for the selected channel
+
+                HashMap<Integer, List<Triple<Long, Integer, String>>> newMessages = mainViewModel.getChannelMessages(); // Assuming you have such a method
+                mainViewModel.setCurrentChannel(value);
+//                mainViewModel.setChannelMessages(newMessages);
+                // TODO: It cannot change right now, have to decide about the channel ID?
+                List<Triple<Long, Integer, String>> newMessageList = newMessages.get(1);
+                for (Triple<Long, Integer, String> newMessage : newMessageList) {
+                    // Create and add new message components to the messagesPanel
+                    // This depends on how you're displaying messages
+                    // TODO: It cannot change right now, have to discuss about the ID or UserName
+                    addMessage("newMessage.second()", newMessage.third(), newMessage.first());
+                }
+
+                messagesPanel.revalidate();
+                messagesPanel.repaint();
             }
         });
     }
@@ -395,8 +420,6 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                         System.out.println(content);
                         inputField.setText(null);
                         mainController.sendMessage(content, channelLabel.getText());
-
-
                     }
                 }
             }
@@ -570,7 +593,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
      *                                 If the timestamp is negative.
      */
 
-    private void addMessage(String username, String content, int timestamp) throws InvalidMessageException {
+    private void addMessage(String username, String content, long timestamp) throws InvalidMessageException {
 
         if (username == null) {
             throw new InvalidMessageException("Username must not be null");
