@@ -6,6 +6,8 @@ import client.interface_adapter.send_message.SendMessageState;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainViewModel {
     public static final String TITLE_LABEL = "Main Window";
@@ -14,6 +16,7 @@ public class MainViewModel {
 
     private LoginState loginState = new LoginState();
     private HighContrastState highContrastState = new HighContrastState();
+    private List<MainState> channels = new ArrayList<>();
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -62,4 +65,21 @@ public class MainViewModel {
     public void setLoginState(LoginState loginState){this.loginState = loginState;}
 
     public void setOptionsState(HighContrastState highContrastState) {this.highContrastState = highContrastState;}
+
+    public void addChannel(String channelName) {
+        MainState newChannel = new MainState(channelName);
+        channels.add(newChannel);
+        // Notify the view about the new channel
+        support.firePropertyChange("channelList", null, channels);
+    }
+
+    public void removeChannel(String channelName) {
+        channels.removeIf(channel -> channel.getName().equals(channelName));
+        // Notify the view about the updated channel list
+        support.firePropertyChange("channelList", null, channels);
+    }
+
+    public List<MainState> getChannels() {
+        return channels;
+    }
 }

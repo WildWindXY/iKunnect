@@ -8,9 +8,11 @@ import client.use_case.translate.TranslationInputBoundary;
 import client.use_case.translate.TranslationInputData;
 import client.use_case.high_contrast.HighContrastInputBoundary;
 import client.view.MainView;
+import org.apache.logging.log4j.message.Message;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MainController {
 
@@ -134,6 +136,31 @@ public class MainController {
             }
         });
         return b;
+    }
+
+    public void switchChannel(String channelName) {
+        // Example logic to handle channel switching
+
+        // Fetch messages for the selected channel
+        // This is a placeholder logic. You might need to implement the actual message fetching
+        // logic based on your application's data model and architecture.
+        List<Message> channelMessages = fetchMessagesForChannel(channelName);
+
+        // Update ViewModel with the channel messages
+        // This method needs to be implemented in your MainViewModel
+        mainViewModel.updateChannelMessages(channelMessages);
+
+        // Optionally, if MainViewModel notifies the view via property change listeners,
+        // the view will automatically update to reflect the new channel's messages.
+    }
+
+    // A method to fetch messages for a specific channel
+    // This is a placeholder and needs to be implemented according to your data access patterns
+    private List<Message> fetchMessagesForChannel(String channelName) {
+        // Fetch messages for the selected channel
+        // This is a placeholder logic. You might need to implement the actual message fetching
+        // logic based on your application's data model and architecture.
+        List<Message> channelMessages = new ArrayList<>();
     }
 
 }

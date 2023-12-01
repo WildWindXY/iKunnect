@@ -28,6 +28,8 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainView extends JPanel implements ActionListener, PropertyChangeListener {
 
@@ -350,17 +352,36 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         });
     }
 
+//    private void addChannelSelectListener() {
+//        channels.addListSelectionListener(e -> {
+//            if (!e.getValueIsAdjusting()) {
+//                String value = channels.getSelectedValue();
+//                System.out.println(value);
+//                //Re-render messages
+//                channelLabel.setText(value);
+//                //TODO implement load messages from channel
+//            }
+//        });
+//    }
     private void addChannelSelectListener() {
         channels.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                String value = channels.getSelectedValue();
-                System.out.println(value);
-                //Re-render messages
-                channelLabel.setText(value);
-                //TODO implement load messages from channel
+                String selectedChannel = channels.getSelectedValue();
+                System.out.println(selectedChannel);
+                channelLabel.setText(selectedChannel);
+
+                // Call the MainController to handle the channel switch
+                mainController.switchChannel(selectedChannel);
+
+                // You might want to clear the existing messages from the messagesPanel
+                // and load the new ones for the selected channel
+                messagesPanel.removeAll();
+                // Assuming the MainController updates the state which triggers a property change event
+                // to load messages for the selected channel
             }
         });
     }
+
 
     private void addChannelRightClickListener() {
 
@@ -390,7 +411,16 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                         System.out.println("Send message with content, channel name, etc.");
                         System.out.println(content);
                         inputField.setText(null);
-                        mainController.sendMessage(content, channelLabel.getText());
+                        mainController.setMyUsername(mainViewModel.getUserName());
+                        String str = channelLabel.getText();
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(str);
+
+                        StringBuilder sb = new StringBuilder();
+                        while (m.find()) {
+                            sb.append(m.group());
+                        }
+                        mainController.sendMessage(content, sb.toString());
 
 
                     }
@@ -579,7 +609,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     private void setCurrentChannelLabel() {
-        channelLabel = new JLabel("Current Channel Name");
+        channelLabel = new JLabel("Channel 1");
         channelLabel.setFont(HC ? channelLabelFont : channelLabelFontHC);
         if (HC) {
             channelLabel.setForeground(HCTextColor);
