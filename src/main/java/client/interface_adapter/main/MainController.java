@@ -20,7 +20,7 @@ public class MainController {
     private final HighContrastInputBoundary highContrastInteractor;
 
     private final AddFriendInputBoundary addFriendInteractor;
-    private final String myUsername;
+    private String myUsername;
 
     private JFrame f;
     private JFrame addFriendInput;
@@ -46,6 +46,10 @@ public class MainController {
     public String translateMessage(String message) {
         TranslationInputData in = new TranslationInputData(message);
         return translationInteractor.execute(in);
+    }
+
+    public void setMyUsername(String username) {
+        this.myUsername = username;
     }
 
     public void openOptionsMenu() {
