@@ -3,12 +3,22 @@ package client.interface_adapter.main;
 import client.data_access.high_contrast.HighContrastState;
 import client.interface_adapter.login.LoginState;
 import client.interface_adapter.send_message.SendMessageState;
+import org.apache.logging.log4j.message.Message;
+import utils.Triple;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainViewModel {
     public static final String TITLE_LABEL = "Main Window";
+    private List<MainState> channels = new ArrayList<>();
+
+    private Map<String, HashMap<Integer, List<Triple<Long, Integer, String>>>> channelMessagesMap = new HashMap<>();
+    private String currentChannel;
 
     private SendMessageState sendMessageState = new SendMessageState();
 
@@ -62,4 +72,16 @@ public class MainViewModel {
     public void setLoginState(LoginState loginState){this.loginState = loginState;}
 
     public void setOptionsState(HighContrastState highContrastState) {this.highContrastState = highContrastState;}
+    public void setChannelMessages(HashMap<Integer, List<Triple<Long, Integer, String>>> messages) {
+        channelMessagesMap.put(currentChannel, messages);
+    }
+    public HashMap<Integer, List<Triple<Long, Integer, String>>> getChannelMessages() {
+        return channelMessagesMap.get(currentChannel);
+    }
+    public void setCurrentChannel(String currentChannel) {
+        this.currentChannel = currentChannel;
+    }
+    public String getCurrentChannel() {
+        return currentChannel;
+    }
 }

@@ -1,6 +1,7 @@
 package client.app;
 
 import client.interface_adapter.add_friend.AddFriendPresenter;
+import client.interface_adapter.channel_chats.ChatsRequestPresenter;
 import client.interface_adapter.main.MainController;
 import client.interface_adapter.main.MainViewModel;
 import client.interface_adapter.receive_message.ReceiveMessagePresenter;
@@ -10,6 +11,10 @@ import client.use_case.add_friend.AddFriendDataAccessInterface;
 import client.use_case.add_friend.AddFriendInputBoundary;
 import client.use_case.add_friend.AddFriendInteractor;
 import client.use_case.add_friend.AddFriendOutputBoundary;
+import client.use_case.channel_chats.ChatsRequestDataAccessInterface;
+import client.use_case.channel_chats.ChatsRequestInputBoundary;
+import client.use_case.channel_chats.ChatsRequestInteractor;
+import client.use_case.channel_chats.ChatsRequestOutputBoundary;
 import client.use_case.receive_message.ReceiveMessageDataAccessInterface;
 import client.use_case.receive_message.ReceiveMessageInputBoundary;
 import client.use_case.receive_message.ReceiveMessageInteractor;
@@ -35,8 +40,9 @@ public class MainUseCaseFactory {
                                             TranslateDataAccessInterface translateDataAccessObject,
                                             HighContrastDataAccessInterface highContrastDataAccessObject,
                                             AddFriendDataAccessInterface addFriendDataAccessObject,
+                                            ChatsRequestDataAccessInterface chatsRequestDataAccessObject,
                                             MainViewModel mainViewModel) {
-        MainController mainController = createMainUseCase(myUsername, sendMessageDataAccessObject, receiveMessageDataAccessObject, translateDataAccessObject, highContrastDataAccessObject, addFriendDataAccessObject, mainViewModel);
+        MainController mainController = createMainUseCase(myUsername, sendMessageDataAccessObject, receiveMessageDataAccessObject, translateDataAccessObject, highContrastDataAccessObject, addFriendDataAccessObject, chatsRequestDataAccessObject, mainViewModel.getCurrentChannel(), mainViewModel);
         return new MainView(mainController, mainViewModel, highContrastDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST));
     }
 
@@ -46,16 +52,20 @@ public class MainUseCaseFactory {
                                                     TranslateDataAccessInterface translateDataAccessObject,
                                                     HighContrastDataAccessInterface highContrastDataAccessObject,
                                                     AddFriendDataAccessInterface addFriendDataAccessObject,
+                                                    ChatsRequestDataAccessInterface chatsRequestDataAccessObject,
+                                                    String currentChannel,
                                                     MainViewModel mainViewModel) {
         SendMessageOutputBoundary sendMessageOutputBoundary = new SendMessagePresenter(mainViewModel);
         ReceiveMessageOutputBoundary receiveMessageOutputBoundary = new ReceiveMessagePresenter(mainViewModel);
         HighContrastOutputBoundary highContrastOutputBoundary = new HighContrastPresenter(mainViewModel);
         AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(mainViewModel);
+        ChatsRequestOutputBoundary chatsRequestOutputBoundary = new ChatsRequestPresenter(mainViewModel);
         SendMessageInputBoundary sendMessageInteractor = new SendMessageInteractor(sendMessageDataAccessObject, sendMessageOutputBoundary);
         ReceiveMessageInputBoundary receiveMessageInteractor = new ReceiveMessageInteractor(receiveMessageDataAccessObject, receiveMessageOutputBoundary);
+        ChatsRequestInputBoundary chatsRequestInteractor = new ChatsRequestInteractor(chatsRequestDataAccessObject, chatsRequestOutputBoundary);
         TranslationInputBoundary translationInteractor = new TranslationInteractor(translateDataAccessObject);
         HighContrastInputBoundary highContrastInteractor = new HighContrastInteractor(highContrastDataAccessObject, highContrastOutputBoundary);
         AddFriendInputBoundary addFriendInteractor = new AddFriendInteractor(addFriendDataAccessObject, addFriendOutputBoundary);
-        return new MainController(myUsername, sendMessageInteractor, receiveMessageInteractor, translationInteractor, highContrastInteractor, addFriendInteractor);
+        return new MainController(myUsername, sendMessageInteractor, receiveMessageInteractor, translationInteractor, highContrastInteractor, addFriendInteractor, chatsRequestInteractor, currentChannel);
     }
 }

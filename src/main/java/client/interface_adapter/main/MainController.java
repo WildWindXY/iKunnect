@@ -1,6 +1,8 @@
 package client.interface_adapter.main;
 
 import client.use_case.add_friend.AddFriendInputBoundary;
+import client.use_case.channel_chats.ChatsRequestInputBoundary;
+import client.use_case.channel_chats.ChatsRequestInputData;
 import client.use_case.receive_message.ReceiveMessageInputBoundary;
 import client.use_case.send_message.SendMessageInputBoundary;
 import client.use_case.send_message.SendMessageInputData;
@@ -8,9 +10,12 @@ import client.use_case.translate.TranslationInputBoundary;
 import client.use_case.translate.TranslationInputData;
 import client.use_case.high_contrast.HighContrastInputBoundary;
 import client.view.MainView;
+import org.apache.logging.log4j.message.Message;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
+import java.util.List;;
 
 public class MainController {
 
@@ -20,18 +25,26 @@ public class MainController {
     private final HighContrastInputBoundary highContrastInteractor;
 
     private final AddFriendInputBoundary addFriendInteractor;
+    private final ChatsRequestInputBoundary chatsRequestInteractor;
     private String myUsername;
 
     private JFrame f;
     private JFrame addFriendInput;
 
-    public MainController(String myUsername, SendMessageInputBoundary sendMessageInteractor, ReceiveMessageInputBoundary receiveMessageInteractor, TranslationInputBoundary translationInteractor, HighContrastInputBoundary highContrastInteractor, AddFriendInputBoundary addFriendInterator) {
+    private Map<String, List<Message>> channelMessages;
+
+    private String currentChannel;
+
+    public MainController(String myUsername, SendMessageInputBoundary sendMessageInteractor, ReceiveMessageInputBoundary receiveMessageInteractor, TranslationInputBoundary translationInteractor, HighContrastInputBoundary highContrastInteractor, AddFriendInputBoundary addFriendInterator, ChatsRequestInputBoundary chatsRequestInteractor, String currentChannel) {
         this.sendMessageInteractor = sendMessageInteractor;
         this.receiveMessageInteractor = receiveMessageInteractor;
         this.translationInteractor = translationInteractor;
         this.highContrastInteractor = highContrastInteractor;
         this.addFriendInteractor = addFriendInterator;
+        this.chatsRequestInteractor = chatsRequestInteractor;
         this.myUsername = myUsername;
+        this.currentChannel = currentChannel;
+        this.channelMessages = new HashMap<>();
     }
 
     public void sendMessage(String message, String receiver) {
@@ -41,6 +54,10 @@ public class MainController {
 
     public void getMessage() {
         receiveMessageInteractor.execute();
+    }
+    public void setChats(String currentChannel) {
+        ChatsRequestInputData chatsIn = new ChatsRequestInputData(currentChannel);
+        chatsRequestInteractor.execute(chatsIn);
     }
 
     public String translateMessage(String message) {
@@ -145,5 +162,4 @@ public class MainController {
         });
         return b;
     }
-
 }
