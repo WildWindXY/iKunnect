@@ -7,6 +7,7 @@ import client.interface_adapter.send_message.SendMessageState;
 import client.use_case.high_contrast.HighContrastOutputData;
 import client.view.components.image.ImageFittingComponent;
 import client.view.components.panels.MessagesJPanel;
+import client.view.exceptions.InvalidMessageException;
 import utils.InputUtils;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class MainView extends JPanel implements ActionListener, PropertyChangeListener {
 
@@ -127,12 +129,15 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     private boolean HC;
     private String inputFieldTemp = "";
 
+    private String myUsername;
+
     public MainView(MainController controller, MainViewModel viewModel, HighContrastOutputData outputData) {
         this.mainController = controller;
         this.mainViewModel = viewModel;
         this.mainViewModel.addPropertyChangeListener(this);
         this.highContrastState = new HighContrastState();
-        highContrastState.setHighContrast(outputData.getHighContrast());
+        this.highContrastState.setHighContrast(outputData.getHighContrast());
+
         UIManager.put("PopupMenu.background", new Color(0));
         UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
 
@@ -183,7 +188,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
         initMessagesPanel();
         addMessageSpacer();
-        addTestMessages();
+        //addTestMessages();
 
         initMessagesScrollPane();
         initMoreOptionsButton();
@@ -229,6 +234,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         inputField = new JTextArea(inputFieldTemp);
 
         moreOptions1 = new JButton("Button 1");
+        moreOptions1.addActionListener(e -> clearMessages());
         moreOptions2 = new JButton("Button 2");
         moreOptions3 = new JButton("Button 3");
     }
@@ -345,9 +351,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     private void addMoreOptionsButtonListener() {
-        moreOptionsButton.addActionListener(l -> {
-            showMoreOptions();
-        });
+        moreOptionsButton.addActionListener(l -> showMoreOptions());
     }
 
     private void addChannelSelectListener() {
@@ -548,6 +552,75 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         return button;
     }
 
+    private void clearMessages() {
+        messagesPanel = new JPanel();
+        initMessagesPanel();
+        messagesScrollPane.setViewportView(messagesPanel);
+        addMessageSpacer();
+    }
+
+    /**
+     * Adds a new message to the messages panel.
+     *
+     * @param username  The username of the message sender.
+     * @param content   The content of the message.
+     * @param timestamp The timestamp of the message.
+     * @throws InvalidMessageException If the provided username is null.
+     *                                 If the provided content is null.
+     *                                 If the timestamp is negative.
+     */
+
+    private void addMessage(String username, String content, int timestamp) throws InvalidMessageException {
+
+        if (username == null) {
+            throw new InvalidMessageException("Username must not be null");
+        }
+
+        if (content == null | Objects.equals(content, "")) {
+            throw new InvalidMessageException("Content must not be null or empty");
+        }
+
+        if (timestamp < 0) {
+            throw new InvalidMessageException("Timestamp must be non-negative");
+        }
+
+        messagesPanel.add(new PlainTextMessage(username, content, timestamp, username.equals(myUsername) ? 1 : 0));
+
+    }
+
+    /**
+     * Inserts a new message at the specified index in the messages panel.
+     *
+     * @param username  The username of the message sender. Must not be null.
+     * @param content   The content of the message. Must not be null.
+     * @param timestamp The timestamp of the message. Must be non-negative.
+     * @param index     The index at which to insert the message in the messages panel.
+     * @throws InvalidMessageException If the provided username is null.
+     *                                 If the provided content is null.
+     *                                 If the timestamp is negative.
+     *                                 If the index is negative.
+     */
+    private void insertMessage(String username, String content, int timestamp, int index) {
+        // Validate input parameters
+        if (username == null) {
+            throw new InvalidMessageException("Username must not be null");
+        }
+
+        if (content == null | Objects.equals(content, "")) {
+            throw new InvalidMessageException("Content must not be null or empty");
+        }
+
+        if (timestamp < 0) {
+            throw new InvalidMessageException("Timestamp must be non-negative");
+        }
+        if (index < 0) {
+            throw new InvalidMessageException("Index must be non-negative");
+        }
+
+        // Implementation details...
+        messagesPanel.add(new PlainTextMessage(username, content, timestamp, username.equals(myUsername) ? 1 : 0), index);
+    }
+
 
     private void addTestMessages() {
         String[] listOfMessages = new String[10];
@@ -559,11 +632,15 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         String catIpsum = "Cat ipsum dolor sit amet, i just saw other cats inside the house and nobody ask me before using my litter box yet behind the couch yet meow for food, then when human fills food dish, take a few bites of food and continue meowing. Have a lot of grump in yourself because you can't forget to be grumpy and not be like king grumpy cat purr when being pet and human clearly uses close to one life a night no one naps that long so i revive by standing on chestawaken! or has closed eyes but still sees you, yet nap all day purr like a car engine oh yes, there is my human slave woman she does best pats ever that all i like about her hiss meow , or stuff and things. Curl into a furry donut meow for food, then when human fills food dish, take a few bites of food and continue meowing so sleep over your phone and make cute snoring noises yet lasers are tiny mice stare at imaginary bug crusty butthole but scratch at door to be let outside, get let out then scratch at door immmediately after to be let back in. Poop in the plant pot scratch at fleas, meow until belly rubs, hide behind curtain when vacuum cleaner is on scratch strangers and poo on owners food i will ruin the couch with my claws so bleghbleghvomit my furball really tie the room together, so prow?? ew dog you drink from the toilet, yum yum warm milk hotter pls, ouch too hot, for human is in bath tub, emergency! drowning! meooowww! and pretend you want to go out but then don't. Warm up laptop with butt lick butt fart rainbows until owner yells pee in litter box hiss at cats i dreamt about fish yum! for dismember a mouse and then regurgitate parts of it on the family room floor for sit by the fire and meowwww. Sniff all the things is good you understand your place in my world naughty running cat intently sniff hand tuxedo cats always looking dapper. ";
         listOfMessages[0] = catIpsum;
         int i = 0;
-        for (String listOfMessage : listOfMessages) {
-            messagesPanel.add(new PlainTextMessage("cxk", listOfMessage, 0, i++ % 2));
+        for (String testMessage : listOfMessages) {
+            addMessage(i++ % 2 == 1 ? "cxk" : myUsername, testMessage, 0);
+            //messagesPanel.add(new PlainTextMessage(i % 2 == 1 ? "cxk" : myUsername, testMessage, 0, i++ % 2));
         }
-        messagesPanel.add(new PlainTextMessage("cxk", "测试插入", 0, 0), 2);
-        messagesPanel.add(new PlainTextMessage("You", "测试插入", 0, 1), 2);
+
+        insertMessage("cxk", "测试插入", 0, 2);
+        insertMessage(myUsername, "测试插入", 0, 2);
+        //messagesPanel.add(new PlainTextMessage("cxk", "测试插入", 0, 0), 2);
+        //messagesPanel.add(new PlainTextMessage("You", "测试插入", 0, 1), 2);
     }
 
     private void initMessagesPanel() {
@@ -760,7 +837,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
                 labelWrapper.setBackground(HC ? leftColorHC : leftColor);
             } else {
-                username = formattedDate + " You" + " ";
+                username = formattedDate + " " + username + " ";
                 usernameLabel = new JLabel(username);
                 labelWrapper.setLayout(new FlowLayout(FlowLayout.RIGHT));
                 labelWrapper.setBackground(HC ? rightColorHC : rightColor);
@@ -800,6 +877,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                             PlainTextMessagePopup messagePopup = new PlainTextMessagePopup(true, selection);
                             messagePopup.show(messageContentText, e.getX(), e.getY());
                         } else {
+                            //PlainTextMessagePopup messagePopup = new PlainTextMessagePopup(false, messageContentText.getText());
                             PlainTextMessagePopup messagePopup = new PlainTextMessagePopup(false, messageContentText.getText());
                             messagePopup.show(messageContentText, e.getX(), e.getY());
                         }
@@ -911,7 +989,6 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         }
 
         class PlainTextMessagePopup extends JPopupMenu {
-
             public PlainTextMessagePopup(boolean textSelected) {
                 this(textSelected, "");
             }
@@ -1113,7 +1190,8 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                 SendMessageState sendMessageState = (SendMessageState) evt.getNewValue();
                 PlainTextMessage m = null;
                 if (sendMessageState.getSender().isEmpty()) {
-                    m = new PlainTextMessage("You", sendMessageState.getMessage(), sendMessageState.getTimestamp(), 1);
+                    //m = new PlainTextMessage("You", sendMessageState.getMessage(), sendMessageState.getTimestamp(), 1);
+                    m = new PlainTextMessage(myUsername, sendMessageState.getMessage(), sendMessageState.getTimestamp(), 1);
                 } else {
                     m = new PlainTextMessage(sendMessageState.getSender(), sendMessageState.getMessage(), sendMessageState.getTimestamp(), 0);
                 }
@@ -1129,9 +1207,18 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                 boolean hc = highContrastState.getHighContrast();
                 System.out.println("MainView HC " + hc);
                 initComponents(highContrastState);
+                addTestMessages();
             }
             case "addFriend" -> {
-                //TODO Add Friend Success
+                //TODO Add Friend
+            }
+
+            case "loginState" -> {
+                System.out.println("loginState");
+                this.myUsername = mainViewModel.getUserName();
+                //this.myUsername = mainController.getMyUsername();
+                System.out.println("myUsername is: " + myUsername);
+                addTestMessages();
             }
 
         }

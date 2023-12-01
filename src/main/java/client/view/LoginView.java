@@ -48,6 +48,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     LoginViewModel loginViewModel = new LoginViewModel();
 
+    private LoginState loginState;
+
     private boolean HC = false;
 
     public LoginView(LoginController controller, SignupController signupController, LoginViewModel loginViewModel, HighContrastOutputData outputData) {
@@ -92,9 +94,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 } else {
                     usernameBuilder.insert(usernameField.getCaretPosition(), typedChar);
                 }
-                final LoginState currentState = loginViewModel.getState();
-                currentState.setUsername(usernameBuilder.toString());
-                loginViewModel.setState(currentState);
+                loginState = loginViewModel.getState();
+                loginState.setUsername(usernameBuilder.toString());
+                loginViewModel.setState(loginState);
             }
 
             @Override
@@ -140,9 +142,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 } else {
                     passwordBuilder.insert(passwordField.getCaretPosition(), typedChar);
                 }
-                final LoginState currentState = loginViewModel.getState();
-                currentState.setPassword(passwordBuilder.toString());
-                loginViewModel.setState(currentState);
+                loginState = loginViewModel.getState();
+                loginState.setPassword(passwordBuilder.toString());
+                loginViewModel.setState(loginState);
             }
 
             @Override
@@ -160,8 +162,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
         loginButton.addActionListener(e -> {
-            final LoginState currentState = loginViewModel.getState();
-            controller.execute(currentState.getUsername(), currentState.getPassword());
+            loginState = loginViewModel.getState();
+            controller.execute(loginState.getUsername(), loginState.getPassword());
             System.out.println("Log in");
         });
 
