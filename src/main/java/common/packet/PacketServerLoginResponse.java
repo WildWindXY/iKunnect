@@ -1,16 +1,17 @@
 package common.packet;
 
-//TODO: Doc
+@SuppressWarnings("record")
+
 public class PacketServerLoginResponse implements Packet {
-    private final long userID;
+    private final int userID;
     private final Status status;
 
-    public PacketServerLoginResponse(long userID, Status status) {
+    public PacketServerLoginResponse(int userID, Status status) {
         this.userID = userID;
         this.status = status;
     }
 
-    public long getUserID() {
+    public int getUserID() {
         return userID;
     }
 

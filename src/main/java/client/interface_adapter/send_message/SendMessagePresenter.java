@@ -16,10 +16,7 @@ public class SendMessagePresenter implements SendMessageOutputBoundary {
     @Override
     public void presentSendMessageResult(SendMessageOutputData outputData, String message) {
         SendMessageState state = mainViewModel.getSendMessageState();
-        state.setMessage(message);
-        state.setTimestamp(outputData.getTimestamp());
-        state.setSuccess(outputData.getSuccess());
-        state.setSender("");
+        state.setMessage(outputData.getTimestamp(), mainViewModel.getMyUserId(), outputData.getMessage());
         mainViewModel.setSendMessageState(state);
         mainViewModel.fireSendMessagePropertyChanged();
         System.out.println(outputData.getSuccess()+" "+outputData.getSuccess());

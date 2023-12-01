@@ -2,7 +2,6 @@ package client.app;
 
 import client.data_access.ServerDataAccessObject;
 import client.data_access.add_friend.AddFriendDataAccess;
-import client.data_access.channel_chats.ChatsRequestDataAccess;
 import client.data_access.high_contrast.HighContrastDataAccess;
 import client.data_access.receive_message.ReceiveMessageDataAccess;
 import client.data_access.send_message.SendMessageDataAccess;
@@ -51,7 +50,6 @@ public class IntegratedClientApp {
         TranslateDataAccess translateDataAccessObject = new TranslateDataAccess();
         HighContrastDataAccess highContrastDataAccessObject = new HighContrastDataAccess();
         AddFriendDataAccess addFriendDataAccessObject = new AddFriendDataAccess(serverDataAccessObject);
-        ChatsRequestDataAccess chatsRequestDataAccessObject = new ChatsRequestDataAccess(serverDataAccessObject);
 
         // Create and add your views to the card layout
         SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, mainViewModel, signupViewModel, serverDataAccessObject, highContrastDataAccessObject);
@@ -63,7 +61,7 @@ public class IntegratedClientApp {
         views.add(loginView, LoginView.VIEW_NAME);
 
 
-        MainView mainView = MainUseCaseFactory.create(loginViewModel.getState().getUsername(), sendDataAccessObject, receiveDataAccessObject, translateDataAccessObject, highContrastDataAccessObject, addFriendDataAccessObject, chatsRequestDataAccessObject, mainViewModel);
+        MainView mainView = MainUseCaseFactory.create(loginViewModel.getState().getUsername(), sendDataAccessObject, receiveDataAccessObject, translateDataAccessObject, highContrastDataAccessObject, addFriendDataAccessObject, mainViewModel);
         mainView.setPreferredSize(new Dimension(1200, 800)); // Set the preferred size
         views.add(mainView, MainView.VIEW_NAME);
 

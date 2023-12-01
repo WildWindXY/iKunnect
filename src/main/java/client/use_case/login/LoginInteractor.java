@@ -19,7 +19,7 @@ public class LoginInteractor implements LoginInputBoundary {
             PacketServerGetFriendListResponse packet0 = userDataAccessObject.getFriendList();
             System.out.println(packet0);
             if (packet0.getStatus() == PacketServerGetFriendListResponse.Status.SUCCESS) {
-                LoginOutputData loginOutputData = new LoginOutputData(loginInputData.getUsername(), packet0.getFriends(), packet0.getChats());
+                LoginOutputData loginOutputData = new LoginOutputData(loginInputData.getUsername(), packet0.getFriends(), packet0.getChats(), packet.getUserID());
                 loginPresenter.prepareSuccessView(loginOutputData);
             } else {
                 loginPresenter.prepareFailView("Your login is successful, but:\n " + packet);

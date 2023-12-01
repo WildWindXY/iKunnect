@@ -7,8 +7,6 @@ import client.use_case.send_message.SendMessageOutputData;
 import common.packet.PacketClientTextMessage;
 import common.packet.PacketServerTextMessageResponse;
 
-import static utils.MessageEncryptionUtils.AES_encrypt;
-
 public class SendMessageDataAccess implements SendMessageDataAccessInterface {
     private final ServerDataAccessObject serverDataAccessObject;
 
@@ -25,21 +23,12 @@ public class SendMessageDataAccess implements SendMessageDataAccessInterface {
      *
      * @param input The input data for sending the message, including receiver and message content.
      * @return The output data containing the success status and timestamp of the sent message.
-     * @throws RuntimeException if an exception occurs during message encryption or transmission.
      */
     @Override
     public SendMessageOutputData sendMessage(SendMessageInputData input) {
-        PacketClientTextMessage packet = null;
-        try {
-            packet = new PacketClientTextMessage(0, Integer.parseInt(input.getReceiver()), AES_encrypt(input.getMessage())); //TODO: Unchecked Integer Cast
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        serverDataAccessObject.sendPacket(packet);
+//        serverDataAccessObject.sendPacket(new PacketClientTextMessage(0, input.getRecipientID(), AES_encrypt(input.getMessage()));
+        serverDataAccessObject.sendPacket(new PacketClientTextMessage(0, input.getRecipientID(), input.getMessage()));
         PacketServerTextMessageResponse response = serverDataAccessObject.getSendMessageResponse();
-        return new SendMessageOutputData(response.getStatus() == PacketServerTextMessageResponse.Status.RECEIVED, response.getTimestamp());
+        return new SendMessageOutputData(response.getStatus() == PacketServerTextMessageResponse.Status.RECEIVED, response.getTimestamp(), input.getMessage());
     }
-
-
 }

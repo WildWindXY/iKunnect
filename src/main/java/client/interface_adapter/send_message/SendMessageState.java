@@ -3,14 +3,12 @@ package client.interface_adapter.send_message;
 public class SendMessageState {
     private String message = "";
     private long timestamp = 0;
+    private int senderId = -1;
 
-    private String sender = "";
-    private boolean success = false;
     public SendMessageState(SendMessageState copy) {
         message = copy.message;
         timestamp = copy.timestamp;
-        success = copy.success;
-        sender = copy.sender;
+        senderId = copy.senderId;
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
@@ -18,38 +16,29 @@ public class SendMessageState {
     }
 
 
-    public String getMessage(){
-
+    public String getMessage() {
         return message;
     }
 
-    public String getSender(){
-        return sender;
-    }
-
-    public long getTimestamp(){
-        return timestamp;
-    }
-
-    public boolean getSuccess(){
-        return success;
-    }
-
-    public void setMessage(String message){
+    public void setMessage(long timestamp, int senderId, String message){
+        this.timestamp = timestamp;
+        this.senderId = senderId;
         this.message = message;
     }
 
-    public void setSender(String sender){
-        this.sender = sender;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public void setTimestamp(long timestamp){
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
-
-    public void setSuccess(boolean success){
-        this.success = success;
-    }
-
-
 }
