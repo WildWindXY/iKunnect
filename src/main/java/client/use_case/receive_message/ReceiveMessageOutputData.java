@@ -1,18 +1,19 @@
 package client.use_case.receive_message;
 
+@SuppressWarnings("record")
 public class ReceiveMessageOutputData {
     private final String message;
 
-    private final String senderID;
+    private final int senderID;
     private final long timestamp;
 
     public ReceiveMessageOutputData(int senderID, String message, long timestamp) {
-        this.senderID = String.valueOf(senderID);
+        this.senderID = senderID;
         this.message = message;
         this.timestamp = timestamp;
     }
-    
-    public String getSenderID() {
+
+    public int getSenderID() {
         return senderID;
     }
 

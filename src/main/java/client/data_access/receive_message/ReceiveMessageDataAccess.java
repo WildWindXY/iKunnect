@@ -5,8 +5,6 @@ import client.use_case.receive_message.ReceiveMessageDataAccessInterface;
 import client.use_case.receive_message.ReceiveMessageOutputData;
 import common.packet.PacketServerTextMessage;
 
-import static utils.MessageEncryptionUtils.AES_decrypt;
-
 public class ReceiveMessageDataAccess implements ReceiveMessageDataAccessInterface {
     private final ServerDataAccessObject serverDataAccessObject;
 
@@ -23,11 +21,11 @@ public class ReceiveMessageDataAccess implements ReceiveMessageDataAccessInterfa
     @Override
     public ReceiveMessageOutputData receiveMessage() {
         PacketServerTextMessage response = serverDataAccessObject.getReceiveMessage();
-        try {
-            return new ReceiveMessageOutputData(response.getSender(), AES_decrypt(response.getEncryptedMessage()), response.getTimestamp());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return new ReceiveMessageOutputData(response.getSender(), response.getEncryptedMessage(), response.getTimestamp());
+//        try {
+//            return new ReceiveMessageOutputData(response.getSender(), AES_decrypt(response.getEncryptedMessage()), response.getTimestamp());
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
     }
-
 }

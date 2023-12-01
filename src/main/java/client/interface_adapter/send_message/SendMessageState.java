@@ -41,8 +41,4 @@ public class SendMessageState {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
-
-    public void setSender(int senderId) {
-        this.senderId = senderId;
-    }
 }
