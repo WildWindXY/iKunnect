@@ -47,8 +47,8 @@ class ConnectionPool {
                 networkManager.addMessageToTerminal("Some client connected");
                 Connection connection = new Connection(socket, i);
                 connections.add(connection);
-            } catch (Exception ignored) {//TODO: Log it later
-
+            } catch (Exception e) {
+                networkManager.addMessageToTerminal(TextUtils.error(e.getMessage()));
             }
         }
     }
@@ -58,8 +58,7 @@ class ConnectionPool {
      * <p>
      * This method is used to close the server's resources, including the server socket
      * and all active connections. It is typically called to gracefully terminate the
-     * server. Any IOExceptions that occur during the closing process are caught and
-     * ignored for later handling.
+     * server.
      */
     public void close() {
         try {
@@ -83,9 +82,10 @@ class ConnectionPool {
      * @param packet The packet to be sent to all connected clients.
      */
     public void sendAll(Packet packet) {
+        connections.removeIf(connection -> connection.dead);
         for (Connection connection : connections) {
             connection.toSend.add(packet);
-            networkManager.addMessageToTerminal("Send packet to client: " + packet);
+            networkManager.addMessageToTerminal("Send packet to all clients: " + packet);
         }
     }
 
@@ -97,7 +97,8 @@ class ConnectionPool {
      * @param packet The packet to be sent.
      * @param info   The ConnectionInfo of the target connection.
      */
-    public void sendTo(Packet packet, ConnectionInfo info) { //TODO: add different send methods
+    public void sendTo(Packet packet, ConnectionInfo info) {
+        connections.removeIf(connection -> connection.dead);
         for (Connection connection : connections) {
             if (connection.info.getConnectionId() == info.getConnectionId()) {
                 connection.toSend.add(packet);
@@ -108,6 +109,7 @@ class ConnectionPool {
     }
 
     public ConnectionInfo getConnectionInfo(int id) {
+        connections.removeIf(connection -> connection.dead);
         for (Connection connection : connections) {
             if (connection.info.getUser().getUserId() == id) {
                 return connection.info;

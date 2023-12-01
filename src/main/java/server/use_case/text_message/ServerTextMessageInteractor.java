@@ -1,7 +1,7 @@
 package server.use_case.text_message;
 
 import common.packet.PacketClientTextMessage;
-import common.packet.PacketServerMessage;
+import common.packet.PacketServerTextMessage;
 import common.packet.PacketServerTextMessageResponse;
 import server.data_access.network.ConnectionInfo;
 import server.entity.*;
@@ -60,7 +60,10 @@ public class ServerTextMessageInteractor implements ServerTextMessageInputBounda
                             serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessageResponse(clientMessageId, timestamp, PacketServerTextMessageResponse.Status.RECEIVED), info);
                             ConnectionInfo friendInfo = serverTextMessageDataAccessInterface.getConnectionInfo(friend.getUserId());
                             if (friendInfo != null) {
-                                serverTextMessageDataAccessInterface.sendTo(new PacketServerMessage(user.getUserId(), message, timestamp), friendInfo);
+                                textMessagePresenter.addMessage("TextMessage from " + user.getUsername() + " to " + friend.getUsername() + " sent successfully");
+                                serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessage(user.getUserId(), message, timestamp), friendInfo);
+                            }else {
+                                textMessagePresenter.addMessage("TextMessage to " + friend.getUsername() +" unsent since not online.");
                             }
                         }
                     }

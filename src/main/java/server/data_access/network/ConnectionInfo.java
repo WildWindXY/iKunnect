@@ -58,11 +58,19 @@ public class ConnectionInfo {
         this.status = Status.LOGGED;
     }
 
+    @Override
+    public String toString() {
+        if (status == Status.LOGGED) {
+            return "[ConnectionInfo] connectionId: " + connectionId + ", user: " + user.getUsername();
+        } else {
+            return "[ConnectionInfo] connectionId: " + connectionId + " not logged in yet.";
+        }
+    }
+
     /**
      * The Status enum represents the possible statuses of a connection.
      */
     public enum Status {
         UNKNOWN, GUEST, LOGGED
-
     }
 }

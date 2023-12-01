@@ -1,7 +1,4 @@
-import common.packet.Packet;
-import common.packet.PacketClientGetFriendList;
-import common.packet.PacketClientLogin;
-import common.packet.PacketClientSignup;
+import common.packet.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -28,16 +25,22 @@ public class TestClient {
             }
         }).start();
 
-        send(new PacketClientSignup(username, password));
+//        send(new PacketClientSignup(username, password));
         send(new PacketClientLogin(username, password));
-        send(new PacketClientGetFriendList());
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        new TestClient("user1", "user");
+        TestClient user1 = new TestClient("user1", "user");
+        TestClient user2 = new TestClient("user2", "user");
+        user2.send(new PacketClientFriendRequest("user1"));
+        user1.send(new PacketClientFriendRequest("user2"));
+        user2.send(new PacketClientTextMessage(2, 0, "message 2"));
+        user1.send(new PacketClientTextMessage(1, 1, "message 1"));
+        user1.send(new PacketClientGetFriendList());
+        user2.send(new PacketClientGetFriendList());
     }
 
-    private void send(Packet packet) throws InterruptedException, IOException {
+    public void send(Packet packet) throws InterruptedException, IOException {
         out.writeObject(packet);
         out.flush();
         System.out.println("sent: " + packet);

@@ -138,6 +138,9 @@ public class ServerTest {
         packet = user1.read();
         assert (packet instanceof PacketServerFriendRequestResponse);
         assert (((PacketServerFriendRequestResponse) packet).getStatus() == PacketServerFriendRequestResponse.Status.SENT);
+        packet = user2.read();
+        assert (packet instanceof PacketServerFriendRequestFrom);
+        assert (((PacketServerFriendRequestFrom) packet).getUsername().equals("user1"));
 
         user2.send(new PacketClientFriendRequest("user1"));
         packet = user2.read();
@@ -158,6 +161,9 @@ public class ServerTest {
         packet = user1.read();
         assert (packet instanceof PacketServerTextMessageResponse);
         assert (((PacketServerTextMessageResponse) packet).getStatus() == PacketServerTextMessageResponse.Status.RECEIVED);
+        packet = user2.read();
+        assert (packet instanceof PacketServerTextMessage);
+        assert ((PacketServerTextMessage) packet).getEncryptedMessage().equals("message");
 
 
         user1.send(new PacketClientGetFriendList());
