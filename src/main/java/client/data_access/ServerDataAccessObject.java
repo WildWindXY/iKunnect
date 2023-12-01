@@ -136,6 +136,12 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
         return getLoginResponse();
     }
 
+    @Override
+    public PacketServerGetFriendListResponse getFriendList() {
+        sendPacket(new PacketClientGetFriendList());
+        return getFriendListResponse();
+    }
+
     public PacketServerSignupResponse getSignupResponse() {
         try {
             return signupResponses.take();

@@ -49,6 +49,11 @@ public class PacketServerGetFriendListResponse implements Packet {
         return status;
     }
 
+    @Override
+    public String toString() {
+        return "[PacketServerGetFriendListResponse] status: " + status + ", friends: " + friends + ", chats: " + chats;
+    }
+
     /**
      * The Status enum represents the possible statuses of the response.
      */

@@ -1,5 +1,6 @@
 package client.use_case.login;
 
+import common.packet.PacketServerGetFriendListResponse;
 import common.packet.PacketServerLoginResponse;
 
 public class LoginInteractor implements LoginInputBoundary {
@@ -15,8 +16,14 @@ public class LoginInteractor implements LoginInputBoundary {
     public void execute(LoginInputData loginInputData) {
         PacketServerLoginResponse packet = userDataAccessObject.login(loginInputData.getUsername(), loginInputData.getPassword());
         if (packet.getStatus() == PacketServerLoginResponse.Status.SUCCESS) {
-            LoginOutputData loginOutputData = new LoginOutputData(loginInputData.getUsername(), false);
-            loginPresenter.prepareSuccessView(loginOutputData);
+            PacketServerGetFriendListResponse packet0 = userDataAccessObject.getFriendList();
+            System.out.println(packet0);
+            if (packet0.getStatus() == PacketServerGetFriendListResponse.Status.SUCCESS) {
+                LoginOutputData loginOutputData = new LoginOutputData(loginInputData.getUsername(), packet0.getFriends(), packet0.getChats());
+                loginPresenter.prepareSuccessView(loginOutputData);
+            } else {
+                loginPresenter.prepareFailView("Your login is successful, but:\n " + packet);
+            }
         } else {
             loginPresenter.prepareFailView(packet.toString());
         }
