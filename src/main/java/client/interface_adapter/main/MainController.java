@@ -52,6 +52,10 @@ public class MainController {
         this.myUsername = username;
     }
 
+    public String getMyUsername() {
+        return myUsername;
+    }
+
     public void openOptionsMenu() {
         if (f == null || !f.isDisplayable()) {
             f = new JFrame("options");
@@ -67,8 +71,8 @@ public class MainController {
             f.add(p);
             f.pack();
             f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            f.setLocationRelativeTo(null);
             f.setSize(new Dimension(400, 300));
+            f.setLocationRelativeTo(null);
             f.setResizable(false);
         } else {f.toFront();}
 
@@ -99,6 +103,12 @@ public class MainController {
                     String s = textArea.getText().strip();
                     textArea.setText("");
                     addFriendInteractor.execute(s);
+                    JOptionPane.showMessageDialog(
+                            addFriendInput,  // Parent component (null for centering on screen)
+                            "Friend Request Sent",  // Message to display
+                            "Success",  // Title of the dialog
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
                 });
 
                 p.add(label);
@@ -110,8 +120,8 @@ public class MainController {
                 addFriendInput.add(p0);
                 addFriendInput.pack();
                 addFriendInput.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                addFriendInput.setLocationRelativeTo(null);
                 addFriendInput.setSize(new Dimension(600, 200));
+                addFriendInput.setLocationRelativeTo(f);
                 addFriendInput.setResizable(false);
             } else {addFriendInput.toFront();}
         });
