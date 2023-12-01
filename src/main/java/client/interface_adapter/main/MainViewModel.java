@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class MainViewModel {
     public static final String TITLE_LABEL = "Main Window";
-    private List<MainState> channels = new ArrayList<>();
 
     private Map<String, HashMap<Integer, List<Triple<Long, Integer, String>>>> channelMessagesMap = new HashMap<>();
     private String currentChannel;
