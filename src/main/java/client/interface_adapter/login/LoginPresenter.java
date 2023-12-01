@@ -1,8 +1,8 @@
 package client.interface_adapter.login;
 
+import client.interface_adapter.ViewManagerModel;
 import client.interface_adapter.main.MainViewModel;
 import client.interface_adapter.signup.SignupViewModel;
-import client.interface_adapter.ViewManagerModel;
 import client.use_case.login.LoginOutputBoundary;
 import client.use_case.login.LoginOutputData;
 
@@ -40,11 +40,13 @@ public class LoginPresenter implements LoginOutputBoundary {
 
     @Override
     public void prepareSuccessView(LoginOutputData response) {
-        // On success, switch to the logged in view.
+        // On success, switch to the main view
 
         //LoginState loginState = mainViewModel.getLoginState();
         LoginState loginState = loginViewModel.getState();
         //sendMessageState.setSender(response.getUsername());
+
+        this.mainViewModel.initMessages(response.getFriends(), response.getChats());
         this.mainViewModel.setLoginState(loginState);
         this.mainViewModel.fireLoginPropertyChanged();
 
@@ -62,6 +64,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         }
         loginViewModel.firePropertyChanged();
     }
+
     @Override
     public void prepareSignupView() {
         this.viewManagerModel.setActiveView(signupViewModel.getViewName());

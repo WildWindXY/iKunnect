@@ -1,21 +1,16 @@
 package client.interface_adapter.main;
 
 import client.use_case.add_friend.AddFriendInputBoundary;
-import client.use_case.channel_chats.ChatsRequestInputBoundary;
-import client.use_case.channel_chats.ChatsRequestInputData;
+import client.use_case.high_contrast.HighContrastInputBoundary;
 import client.use_case.receive_message.ReceiveMessageInputBoundary;
 import client.use_case.send_message.SendMessageInputBoundary;
 import client.use_case.send_message.SendMessageInputData;
 import client.use_case.translate.TranslationInputBoundary;
 import client.use_case.translate.TranslationInputData;
-import client.use_case.high_contrast.HighContrastInputBoundary;
 import client.view.MainView;
-import org.apache.logging.log4j.message.Message;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
-import java.util.List;;
 
 public class MainController {
 
@@ -25,26 +20,18 @@ public class MainController {
     private final HighContrastInputBoundary highContrastInteractor;
 
     private final AddFriendInputBoundary addFriendInteractor;
-    private final ChatsRequestInputBoundary chatsRequestInteractor;
-    private String myUsername;
+    private final String myUsername;
 
     private JFrame f;
     private JFrame addFriendInput;
 
-    private Map<String, List<Message>> channelMessages;
-
-    private String currentChannel;
-
-    public MainController(String myUsername, SendMessageInputBoundary sendMessageInteractor, ReceiveMessageInputBoundary receiveMessageInteractor, TranslationInputBoundary translationInteractor, HighContrastInputBoundary highContrastInteractor, AddFriendInputBoundary addFriendInterator, ChatsRequestInputBoundary chatsRequestInteractor, String currentChannel) {
+    public MainController(String myUsername, SendMessageInputBoundary sendMessageInteractor, ReceiveMessageInputBoundary receiveMessageInteractor, TranslationInputBoundary translationInteractor, HighContrastInputBoundary highContrastInteractor, AddFriendInputBoundary addFriendInteractor) {
         this.sendMessageInteractor = sendMessageInteractor;
         this.receiveMessageInteractor = receiveMessageInteractor;
         this.translationInteractor = translationInteractor;
         this.highContrastInteractor = highContrastInteractor;
-        this.addFriendInteractor = addFriendInterator;
-        this.chatsRequestInteractor = chatsRequestInteractor;
+        this.addFriendInteractor = addFriendInteractor;
         this.myUsername = myUsername;
-        this.currentChannel = currentChannel;
-        this.channelMessages = new HashMap<>();
     }
 
     public void sendMessage(String message, String receiver) {
@@ -55,22 +42,10 @@ public class MainController {
     public void getMessage() {
         receiveMessageInteractor.execute();
     }
-    public void setChats(String currentChannel) {
-        ChatsRequestInputData chatsIn = new ChatsRequestInputData(currentChannel);
-        chatsRequestInteractor.execute(chatsIn);
-    }
 
     public String translateMessage(String message) {
         TranslationInputData in = new TranslationInputData(message);
         return translationInteractor.execute(in);
-    }
-
-    public void setMyUsername(String username) {
-        this.myUsername = username;
-    }
-
-    public String getMyUsername() {
-        return myUsername;
     }
 
     public void openOptionsMenu() {
@@ -91,7 +66,9 @@ public class MainController {
             f.setSize(new Dimension(400, 300));
             f.setLocationRelativeTo(null);
             f.setResizable(false);
-        } else {f.toFront();}
+        } else {
+            f.toFront();
+        }
 
     }
 
@@ -113,19 +90,17 @@ public class MainController {
                 label.setFont(highContrastUIButtonFont);
                 JTextArea textArea = new JTextArea();
                 textArea.setFont(highContrastUIButtonFont);
-                textArea.setPreferredSize(new Dimension(200,label.getPreferredSize().height));
+                textArea.setPreferredSize(new Dimension(200, label.getPreferredSize().height));
                 JButton submit = new JButton("Add");
                 submit.setFont(highContrastUIButtonFont);
                 submit.addActionListener(e1 -> {
                     String s = textArea.getText().strip();
                     textArea.setText("");
                     addFriendInteractor.execute(s);
-                    JOptionPane.showMessageDialog(
-                            addFriendInput,  // Parent component (null for centering on screen)
+                    JOptionPane.showMessageDialog(addFriendInput,  // Parent component (null for centering on screen)
                             "Friend Request Sent",  // Message to display
                             "Success",  // Title of the dialog
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
+                            JOptionPane.INFORMATION_MESSAGE);
                 });
 
                 p.add(label);
@@ -140,7 +115,9 @@ public class MainController {
                 addFriendInput.setSize(new Dimension(600, 200));
                 addFriendInput.setLocationRelativeTo(f);
                 addFriendInput.setResizable(false);
-            } else {addFriendInput.toFront();}
+            } else {
+                addFriendInput.toFront();
+            }
         });
         return b;
     }
