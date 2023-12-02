@@ -1,10 +1,19 @@
+import client.app.SignupUseCaseFactory;
 import client.entity.UserFactory;
+import client.interface_adapter.ViewManagerModel;
+import client.interface_adapter.login.LoginViewModel;
+import client.interface_adapter.main.MainViewModel;
+import client.interface_adapter.signup.SignupViewModel;
+import client.use_case.high_contrast.HighContrastDataAccessInterface;
+import client.use_case.high_contrast.HighContrastOutputData;
 import client.use_case.signup.*;
+import client.view.SignupView;
 import common.packet.PacketServerSignupResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class SignupInteractorTest {
@@ -86,3 +95,25 @@ class SignupOutputDataTest {
         assertEquals(newTime, data.getCreationTime(), "Creation time should be updated to the new value");
     }
 }
+
+class SignupUseCaseFactoryTest {
+
+    @Test
+    void testCreate() {
+        ViewManagerModel viewManagerModel = mock(ViewManagerModel.class);
+        MainViewModel mainViewModel = mock(MainViewModel.class);
+        SignupViewModel signupViewModel = mock(SignupViewModel.class);
+        LoginViewModel loginViewModel = mock(LoginViewModel.class);
+        SignupDataAccessInterface userDataAccessObject = mock(SignupDataAccessInterface.class);
+        HighContrastDataAccessInterface optionsDataAccessObject = mock(HighContrastDataAccessInterface.class);
+
+        // Assuming HighContrastDataAccessInterface.HIGH_CONTRAST is a static final field
+//        when(optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(true);
+        when(optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(new HighContrastOutputData(1));
+
+        SignupView result = SignupUseCaseFactory.create(viewManagerModel, mainViewModel, signupViewModel, loginViewModel, userDataAccessObject, optionsDataAccessObject);
+
+        assertNotNull(result);
+    }
+}
+

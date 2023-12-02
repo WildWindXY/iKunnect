@@ -10,10 +10,17 @@ import client.interface_adapter.signup.SignupViewModel;
 import client.use_case.high_contrast.HighContrastDataAccessInterface;
 import client.use_case.login.*;
 import client.view.LoginView;
+import common.packet.PacketServerGetFriendListResponse;
 import common.packet.PacketServerLoginResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Triple;
+import utils.Tuple;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -29,6 +36,23 @@ class LoginInteractorTest {
         loginPresenter = mock(LoginOutputBoundary.class);
         loginInteractor = new LoginInteractor(userDataAccessObject, loginPresenter);
     }
+
+    @Test
+    void testSuccessfulLogin() {
+        LoginInputData inputData = new LoginInputData("username", "password");
+        PacketServerLoginResponse loginResponse = new PacketServerLoginResponse(123, PacketServerLoginResponse.Status.SUCCESS);
+        HashMap<Integer, Tuple<String, Integer>> friends = new HashMap<>();
+        HashMap<Integer, List<Triple<Long, Integer, String>>> chats = new HashMap<>();
+        PacketServerGetFriendListResponse friendListResponse = new PacketServerGetFriendListResponse(friends, chats, PacketServerGetFriendListResponse.Status.SUCCESS);
+
+        when(userDataAccessObject.login(inputData.getUsername(), inputData.getPassword())).thenReturn(loginResponse);
+        when(userDataAccessObject.getFriendList()).thenReturn(friendListResponse);
+
+        loginInteractor.execute(inputData);
+
+        verify(loginPresenter).prepareSuccessView(any(LoginOutputData.class));
+    }
+
 
     //TODO: broken due to LoginOutputData changes
 //    @Test
