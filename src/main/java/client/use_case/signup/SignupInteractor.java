@@ -24,7 +24,7 @@ public class SignupInteractor implements SignupInputBoundary {
         } else {
             PacketServerSignupResponse packet = userDataAccessObject.signup(data.getUsername(), data.getPassword());
             if (packet.getStatus() == PacketServerSignupResponse.Status.SUCCESS) {
-                SignupOutputData signupOutputData = new SignupOutputData(data.getUsername(), LocalDateTime.now().toString(), false);
+                SignupOutputData signupOutputData = new SignupOutputData(data.getUsername(), LocalDateTime.now().toString(), packet.getUserID());
                 userPresenter.prepareSuccessView(signupOutputData);
             } else {
                 userPresenter.prepareFailView(packet.toString());
