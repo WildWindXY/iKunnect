@@ -4,6 +4,7 @@ package common.packet;
  * The PacketServerSignupResponse class represents a server response packet for client signup requests.
  * It includes information about the user ID and the status of the signup operation.
  */
+@SuppressWarnings("record")
 public class PacketServerSignupResponse implements Packet {
 
     private final int userID;
@@ -25,7 +26,7 @@ public class PacketServerSignupResponse implements Packet {
      *
      * @return The user ID.
      */
-    public long getUserID() {
+    public int getUserID() {
         return userID;
     }
 

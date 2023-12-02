@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class SignupInteractorTest {
@@ -63,7 +62,7 @@ class SignupOutputDataTest {
     @Test
     void testUsernameIsCorrectlyStoredAndRetrieved() {
         String expectedUsername = "testUser";
-        SignupOutputData data = new SignupOutputData(expectedUsername, "2022-01-01T00:00:00", false);
+        SignupOutputData data = new SignupOutputData(expectedUsername, "2022-01-01T00:00:00", -1);
 
         assertEquals(expectedUsername, data.getUsername(), "Username should match the one provided at construction");
     }
@@ -71,7 +70,7 @@ class SignupOutputDataTest {
     @Test
     void testCreationTimeIsCorrectlyStoredAndRetrieved() {
         String expectedTime = "2022-01-01T00:00:00";
-        SignupOutputData data = new SignupOutputData("testUser", expectedTime, false);
+        SignupOutputData data = new SignupOutputData("testUser", expectedTime, -1);
 
         assertEquals(expectedTime, data.getCreationTime(), "Creation time should match the one provided at construction");
     }
@@ -80,7 +79,7 @@ class SignupOutputDataTest {
     void testCreationTimeCanBeModified() {
         String initialTime = "2022-01-01T00:00:00";
         String newTime = "2022-01-02T00:00:00";
-        SignupOutputData data = new SignupOutputData("testUser", initialTime, false);
+        SignupOutputData data = new SignupOutputData("testUser", initialTime, -1);
 
         data.setCreationTime(newTime);
 

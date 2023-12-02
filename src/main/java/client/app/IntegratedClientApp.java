@@ -52,7 +52,7 @@ public class IntegratedClientApp {
         AddFriendDataAccess addFriendDataAccessObject = new AddFriendDataAccess(serverDataAccessObject);
 
         // Create and add your views to the card layout
-        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, mainViewModel, signupViewModel, serverDataAccessObject, highContrastDataAccessObject);
+        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, mainViewModel, signupViewModel, loginViewModel, serverDataAccessObject, highContrastDataAccessObject);
         //signupView.setPreferredSize(new Dimension(550, 500));
         views.add(signupView, SignupView.VIEW_NAME);
 
