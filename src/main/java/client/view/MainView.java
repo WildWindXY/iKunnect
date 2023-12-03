@@ -186,6 +186,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 //        addTestChannels();
         initChatPanel();
 //        setCurrentChannelLabel();
+        initChannelLabel();
 //        addChannelSelectListener();
 //        addChannelRightClickListener();
 
@@ -657,7 +658,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         messagesPanel.add(p);
     }
 
-    private void setCurrentChannelLabel() {
+    private void initChannelLabel() {
         channelLabel = new JLabel("Add some friends!");
         channelLabel.setFont(HC ? channelLabelFont : channelLabelFontHC);
         if (HC) {
@@ -668,6 +669,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         channelLabelWrapper.setPreferredSize(new Dimension(700, 40));
         channelLabelWrapper.setBackground(HC ? messagesColorHC : messagesColor);
         chatPanel.add(channelLabelWrapper);
+    }
+
+    private void setCurrentChannelLabel(String name){
+        channelLabel.setText(name);
     }
 
     @Deprecated
@@ -849,7 +854,8 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         channels.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         channelsScrollPane.setViewportView(channels);
 
-        setCurrentChannelLabel(); //TODO: Probably due to my lack of understanding, the current chat name label went to the bottom somehow
+        //initChannelLabel();
+        setCurrentChannelLabel("Add some friends!");
         if (!mainViewModel.getFriends().isEmpty()) {
             channels.setSelectedIndex(0);
             updateCurrentChat();
@@ -860,7 +866,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
     private void updateCurrentChat() {
         Triple<String, Integer, Integer> chatInfo = channels.getSelectedValue();
-        channelLabel.setText(chatInfo.first());
+        setCurrentChannelLabel(chatInfo.first());
         mainViewModel.setCurrentChatId(chatInfo.third());
 
         messagesPanel.removeAll();
