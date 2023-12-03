@@ -819,10 +819,17 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                 boolean hc = highContrastState.getHighContrast();
                 System.out.println("MainView HC " + hc);
                 initComponents(highContrastState);
+                mainController.getFriendList();
                 initChannels();
             }
             case "addFriend" -> {
-                //TODO Add Friend
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mainController.getFriendList();
+                initChannels();
             }
             case "loginState" -> {
                 System.out.println("loginState");

@@ -43,6 +43,10 @@ public class MainController {
         receiveMessageInteractor.execute();
     }
 
+    public void getFriendList(){
+        this.addFriendInteractor.executeFriendList();
+    }
+
     public String translateMessage(String message) {
         TranslationInputData in = new TranslationInputData(message);
         return translationInteractor.execute(in);
@@ -54,6 +58,7 @@ public class MainController {
             JPanel p = new JPanel();
             JButton highContrastButton = initHighContrastButton();
             JButton addFriendButton = initAddFriendButton();
+
             addFriendButton.setPreferredSize(highContrastButton.getPreferredSize());
             p.setLayout(new FlowLayout(FlowLayout.CENTER));
             p.setBackground(MainView.messagesColor);

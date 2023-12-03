@@ -14,4 +14,9 @@ public class AddFriendInteractor implements AddFriendInputBoundary {
         dataAccess.addFriend(username);
         addFriendPresenter.prepareSuccessView();
     }
+
+    @Override
+    public void executeFriendList() {
+        addFriendPresenter.friendListSuccessView(dataAccess.getFriendList());
+    }
 }

@@ -43,8 +43,11 @@ public class DataAccess implements TerminalMessageDataAccessInterface, ServerShu
      * @throws IOException If an I/O error occurs during the initialization of FileManager or NetworkManager.
      */
     public DataAccess() throws IOException {
+        System.out.println(2);
         fileManager = new FileManager(this);
+        System.out.println(2);
         networkManager = new NetworkManager(this);
+        System.out.println(2);
     }
 
     /**

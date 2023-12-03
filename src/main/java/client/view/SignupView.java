@@ -199,22 +199,22 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
         signupButton.addActionListener(e -> {
             SignupState currentState = signupViewModel.getState();
-            controller.execute(
-                    currentState.getUsername(),
-                    currentState.getPassword(),
-                    currentState.getRepeatPassword()
-            );
-            passwordBuilder.delete(0, passwordBuilder.length());
-            passwordField.setText("");
-            String password = signupViewModel.getState().getPassword();
 
+            String password = signupViewModel.getState().getPassword();
             // Check if the password is valid
             boolean isValidPassword = controller.checkPassword(password);
             String message = isValidPassword ? "Password is valid." : "Password is invalid.";
             // Show the dialog
             JOptionPane.showMessageDialog(null, message, "Password Validation", JOptionPane.INFORMATION_MESSAGE);
-
-            System.out.println("Sign up:" + password + " Is password valid? :" + controller.checkPassword(password));
+            if(isValidPassword){
+                controller.execute(
+                        currentState.getUsername(),
+                        currentState.getPassword(),
+                        currentState.getRepeatPassword()
+                );
+                passwordBuilder.delete(0, passwordBuilder.length());
+                passwordField.setText("");
+            }
         });
 
 
