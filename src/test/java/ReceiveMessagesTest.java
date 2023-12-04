@@ -1,10 +1,10 @@
-import client.data_access.ServerDataAccessObject;
-import client.data_access.receive_message.ReceiveMessageDataAccess;
-import client.use_case.receive_message.ReceiveMessageDataAccessInterface;
-import client.use_case.receive_message.ReceiveMessageInteractor;
-import client.use_case.receive_message.ReceiveMessageOutputBoundary;
-import client.use_case.receive_message.ReceiveMessageOutputData;
-import common.packet.PacketServerTextMessage;
+import com.xiaoheizi.client.data_access.ServerDataAccessObject;
+import com.xiaoheizi.client.data_access.receive_message.ReceiveMessageDataAccess;
+import com.xiaoheizi.client.use_case.receive_message.ReceiveMessageDataAccessInterface;
+import com.xiaoheizi.client.use_case.receive_message.ReceiveMessageInteractor;
+import com.xiaoheizi.client.use_case.receive_message.ReceiveMessageOutputBoundary;
+import com.xiaoheizi.client.use_case.receive_message.ReceiveMessageOutputData;
+import com.xiaoheizi.packet.PacketServerTextMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -70,7 +70,7 @@ class ReceiveMessageDataAccessTest {
         String encryptedMessage = "EncryptedMessage"; // Example encrypted message
         long timestamp = System.currentTimeMillis(); // Example timestamp
 
-        // Mock the response from the server
+        // Mock the response from the com.ikun.server
         PacketServerTextMessage mockResponse = new PacketServerTextMessage(senderID, encryptedMessage, timestamp);
         when(serverDataAccessObject.getReceiveMessage()).thenReturn(mockResponse);
 

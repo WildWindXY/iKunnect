@@ -1,18 +1,18 @@
-import common.packet.*;
+import com.xiaoheizi.packet.*;
 import org.junit.jupiter.api.Test;
-import server.data_access.DataAccess;
-import server.interface_adapter.TerminalController;
-import server.interface_adapter.TerminalPresenter;
-import server.interface_adapter.TerminalViewModel;
-import server.use_case.friend_request.ServerFriendRequestInteractor;
-import server.use_case.get_friend_list.ServerGetFriendListInteractor;
-import server.use_case.login.ServerLoginInteractor;
-import server.use_case.server_shutdown.ServerShutdownInteractor;
-import server.use_case.signup.ServerSignupInteractor;
-import server.use_case.terminal_message.TerminalMessageInteractor;
-import server.use_case.text_message.ServerTextMessageInteractor;
-import server.view.TerminalView;
-import utils.FileUtils;
+import com.xiaoheizi.server.data_access.DataAccess;
+import com.xiaoheizi.server.interface_adapter.TerminalController;
+import com.xiaoheizi.server.interface_adapter.TerminalPresenter;
+import com.xiaoheizi.server.interface_adapter.TerminalViewModel;
+import com.xiaoheizi.server.use_case.friend_request.ServerFriendRequestInteractor;
+import com.xiaoheizi.server.use_case.get_friend_list.ServerGetFriendListInteractor;
+import com.xiaoheizi.server.use_case.login.ServerLoginInteractor;
+import com.xiaoheizi.server.use_case.server_shutdown.ServerShutdownInteractor;
+import com.xiaoheizi.server.use_case.signup.ServerSignupInteractor;
+import com.xiaoheizi.server.use_case.terminal_message.TerminalMessageInteractor;
+import com.xiaoheizi.server.use_case.text_message.ServerTextMessageInteractor;
+import com.xiaoheizi.server.view.TerminalView;
+import com.xiaoheizi.utils.FileUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,12 +20,12 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * Tests in this class requires server running with empty data.
+ * Tests in this class requires com.ikun.server running with empty data.
  */
 public class ServerTest {
 
     /**
-     * Since testing the server requires a fixed order, it cannot be seperated into different tests
+     * Since testing the com.ikun.server requires a fixed order, it cannot be seperated into different tests
      */
     @Test
     public void testServer() throws IOException, ClassNotFoundException {

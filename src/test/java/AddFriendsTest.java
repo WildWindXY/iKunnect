@@ -1,8 +1,8 @@
-import client.data_access.ServerDataAccessObject;
-import client.data_access.add_friend.AddFriendDataAccess;
-import client.use_case.add_friend.AddFriendDataAccessInterface;
-import client.use_case.add_friend.AddFriendInteractor;
-import client.use_case.add_friend.AddFriendOutputBoundary;
+import com.xiaoheizi.client.data_access.ServerDataAccessObject;
+import com.xiaoheizi.client.data_access.add_friend.AddFriendDataAccess;
+import com.xiaoheizi.client.use_case.add_friend.AddFriendDataAccessInterface;
+import com.xiaoheizi.client.use_case.add_friend.AddFriendInteractor;
+import com.xiaoheizi.client.use_case.add_friend.AddFriendOutputBoundary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

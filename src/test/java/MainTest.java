@@ -1,12 +1,12 @@
-import client.app.MainUseCaseFactory;
-import client.interface_adapter.main.MainViewModel;
-import client.use_case.add_friend.AddFriendDataAccessInterface;
-import client.use_case.high_contrast.HighContrastDataAccessInterface;
-import client.use_case.high_contrast.HighContrastOutputData;
-import client.use_case.receive_message.ReceiveMessageDataAccessInterface;
-import client.use_case.send_message.SendMessageDataAccessInterface;
-import client.use_case.translate.TranslateDataAccessInterface;
-import client.view.MainView;
+import com.xiaoheizi.client.app.MainUseCaseFactory;
+import com.xiaoheizi.client.interface_adapter.main.MainViewModel;
+import com.xiaoheizi.client.use_case.add_friend.AddFriendDataAccessInterface;
+import com.xiaoheizi.client.use_case.high_contrast.HighContrastDataAccessInterface;
+import com.xiaoheizi.client.use_case.high_contrast.HighContrastOutputData;
+import com.xiaoheizi.client.use_case.receive_message.ReceiveMessageDataAccessInterface;
+import com.xiaoheizi.client.use_case.send_message.SendMessageDataAccessInterface;
+import com.xiaoheizi.client.use_case.translate.TranslateDataAccessInterface;
+import com.xiaoheizi.client.view.MainView;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

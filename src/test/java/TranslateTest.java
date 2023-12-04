@@ -1,9 +1,9 @@
-import client.data_access.translate.TranslateDataAccess;
-import client.entity.TranslationResponse;
-import client.use_case.translate.TranslateDataAccessInterface;
-import client.use_case.translate.TranslationInputData;
-import client.use_case.translate.TranslationInteractor;
-import client.use_case.translate.TranslationOutputData;
+import com.xiaoheizi.client.data_access.translate.TranslateDataAccess;
+import com.xiaoheizi.client.entity.TranslationResponse;
+import com.xiaoheizi.client.use_case.translate.TranslateDataAccessInterface;
+import com.xiaoheizi.client.use_case.translate.TranslationInputData;
+import com.xiaoheizi.client.use_case.translate.TranslationInteractor;
+import com.xiaoheizi.client.use_case.translate.TranslationOutputData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
