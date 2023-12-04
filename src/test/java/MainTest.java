@@ -8,8 +8,10 @@ import client.use_case.send_message.SendMessageDataAccessInterface;
 import client.use_case.translate.TranslateDataAccessInterface;
 import client.view.MainView;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class MainUseCaseFactoryTest {
 

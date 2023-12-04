@@ -7,7 +7,8 @@ import client.use_case.high_contrast.HighContrastOutputData;
 
 public class HighContrastPresenter implements HighContrastOutputBoundary {
     private final MainViewModel mainViewModel;
-    public HighContrastPresenter(MainViewModel mainViewModel){
+
+    public HighContrastPresenter(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
     }
 

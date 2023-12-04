@@ -9,7 +9,7 @@ public class SendMessagePresenter implements SendMessageOutputBoundary {
     //take the panel from main view
     private final MainViewModel mainViewModel;
 
-    public SendMessagePresenter(MainViewModel mainViewModel){
+    public SendMessagePresenter(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
     }
 
@@ -19,6 +19,6 @@ public class SendMessagePresenter implements SendMessageOutputBoundary {
         state.setMessage(outputData.getTimestamp(), mainViewModel.getMyUserId(), outputData.getMessage());
         mainViewModel.setSendMessageState(state);
         mainViewModel.fireSendMessagePropertyChanged();
-        System.out.println(outputData.getSuccess()+" "+outputData.getSuccess());
+        System.out.println(outputData.getSuccess() + " " + outputData.getSuccess());
     }
 }

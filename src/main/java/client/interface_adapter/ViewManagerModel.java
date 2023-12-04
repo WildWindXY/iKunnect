@@ -6,9 +6,8 @@ import java.beans.PropertyChangeSupport;
 
 public class ViewManagerModel {
 
-    private String activeViewName;
-
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private String activeViewName;
 
     public String getActiveView() {
         return activeViewName;

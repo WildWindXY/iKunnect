@@ -28,7 +28,13 @@ public class ServerFriendRequestInteractor implements ServerFriendRequestInputBo
         ServerThreadPool.submit(() -> {
             try {
                 while (!Thread.interrupted()) {
-                    handlePacket(serverFriendRequestDataAccessInterface.getPacketClientFriendRequests());}} catch (InterruptedException ignored) {Thread.currentThread().interrupt(); friendRequestPresenter.addMessage("ServerFriendRequestInteractor ended"); } }, "ServerFriendRequestInteractor");
+                    handlePacket(serverFriendRequestDataAccessInterface.getPacketClientFriendRequests());
+                }
+            } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
+                friendRequestPresenter.addMessage("ServerFriendRequestInteractor ended");
+            }
+        }, "ServerFriendRequestInteractor");
     }
 
     /**
@@ -48,12 +54,20 @@ public class ServerFriendRequestInteractor implements ServerFriendRequestInputBo
                 if (friend == null || user.getUsername().equals(friend.getUsername())) {
                     friendRequestPresenter.addMessage("FriendRequest Failed: friend request to " + packetIn.getPacket().getUsername() + " by " + user.getUsername() + " is invalid.");
                     serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.INFO_INVALID), info);
-                } else if (user.isFriend(friend.getUserId()) != friend.isFriend(user.getUserId())) { throw new IllegalStateException("How " + user.getUsername() + " and " + friend.getUsername() + " are both friend and not friend?");
+                } else if (user.isFriend(friend.getUserId()) != friend.isFriend(user.getUserId())) {
+                    throw new IllegalStateException("How " + user.getUsername() + " and " + friend.getUsername() + " are both friend and not friend?");
                 } else if (user.isFriend(friend.getUserId())) {
                     friendRequestPresenter.addMessage("FriendRequest Failed: " + user.getUsername() + " and " + friend.getUsername() + " already established friendship.");
                     serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.ALREADY_FRIEND), info);
-                } else if (user.wasFriend(friend.getUserId()) != friend.wasFriend(user.getUserId())) {throw new IllegalStateException("How " + user.getUsername() + " and " + friend.getUsername() + " are both ex-friend and not ex-friend?");
-                } else if (user.wasFriend(friend.getUserId())) {if (user.isFriendRequestedBy(friend.getUserId())) {user.removeFriendRequest(friend.getUserId());user.makeupFriend(friend.getUserId());friend.makeupFriend(user.getUserId());friendRequestPresenter.addMessage("FriendRequest Success: " + user.getUsername() + " and " + friend.getUsername() + " made up their friendship.");serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(new Triple<>(friend.getUserId(), friend.getUsername(), user.getChatId(friend.getUserId())), PacketServerFriendRequestResponse.Status.ACCEPTED), info);
+                } else if (user.wasFriend(friend.getUserId()) != friend.wasFriend(user.getUserId())) {
+                    throw new IllegalStateException("How " + user.getUsername() + " and " + friend.getUsername() + " are both ex-friend and not ex-friend?");
+                } else if (user.wasFriend(friend.getUserId())) {
+                    if (user.isFriendRequestedBy(friend.getUserId())) {
+                        user.removeFriendRequest(friend.getUserId());
+                        user.makeupFriend(friend.getUserId());
+                        friend.makeupFriend(user.getUserId());
+                        friendRequestPresenter.addMessage("FriendRequest Success: " + user.getUsername() + " and " + friend.getUsername() + " made up their friendship.");
+                        serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(new Triple<>(friend.getUserId(), friend.getUsername(), user.getChatId(friend.getUserId())), PacketServerFriendRequestResponse.Status.ACCEPTED), info);
                         //TODO: notify friend} else {sendRequest(info, user, friend);
                     }
                 } else if (user.isFriendRequestedBy(friend.getUserId())) {
@@ -66,7 +80,11 @@ public class ServerFriendRequestInteractor implements ServerFriendRequestInputBo
                     //TODO: notify friend
                 } else {
                     sendRequest(info, user, friend);
-                }}} catch (Exception e) {friendRequestPresenter.addMessage(TextUtils.error("FriendRequest Failed: " + e.getMessage()));serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.SERVER_ERROR), info);
+                }
+            }
+        } catch (Exception e) {
+            friendRequestPresenter.addMessage(TextUtils.error("FriendRequest Failed: " + e.getMessage()));
+            serverFriendRequestDataAccessInterface.sendTo(new PacketServerFriendRequestResponse(null, PacketServerFriendRequestResponse.Status.SERVER_ERROR), info);
         } finally {
             ServerUsers.save();
             ServerChats.save();

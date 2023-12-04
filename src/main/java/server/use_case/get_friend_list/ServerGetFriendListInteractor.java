@@ -33,7 +33,12 @@ public class ServerGetFriendListInteractor implements ServerGetFriendListInputBo
             try {
                 while (!Thread.interrupted()) {
                     handlePacket(serverGetFriendListDataAccessInterface.getPacketClientGetFriendList());
-                }} catch (InterruptedException ignored) {Thread.currentThread().interrupt();getFriendListPresenter.addMessage("ServerGetFriendListInteractor ended");}}, "ServerGetFriendListInteractor");
+                }
+            } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
+                getFriendListPresenter.addMessage("ServerGetFriendListInteractor ended");
+            }
+        }, "ServerGetFriendListInteractor");
     }
 
     /**
@@ -57,7 +62,9 @@ public class ServerGetFriendListInteractor implements ServerGetFriendListInputBo
                 getFriendListPresenter.addMessage("GetFriendList Success: user " + info.getUser().getUsername() + "'s friend list is " + friends + " with chat list " + chats);
                 serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(friends, chats, PacketServerGetFriendListResponse.Status.SUCCESS), info);
             }
-        } catch (Exception e) {getFriendListPresenter.addMessage(TextUtils.error("GetFriendList Failed: " + e.getMessage()));serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, null, PacketServerGetFriendListResponse.Status.SERVER_ERROR), info);
+        } catch (Exception e) {
+            getFriendListPresenter.addMessage(TextUtils.error("GetFriendList Failed: " + e.getMessage()));
+            serverGetFriendListDataAccessInterface.sendTo(new PacketServerGetFriendListResponse(null, null, PacketServerGetFriendListResponse.Status.SERVER_ERROR), info);
         }
     }
 }

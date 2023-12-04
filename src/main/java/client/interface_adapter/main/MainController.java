@@ -43,7 +43,7 @@ public class MainController {
         receiveMessageInteractor.execute();
     }
 
-    public void getFriendList(){
+    public void getFriendList() {
         this.addFriendInteractor.executeFriendList();
     }
 

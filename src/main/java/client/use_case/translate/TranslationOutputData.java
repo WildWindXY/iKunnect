@@ -15,6 +15,7 @@ public class TranslationOutputData {
     public String getTranslatedText() {
         return translatedText;
     }
+
     public String getDetectedLanguage() {
         return detectedLanguage;
     }

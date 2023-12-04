@@ -1,6 +1,3 @@
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import client.data_access.ServerDataAccessObject;
 import client.data_access.send_message.SendMessageDataAccess;
 import client.use_case.send_message.*;
@@ -8,6 +5,9 @@ import common.packet.PacketClientTextMessage;
 import common.packet.PacketServerTextMessageResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class SendMessageInteractorTest {
     private SendMessageDataAccessInterface dataAccess;
@@ -23,7 +23,7 @@ class SendMessageInteractorTest {
 
     @Test
     void testExecuteSendsMessageAndPresentsResult() {
-        SendMessageInputData inputData = new SendMessageInputData( "Hello, world!", "test", 123456 );
+        SendMessageInputData inputData = new SendMessageInputData("Hello, world!", "test", 123456);
         SendMessageOutputData outputData = new SendMessageOutputData(true, 121212, "Message sent");
 
         when(dataAccess.sendMessage(inputData)).thenReturn(outputData);

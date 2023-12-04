@@ -69,12 +69,8 @@ public class MainViewModel {
         this.chats = chats;
     }
 
-    public void setFriendList(HashMap<Integer, Tuple<String, Integer>> friends){
+    public void setFriendList(HashMap<Integer, Tuple<String, Integer>> friends) {
         this.friends = friends;
-    }
-
-    public void setChats(HashMap<Integer, List<Triple<Long, Integer, String>>> chats){
-        this.chats = chats;
     }
 
     public HashMap<Integer, Tuple<String, Integer>> getFriends() {
@@ -83,6 +79,10 @@ public class MainViewModel {
 
     public HashMap<Integer, List<Triple<Long, Integer, String>>> getChats() {
         return chats;
+    }
+
+    public void setChats(HashMap<Integer, List<Triple<Long, Integer, String>>> chats) {
+        this.chats = chats;
     }
 
     public HighContrastState getOptionsState() {

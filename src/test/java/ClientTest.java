@@ -1,4 +1,3 @@
-import client.app.IntegratedClientApp;
 import client.data_access.ServerDataAccessObject;
 import client.data_access.add_friend.AddFriendDataAccess;
 import client.data_access.high_contrast.HighContrastDataAccess;

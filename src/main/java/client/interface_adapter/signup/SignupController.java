@@ -9,6 +9,7 @@ public class SignupController {
     final SignupInputBoundary userSignupUseCaseInteractor;
 
     final PasswordCheckerInputBoundary passwordCheckerUseCaseInteractor;
+
     public SignupController(SignupInputBoundary userSignupUseCaseInteractor, PasswordCheckerInputBoundary passwordCheckerUseCaseInteractor) {
         this.userSignupUseCaseInteractor = userSignupUseCaseInteractor;
         this.passwordCheckerUseCaseInteractor = passwordCheckerUseCaseInteractor;
@@ -19,7 +20,7 @@ public class SignupController {
         userSignupUseCaseInteractor.execute(signupInputData);
     }
 
-    public void executeLogin(){
+    public void executeLogin() {
         userSignupUseCaseInteractor.executeLogin();
     }
 

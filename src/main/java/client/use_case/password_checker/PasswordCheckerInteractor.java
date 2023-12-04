@@ -1,6 +1,6 @@
 package client.use_case.password_checker;
 
-public class PasswordCheckerInteractor implements PasswordCheckerInputBoundary{
+public class PasswordCheckerInteractor implements PasswordCheckerInputBoundary {
     private final PasswordCheckerDataAccessInterface dataAccess;
 
 

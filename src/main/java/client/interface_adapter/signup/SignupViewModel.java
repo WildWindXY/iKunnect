@@ -19,18 +19,12 @@ public class SignupViewModel extends ViewModel {
     public static final String LOGIN_BUTTON_TOOLTIPS = "Switch to login";
     public static final String EXIT_BUTTON_LABEL = "Exit";
     public static final String EXIT_BUTTON_TOOLTIPS = "Exit the application";
-
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private SignupState state = new SignupState();
 
     public SignupViewModel() {
         super("Sign Up");
     }
-
-    public void setState(SignupState state) {
-        this.state = state;
-    }
-
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     // This is what the Signup Presenter will call to let the ViewModel know
     // to alert the View
@@ -44,6 +38,10 @@ public class SignupViewModel extends ViewModel {
 
     public SignupState getState() {
         return state;
+    }
+
+    public void setState(SignupState state) {
+        this.state = state;
     }
 
 }

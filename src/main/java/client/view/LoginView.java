@@ -17,7 +17,10 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -38,7 +41,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     loginSignupButton signupButton = new loginSignupButton();
     loginSignupButton loginButton = new loginSignupButton();
     loginSignupButton exitButton = new loginSignupButton();
-    
+
 
 //    private final StringBuilder passwordBuilder = new StringBuilder();
 
@@ -58,7 +61,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         this.loginController = controller;
         this.signupController = signupController;
         initComponents(HC);
-        
+
         loginViewModel.addPropertyChangeListener(this);
 
         usernameField.addKeyListener(new KeyAdapter() {
@@ -66,23 +69,44 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             private boolean deleteFirstChar = false;
 
             @Override
-            public void keyTyped(KeyEvent e) {final char typedChar = e.getKeyChar();if (!InputUtils.isValidUsernameChar(typedChar)) {if (InputUtils.isBackspace(typedChar)) {if (usernameField.getCaretPosition() != 0 || deleteFirstChar) {usernameBuilder.deleteCharAt(usernameField.getCaretPosition());deleteFirstChar = false;} else {e.consume();
+            public void keyTyped(KeyEvent e) {
+                final char typedChar = e.getKeyChar();
+                if (!InputUtils.isValidUsernameChar(typedChar)) {
+                    if (InputUtils.isBackspace(typedChar)) {
+                        if (usernameField.getCaretPosition() != 0 || deleteFirstChar) {
+                            usernameBuilder.deleteCharAt(usernameField.getCaretPosition());
+                            deleteFirstChar = false;
+                        } else {
+                            e.consume();
                             return;
                         }
-                    } else if (InputUtils.isDelete(typedChar)) {if (usernameField.getCaretPosition() < usernameBuilder.length()) {usernameBuilder.deleteCharAt(usernameField.getCaretPosition());} else {e.consume();
+                    } else if (InputUtils.isDelete(typedChar)) {
+                        if (usernameField.getCaretPosition() < usernameBuilder.length()) {
+                            usernameBuilder.deleteCharAt(usernameField.getCaretPosition());
+                        } else {
+                            e.consume();
                             return;
                         }
                     } else {
                         e.consume();
                         return;
                     }
-                } else if (usernameBuilder.length() == 20) {e.consume();return;
+                } else if (usernameBuilder.length() == 20) {
+                    e.consume();
+                    return;
                 } else {
-                    usernameBuilder.insert(usernameField.getCaretPosition(), typedChar);}loginState = loginViewModel.getState();loginState.setUsername(usernameBuilder.toString());loginViewModel.setState(loginState);
+                    usernameBuilder.insert(usernameField.getCaretPosition(), typedChar);
+                }
+                loginState = loginViewModel.getState();
+                loginState.setUsername(usernameBuilder.toString());
+                loginViewModel.setState(loginState);
             }
 
             @Override
-            public void keyPressed(KeyEvent e) {final char typedChar = e.getKeyChar();if (typedChar == '\b' && usernameField.getCaretPosition() == 1) {deleteFirstChar = true;
+            public void keyPressed(KeyEvent e) {
+                final char typedChar = e.getKeyChar();
+                if (typedChar == '\b' && usernameField.getCaretPosition() == 1) {
+                    deleteFirstChar = true;
                 }
             }
         });
@@ -93,21 +117,65 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             private boolean deleteFirstChar = false;
 
             @Override
-            public void keyTyped(KeyEvent e) {final char typedChar = e.getKeyChar();if (!InputUtils.isValidPasswordChar(typedChar)) {if (InputUtils.isBackspace(typedChar)) {if (passwordField.getCaretPosition() != 0 || deleteFirstChar) {passwordBuilder.deleteCharAt(passwordField.getCaretPosition());deleteFirstChar = false;} else {e.consume();return;}} else if (InputUtils.isDelete(typedChar)) {if (passwordField.getCaretPosition() < passwordBuilder.length()) {
-                            passwordBuilder.deleteCharAt(passwordField.getCaretPosition());} else {e.consume();return;}} else {e.consume();return;}} else if (passwordBuilder.length() == 100) {e.consume();return;} else {passwordBuilder.insert(passwordField.getCaretPosition(), typedChar);}loginState = loginViewModel.getState();loginState.setPassword(passwordBuilder.toString());loginViewModel.setState(loginState);
+            public void keyTyped(KeyEvent e) {
+                final char typedChar = e.getKeyChar();
+                if (!InputUtils.isValidPasswordChar(typedChar)) {
+                    if (InputUtils.isBackspace(typedChar)) {
+                        if (passwordField.getCaretPosition() != 0 || deleteFirstChar) {
+                            passwordBuilder.deleteCharAt(passwordField.getCaretPosition());
+                            deleteFirstChar = false;
+                        } else {
+                            e.consume();
+                            return;
+                        }
+                    } else if (InputUtils.isDelete(typedChar)) {
+                        if (passwordField.getCaretPosition() < passwordBuilder.length()) {
+                            passwordBuilder.deleteCharAt(passwordField.getCaretPosition());
+                        } else {
+                            e.consume();
+                            return;
+                        }
+                    } else {
+                        e.consume();
+                        return;
+                    }
+                } else if (passwordBuilder.length() == 100) {
+                    e.consume();
+                    return;
+                } else {
+                    passwordBuilder.insert(passwordField.getCaretPosition(), typedChar);
+                }
+                loginState = loginViewModel.getState();
+                loginState.setPassword(passwordBuilder.toString());
+                loginViewModel.setState(loginState);
             }
 
             @Override
-            public void keyPressed(KeyEvent e) {final char typedChar = e.getKeyChar();if (typedChar == '\b' && passwordField.getCaretPosition() == 1) {deleteFirstChar = true;
+            public void keyPressed(KeyEvent e) {
+                final char typedChar = e.getKeyChar();
+                if (typedChar == '\b' && passwordField.getCaretPosition() == 1) {
+                    deleteFirstChar = true;
                 }
             }
         });
 
-        signupButton.addActionListener(e -> {controller.executeSignup();System.out.println("Sign up");});
+        signupButton.addActionListener(e -> {
+            controller.executeSignup();
+            System.out.println("Sign up");
+        });
 
-        loginButton.addActionListener(e -> {loginState = loginViewModel.getState();controller.execute(loginState.getUsername(), loginState.getPassword());System.out.println("Log in");});
+        loginButton.addActionListener(e -> {
+            loginState = loginViewModel.getState();
+            controller.execute(loginState.getUsername(), loginState.getPassword());
+            System.out.println("Log in");
+        });
 
-        exitButton.addActionListener(e -> {int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Confirmation", JOptionPane.YES_NO_OPTION);if (result == JOptionPane.YES_OPTION) {System.exit(0);}});
+        exitButton.addActionListener(e -> {
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
+        });
 
     }
 
@@ -187,8 +255,11 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     public void propertyChange(PropertyChangeEvent evt) {
         LoginState state = (LoginState) evt.getNewValue();
 //        setFields(state);
-        if(state.getPasswordError() != null) {
-            JOptionPane.showMessageDialog(this, state.getPasswordError());} else if(state.getUsernameError() != null) {JOptionPane.showMessageDialog(this, state.getUsernameError());}
+        if (state.getPasswordError() != null) {
+            JOptionPane.showMessageDialog(this, state.getPasswordError());
+        } else if (state.getUsernameError() != null) {
+            JOptionPane.showMessageDialog(this, state.getUsernameError());
+        }
 
     }
 

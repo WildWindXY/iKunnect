@@ -87,9 +87,11 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
     public synchronized void sendPacket(Packet msg) { //TODO: Exception should be thrown and handled outside
         System.out.println("Message to send to server: " + msg.toString());
         try {
-            out.writeObject(msg);out.flush();
+            out.writeObject(msg);
+            out.flush();
         } catch (Exception e) {
-            e.printStackTrace();}
+            e.printStackTrace();
+        }
     }
 
     public PacketServerLoginResponse getLoginResponse() {
@@ -108,12 +110,19 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
         }
     }
 
-    public PacketServerTextMessageResponse getSendMessageResponse() {try {return sendMessageResponses.take();} catch (InterruptedException e) {throw new RuntimeException(e);
+    public PacketServerTextMessageResponse getSendMessageResponse() {
+        try {
+            return sendMessageResponses.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public PacketServerTextMessage getReceiveMessage() {
-        try {return serverMessages.take();} catch (InterruptedException e) {throw new RuntimeException(e);
+        try {
+            return serverMessages.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

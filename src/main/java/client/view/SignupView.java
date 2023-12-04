@@ -28,6 +28,9 @@ import static client.view.MainView.messagesColor;
 
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
     public static final String VIEW_NAME = "Sign Up";
+    //private JPanel LoginMain;
+    private final StringBuilder usernameBuilder;
+    private final StringBuilder passwordBuilder;
     JPanel topPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
     InputFieldJLabel enterUsernameLabel = new InputFieldJLabel();
@@ -39,10 +42,6 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     loginSignupButton signupButton = new loginSignupButton();
     loginSignupButton loginButton = new loginSignupButton();
     loginSignupButton exitButton = new loginSignupButton();
-    //private JPanel LoginMain;
-    private final StringBuilder usernameBuilder;
-    private final StringBuilder passwordBuilder;
-
     private boolean HC = false;
 
 
@@ -206,7 +205,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
             String message = isValidPassword ? "Password is valid." : "Password is invalid.";
             // Show the dialog
             JOptionPane.showMessageDialog(null, message, "Password Validation", JOptionPane.INFORMATION_MESSAGE);
-            if(isValidPassword){
+            if (isValidPassword) {
                 controller.execute(
                         currentState.getUsername(),
                         currentState.getPassword(),

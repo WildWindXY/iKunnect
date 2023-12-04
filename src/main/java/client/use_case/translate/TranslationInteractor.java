@@ -1,6 +1,6 @@
 package client.use_case.translate;
 
-public class TranslationInteractor implements TranslationInputBoundary{
+public class TranslationInteractor implements TranslationInputBoundary {
     private final TranslateDataAccessInterface translationDataAccessObject;
 
     public TranslationInteractor(TranslateDataAccessInterface translationDataAccessObject) {
