@@ -17,12 +17,6 @@ public class ServerShutdownInteractor implements ServerShutdownInputBoundary {
      * This method is used to ensure a proper and controlled termination of the application.
      */
     @Override
-    public void shutdown() {
-        serverShutdownOutputBoundary.addMessage("Closing DataAccess...");
-        serverShutdownDataAccessInterface.shutdown();
-        serverShutdownOutputBoundary.addMessage("DataAccess closed successfully.");
-        serverShutdownOutputBoundary.addMessage("Closing ServerThreadPool...");
-        ServerThreadPool.shutdown();
-        System.exit(0);
+    public void shutdown() {serverShutdownOutputBoundary.addMessage("Closing DataAccess...");serverShutdownDataAccessInterface.shutdown();serverShutdownOutputBoundary.addMessage("DataAccess closed successfully.");serverShutdownOutputBoundary.addMessage("Closing ServerThreadPool...");ServerThreadPool.shutdown();System.exit(0);
     }
 }

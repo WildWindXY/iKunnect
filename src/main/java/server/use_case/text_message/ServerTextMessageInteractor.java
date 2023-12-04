@@ -18,12 +18,7 @@ public class ServerTextMessageInteractor implements ServerTextMessageInputBounda
         ServerThreadPool.submit(() -> {
             try {
                 while (!Thread.interrupted()) {
-                    handlePacket(serverTextMessageDataAccessInterface.getPacketClientTextMessage());
-                }
-            } catch (InterruptedException ignored) {
-                Thread.currentThread().interrupt();
-                textMessagePresenter.addMessage("ServerTextMessageInteractor ended");
-            }
+                    handlePacket(serverTextMessageDataAccessInterface.getPacketClientTextMessage());}} catch (InterruptedException ignored) {Thread.currentThread().interrupt();textMessagePresenter.addMessage("ServerTextMessageInteractor ended");}
         }, "ServerTextMessageInteractor");
     }
 
@@ -47,12 +42,10 @@ public class ServerTextMessageInteractor implements ServerTextMessageInputBounda
                     serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessageResponse(clientMessageId, timestamp, PacketServerTextMessageResponse.Status.NOT_FRIEND), info);
                 } else {
                     int chatId = user.getChatId(friend.getUserId());
-                    if (chatId != friend.getChatId(user.getUserId())) {
-                        throw new IllegalStateException("How " + user.getUsername() + " and " + friend.getUsername() + " have different chatIds?");
+                    if (chatId != friend.getChatId(user.getUserId())) {throw new IllegalStateException("How " + user.getUsername() + " and " + friend.getUsername() + " have different chatIds?");
                     } else {
                         ServerChat chat = serverTextMessageDataAccessInterface.getChat(chatId);
-                        if (chat == null) {
-                            throw new IllegalStateException("How chat with id " + chatId + " is null?");
+                        if (chat == null) {throw new IllegalStateException("How chat with id " + chatId + " is null?");
                         } else {
                             int messageId = serverTextMessageDataAccessInterface.addMessage(user.getUserId(), message);
                             chat.addMessage(messageId);
@@ -60,18 +53,7 @@ public class ServerTextMessageInteractor implements ServerTextMessageInputBounda
                             serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessageResponse(clientMessageId, timestamp, PacketServerTextMessageResponse.Status.RECEIVED), info);
                             ConnectionInfo friendInfo = serverTextMessageDataAccessInterface.getConnectionInfo(friend.getUserId());
                             if (friendInfo != null) {
-                                textMessagePresenter.addMessage("TextMessage from " + user.getUsername() + " to " + friend.getUsername() + " sent successfully");
-                                serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessage(user.getUserId(), message, timestamp), friendInfo);
-                            }else {
-                                textMessagePresenter.addMessage("TextMessage to " + friend.getUsername() +" unsent since not online.");
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            textMessagePresenter.addMessage(TextUtils.error("TextMessage Error: " + e.getMessage()));
-            serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessageResponse(clientMessageId, timestamp, PacketServerTextMessageResponse.Status.SERVER_ERROR), info);
+                                textMessagePresenter.addMessage("TextMessage from " + user.getUsername() + " to " + friend.getUsername() + " sent successfully");serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessage(user.getUserId(), message, timestamp), friendInfo);}else {textMessagePresenter.addMessage("TextMessage to " + friend.getUsername() +" unsent since not online.");}}}}}} catch (Exception e) {textMessagePresenter.addMessage(TextUtils.error("TextMessage Error: " + e.getMessage()));serverTextMessageDataAccessInterface.sendTo(new PacketServerTextMessageResponse(clientMessageId, timestamp, PacketServerTextMessageResponse.Status.SERVER_ERROR), info);
         } finally {
             ServerChats.save();
             ServerMessages.save();

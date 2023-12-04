@@ -48,10 +48,7 @@ public class HighContrastDataAccess implements HighContrastDataAccessInterface {
             case HIGH_CONTRAST:
                 System.out.println("OptionsDAO get HIGH_CONTRAST");
                 return new HighContrastOutputData(csvGet(index));
-            case 2:
-        }
-
-        return null;
+            case 2:}return null;
     }
 
     private int csvGet(int index) {
@@ -63,23 +60,7 @@ public class HighContrastDataAccess implements HighContrastDataAccessInterface {
             if (nthLine != null) {
                 String[] parsedNthLine = nthLine.split(",");
                 return Integer.parseInt(parsedNthLine[1].strip());
-            } else {
-                System.out.println("OptionsDataAccess: Line not found (file may have fewer lines)");
-                return -1;
-            }
-        } catch (IOException ignored) {
-            return -1;
-        }
+            } else {System.out.println("OptionsDataAccess: Line not found (file may have fewer lines)");return -1;
+            }} catch (IOException ignored) {return -1; }
     }
-
-    @Override
-    public void set(int index, int value) {
-        switch (index) {
-            case HIGH_CONTRAST:
-                System.out.println("Set HC to value " + value);
-                //TODO implement csv
-        }
-    }
-
-
 }

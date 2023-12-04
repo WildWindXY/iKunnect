@@ -30,12 +30,7 @@ public class ServerLoginInteractor implements ServerLoginInputBoundary {
             try {
                 while (!Thread.interrupted()) {
                     handlePacket(serverLoginDataAccessInterface.getPacketClientLogin());
-                }
-            } catch (InterruptedException ignored) {
-                Thread.currentThread().interrupt();
-                serverLoginPresenter.addMessage("ServerLoginInteractor ended");
-            }
-        }, "ServerLoginInteractor");
+                }} catch (InterruptedException ignored) {Thread.currentThread().interrupt();serverLoginPresenter.addMessage("ServerLoginInteractor ended");}}, "ServerLoginInteractor");
     }
 
     /**

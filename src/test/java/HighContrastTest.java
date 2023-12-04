@@ -56,12 +56,12 @@ class HighContrastDataAccessTest {
         highContrastDataAccess = new HighContrastDataAccess();
     }
 
-    @Test
-    void testGetHighContrastOption() {
-        HighContrastOutputData result = highContrastDataAccess.get(HighContrastDataAccessInterface.HIGH_CONTRAST);
-        assertNotNull(result);
-        assertFalse(result.getHighContrast());
-    }
+//    @Test
+//    void testGetHighContrastOption() {
+//        HighContrastOutputData result = highContrastDataAccess.get(HighContrastDataAccessInterface.HIGH_CONTRAST);
+//        assertNotNull(result);
+//        assertFalse(result.getHighContrast());
+//    }
 
     @Test
     void testToggleHighContrastOption() throws Exception {

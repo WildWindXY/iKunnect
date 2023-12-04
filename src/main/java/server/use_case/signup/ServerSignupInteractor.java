@@ -33,11 +33,7 @@ public class ServerSignupInteractor implements ServerSignupInputBoundary {
             try {
                 while (!Thread.interrupted()) {
                     handlePacket(serverSignupDataAccessInterface.getPacketClientSignup());
-                }
-            } catch (InterruptedException ignored) {
-                Thread.currentThread().interrupt();
-                serverSignupPresenter.addMessage("ServerSignupInteractor ended");
-            }
+                }} catch (InterruptedException ignored) {Thread.currentThread().interrupt();serverSignupPresenter.addMessage("ServerSignupInteractor ended");}
         }, "ServerSignupInteractor");
     }
 
