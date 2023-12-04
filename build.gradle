@@ -23,7 +23,7 @@ application {
 
 jar {
     from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-
+    from sourceSets.main.resources
     manifest {
         attributes 'Main-Class': 'IKunnect'
     }
@@ -54,5 +54,3 @@ task createJarClient(type: Jar, dependsOn: classes) {
     archiveBaseName = 'TempClient'
     duplicatesStrategy = 'exclude'
 }
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16

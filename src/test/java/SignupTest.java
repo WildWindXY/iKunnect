@@ -109,7 +109,7 @@ class SignupUseCaseFactoryTest {
 
         // Assuming HighContrastDataAccessInterface.HIGH_CONTRAST is a static final field
 //        when(optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(true);
-        when(optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(new HighContrastOutputData(1));
+        when(optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(new HighContrastOutputData(true));
 
         SignupView result = SignupUseCaseFactory.create(viewManagerModel, mainViewModel, signupViewModel, loginViewModel, userDataAccessObject, optionsDataAccessObject);
 

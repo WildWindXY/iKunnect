@@ -167,11 +167,11 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         setEnabled(true);
         setLayout(new GridBagLayout());
         createBasePanel();
-        moreOptions3.addActionListener(e -> {
-            basePanel.removeAll();
-            basePanel.revalidate();
-            basePanel.repaint();
-        });
+//        moreOptions3.addActionListener(e -> {
+//            basePanel.removeAll();
+//            basePanel.revalidate();
+//            basePanel.repaint();
+//        });
 
         setTitleLabel();
         initTopPanel();
@@ -237,7 +237,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         inputField = new JTextArea(inputFieldTemp);
 
         moreOptions1 = new JButton("Button 1");
-        moreOptions1.addActionListener(e -> clearMessages());
+//        moreOptions1.addActionListener(e -> clearMessages());
         moreOptions2 = new JButton("Button 2");
         moreOptions3 = new JButton("Button 3");
     }
@@ -247,7 +247,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     private void initOptionsButton() {
-        options = new JButton(new ImageIcon(new ImageIcon(HC ? "src/main/resources/hamburgerHC.png" : "src/main/resources/hamburger.png").getImage().getScaledInstance(50, 50, 4)));
+        options = new JButton(new ImageIcon(new ImageIcon(HC ? MainView.class.getClassLoader().getResource("hamburgerHC.png").getPath() : MainView.class.getClassLoader().getResource("hamburger.png").getPath()).getImage().getScaledInstance(50, 50, 4)));
         options.setUI(new BasicButtonUI() {
             @Override
             public void paintButtonPressed(Graphics g, AbstractButton b) {
@@ -819,15 +819,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
                 boolean hc = highContrastState.getHighContrast();
                 System.out.println("MainView HC " + hc);
                 initComponents(highContrastState);
-                mainController.getFriendList();
                 initChannels();
             }
             case "addFriend" -> {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
                 mainController.getFriendList();
                 initChannels();
             }
@@ -1246,7 +1241,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             panel.setBorder(BorderFactory.createLineBorder(Color.decode("#E8F3FD")));
 
             //Load image from server using username/uuid???
-            String imagePath = "src/main/resources/userIcon.jpg";
+            String imagePath = MainView.class.getClassLoader().getResource("userIcon.jpg").getPath();
             //Default UserIcon
             JComponent imageFittingComponent = new JLabel("Image Failed To Load");
             try {

@@ -206,9 +206,11 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
             // Show the dialog
             JOptionPane.showMessageDialog(null, message, "Password Validation", JOptionPane.INFORMATION_MESSAGE);
             if (isValidPassword) {
-                controller.execute(currentState.getUsernameAndClear(), currentState.getPasswordAndClear(), currentState.getRepeatPasswordAndClear());
-                passwordBuilder.delete(0, passwordBuilder.length());
+                controller.execute(usernameField.getText(), String.valueOf(passwordField.getPassword()), String.valueOf(passwordField.getPassword()));
                 passwordField.setText("");
+                passwordRepeatField.setText("");
+                passwordBuilder.delete(0, passwordBuilder.length());
+                passwordBuilder.delete(0, passwordBuilder.length());
             }
         });
 
