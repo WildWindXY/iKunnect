@@ -2,6 +2,7 @@ package client.data_access.add_friend;
 
 import client.data_access.ServerDataAccessObject;
 import client.use_case.add_friend.AddFriendDataAccessInterface;
+import common.packet.PacketServerFriendRequestFrom;
 import common.packet.PacketServerGetFriendListResponse;
 
 public class AddFriendDataAccess implements AddFriendDataAccessInterface {
@@ -20,6 +21,11 @@ public class AddFriendDataAccess implements AddFriendDataAccessInterface {
     @Override
     public PacketServerGetFriendListResponse getFriendList() {
         return serverDataAccessObject.getFriendList();
+    }
+
+    @Override
+    public PacketServerFriendRequestFrom getFriendRequest() {
+        return serverDataAccessObject.getFriendRequest();
     }
 
 }

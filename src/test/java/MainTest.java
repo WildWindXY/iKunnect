@@ -26,7 +26,7 @@ class MainUseCaseFactoryTest {
         MainViewModel mainViewModel = mock(MainViewModel.class);
 
         // Configure the mock for highContrastDataAccessObject
-        when(highContrastDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(new HighContrastOutputData(1));
+        when(highContrastDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(new HighContrastOutputData(true));
 
         MainView result = MainUseCaseFactory.create(myUsername, sendMessageDataAccessObject, receiveMessageDataAccessObject, translateDataAccessObject, highContrastDataAccessObject, addFriendDataAccessObject, mainViewModel);
 

@@ -21,6 +21,8 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
     private final LinkedBlockingQueue<PacketServerGetFriendListResponse> getFriendListResponses = new LinkedBlockingQueue<>();
 
     private final LinkedBlockingQueue<PacketServerTextMessageResponse> sendMessageResponses = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<PacketServerFriendRequestFrom> friendRequestFrom = new LinkedBlockingQueue<>();
+
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -63,6 +65,7 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
             while (true) {
                 try {
                     Packet packet = receivedPacket.take();
+                    System.out.println("Received: " + packet);
                     if (packet instanceof PacketDebug) {
                         System.out.println("Received from server (debug message): " + packet);
                     } else if (packet instanceof PacketServerTextMessage) {
@@ -75,6 +78,8 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
                         signupResponses.add((PacketServerSignupResponse) packet);
                     } else if (packet instanceof PacketServerGetFriendListResponse) {
                         getFriendListResponses.add((PacketServerGetFriendListResponse) packet);
+                    } else if (packet instanceof PacketServerFriendRequestFrom) {
+                        friendRequestFrom.add((PacketServerFriendRequestFrom) packet);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -121,6 +126,14 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
     public PacketServerTextMessage getReceiveMessage() {
         try {
             return serverMessages.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public PacketServerFriendRequestFrom getFriendRequest() {
+        try {
+            return friendRequestFrom.take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

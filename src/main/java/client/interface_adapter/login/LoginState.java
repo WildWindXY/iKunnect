@@ -6,10 +6,6 @@ public class LoginState {
     private String password = "";
     private String passwordError = null;
 
-    // Because of the previous copy constructor, the default constructor must be explicit.
-    public LoginState() {
-    }
-
     public String getUsername() {
         return username;
     }

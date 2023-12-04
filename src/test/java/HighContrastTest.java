@@ -31,7 +31,7 @@ class HighContrastInteractorTest {
 
     @Test
     void testExecuteToggleHighContrast() {
-        HighContrastOutputData outputData = new HighContrastOutputData(1); // Assuming true means high contrast is enabled
+        HighContrastOutputData outputData = new HighContrastOutputData(true); // Assuming true means high contrast is enabled
         when(optionsDataAccessObject.get(optionsDataAccessObject.HIGH_CONTRAST)).thenReturn(outputData);
 
         int result = highContrastInteractor.execute(HighContrastInteractor.TOGGLE_HIGH_CONTRAST);
