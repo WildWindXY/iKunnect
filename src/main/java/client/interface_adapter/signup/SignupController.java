@@ -17,7 +17,6 @@ public class SignupController {
     public void execute(String username, String password1, String password2) {
         SignupInputData signupInputData = new SignupInputData(username, password1, password2);
         userSignupUseCaseInteractor.execute(signupInputData);
-        System.out.println("SignupController.execute()");
     }
 
     public void executeLogin(){

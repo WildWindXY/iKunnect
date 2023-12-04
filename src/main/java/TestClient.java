@@ -12,7 +12,7 @@ public class TestClient {
     private final ObjectOutputStream out;
 
     public TestClient(String username, String password) throws IOException, InterruptedException {
-        Socket clientSocket = new Socket("localhost", 0x2304);
+        Socket clientSocket = new Socket("154.64.228.76", 0x2304);
         System.out.println("Connected to server");
 
         out = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -34,16 +34,16 @@ public class TestClient {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         List<TestClient> users = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             users.add(new TestClient("user" + i, "user"));
         }
         for (TestClient user : users) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 20; i++) {
                 user.send(new PacketClientFriendRequest("user" + i));
             }
         }
         Random random = new Random();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             users.get(random.nextInt(users.size())).send(new PacketClientTextMessage(i, random.nextInt(10), getRandomString()));
         }
     }

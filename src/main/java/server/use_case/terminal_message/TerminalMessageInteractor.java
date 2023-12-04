@@ -15,11 +15,6 @@ public class TerminalMessageInteractor implements TerminalMessageInputBoundary {
     private void handleMessage() {
         try {
             while (!Thread.interrupted()) {
-                terminalMessagePresenter.addMessage(terminalMessageDataAccess.getTerminalMessage());
-            }
-        } catch (InterruptedException ignored) {
-            Thread.currentThread().interrupt();
-            terminalMessagePresenter.addMessage("TerminalMessageInteractor ended");
-        }
+                terminalMessagePresenter.addMessage(terminalMessageDataAccess.getTerminalMessage());}} catch (InterruptedException ignored) {Thread.currentThread().interrupt();terminalMessagePresenter.addMessage("TerminalMessageInteractor ended");}
     }
 }

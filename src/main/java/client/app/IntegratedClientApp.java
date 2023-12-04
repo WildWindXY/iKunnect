@@ -37,6 +37,7 @@ public class IntegratedClientApp {
         SignupViewModel signupViewModel = new SignupViewModel();
         MainViewModel mainViewModel = new MainViewModel();
 
+//        String serverAddress = "154.64.228.76";
         String serverAddress = "localhost";
         int serverPort = 0x2304;
         try {
