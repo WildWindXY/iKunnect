@@ -20,6 +20,7 @@ public class SignupInteractor implements SignupInputBoundary {
     @Override
     public void execute(SignupInputData data) {
         if (!data.getPassword().equals(data.getRepeatPassword())) {
+            System.out.println(data.getPassword() + "  " + data.getRepeatPassword());
             userPresenter.prepareFailView("Passwords don't match.");
         } else {
             PacketServerSignupResponse packet = userDataAccessObject.signup(data.getUsername(), data.getPassword());
