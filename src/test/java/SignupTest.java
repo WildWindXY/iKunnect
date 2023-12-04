@@ -1,14 +1,14 @@
-import client.app.SignupUseCaseFactory;
-import client.entity.UserFactory;
-import client.interface_adapter.ViewManagerModel;
-import client.interface_adapter.login.LoginViewModel;
-import client.interface_adapter.main.MainViewModel;
-import client.interface_adapter.signup.SignupViewModel;
-import client.use_case.high_contrast.HighContrastDataAccessInterface;
-import client.use_case.high_contrast.HighContrastOutputData;
-import client.use_case.signup.*;
-import client.view.SignupView;
-import common.packet.PacketServerSignupResponse;
+import com.xiaoheizi.client.app.SignupUseCaseFactory;
+import com.xiaoheizi.client.entity.UserFactory;
+import com.xiaoheizi.client.interface_adapter.ViewManagerModel;
+import com.xiaoheizi.client.interface_adapter.login.LoginViewModel;
+import com.xiaoheizi.client.interface_adapter.main.MainViewModel;
+import com.xiaoheizi.client.interface_adapter.signup.SignupViewModel;
+import com.xiaoheizi.client.use_case.high_contrast.HighContrastDataAccessInterface;
+import com.xiaoheizi.client.use_case.high_contrast.HighContrastOutputData;
+import com.xiaoheizi.client.use_case.signup.*;
+import com.xiaoheizi.client.view.SignupView;
+import com.xiaoheizi.packet.PacketServerSignupResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -109,7 +109,7 @@ class SignupUseCaseFactoryTest {
 
         // Assuming HighContrastDataAccessInterface.HIGH_CONTRAST is a static final field
 //        when(optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(true);
-        when(optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(new HighContrastOutputData(1));
+        when(optionsDataAccessObject.get(HighContrastDataAccessInterface.HIGH_CONTRAST)).thenReturn(new HighContrastOutputData(true));
 
         SignupView result = SignupUseCaseFactory.create(viewManagerModel, mainViewModel, signupViewModel, loginViewModel, userDataAccessObject, optionsDataAccessObject);
 

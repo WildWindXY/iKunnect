@@ -1,6 +1,18 @@
-import common.packet.*;
+import com.xiaoheizi.packet.*;
 import org.junit.jupiter.api.Test;
-import utils.FileUtils;
+import com.xiaoheizi.server.data_access.DataAccess;
+import com.xiaoheizi.server.interface_adapter.TerminalController;
+import com.xiaoheizi.server.interface_adapter.TerminalPresenter;
+import com.xiaoheizi.server.interface_adapter.TerminalViewModel;
+import com.xiaoheizi.server.use_case.friend_request.ServerFriendRequestInteractor;
+import com.xiaoheizi.server.use_case.get_friend_list.ServerGetFriendListInteractor;
+import com.xiaoheizi.server.use_case.login.ServerLoginInteractor;
+import com.xiaoheizi.server.use_case.server_shutdown.ServerShutdownInteractor;
+import com.xiaoheizi.server.use_case.signup.ServerSignupInteractor;
+import com.xiaoheizi.server.use_case.terminal_message.TerminalMessageInteractor;
+import com.xiaoheizi.server.use_case.text_message.ServerTextMessageInteractor;
+import com.xiaoheizi.server.view.TerminalView;
+import com.xiaoheizi.utils.FileUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -8,17 +20,27 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * Tests in this class requires server running with empty data.
+ * Tests in this class requires com.ikun.server running with empty data.
  */
 public class ServerTest {
 
     /**
-     * Since testing the server requires a fixed order, it cannot be seperated into different tests
+     * Since testing the com.ikun.server requires a fixed order, it cannot be seperated into different tests
      */
     @Test
     public void testServer() throws IOException, ClassNotFoundException {
         System.out.println(FileUtils.getJarPath());
-        IKunnectServer.start();
+        DataAccess dataAccess = new DataAccess();
+        TerminalViewModel terminalViewModel = new TerminalViewModel();
+        TerminalPresenter terminalPresenter = new TerminalPresenter(terminalViewModel);
+        TerminalMessageInteractor terminalMessageInteractor = new TerminalMessageInteractor(dataAccess, terminalPresenter);
+        ServerShutdownInteractor serverShutdownInteractor = new ServerShutdownInteractor(dataAccess, terminalPresenter);
+        ServerSignupInteractor serverSignupInteractor = new ServerSignupInteractor(dataAccess, terminalPresenter);
+        ServerLoginInteractor serverLoginInteractor = new ServerLoginInteractor(dataAccess, terminalPresenter);
+        ServerGetFriendListInteractor serverGetFriendListInteractor = new ServerGetFriendListInteractor(dataAccess, terminalPresenter);
+        ServerFriendRequestInteractor serverFriendRequestInteractor = new ServerFriendRequestInteractor(dataAccess, terminalPresenter);
+        ServerTextMessageInteractor serverTextMessageInteractor = new ServerTextMessageInteractor(dataAccess, terminalPresenter);
+        TerminalView terminalView = new TerminalView(new TerminalController(terminalMessageInteractor, serverShutdownInteractor, serverSignupInteractor, serverLoginInteractor, serverGetFriendListInteractor, serverFriendRequestInteractor, serverTextMessageInteractor), terminalViewModel);
 
         FakeClient user1 = new FakeClient();
         testServerSignup(user1);
@@ -28,7 +50,6 @@ public class ServerTest {
 
         testServerNotLoggedIn();
         testServerFriendRelated(user1, user2);
-
     }
 
     private void testServerSignup(FakeClient user) throws IOException, ClassNotFoundException {
