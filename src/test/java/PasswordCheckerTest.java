@@ -1,7 +1,7 @@
-import client.data_access.password_checker.PasswordCheckerDataAccess;
-import client.use_case.password_checker.PasswordCheckerDataAccessInterface;
-import client.use_case.password_checker.PasswordCheckerInputData;
-import client.use_case.password_checker.PasswordCheckerInteractor;
+import com.xiaoheizi.client.data_access.password_checker.PasswordCheckerDataAccess;
+import com.xiaoheizi.client.use_case.password_checker.PasswordCheckerDataAccessInterface;
+import com.xiaoheizi.client.use_case.password_checker.PasswordCheckerInputData;
+import com.xiaoheizi.client.use_case.password_checker.PasswordCheckerInteractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

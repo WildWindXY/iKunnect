@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
-import utils.FileUtils;
-import utils.InputUtils;
-import utils.PasswordUtils;
+import com.xiaoheizi.utils.FileUtils;
+import com.xiaoheizi.utils.InputUtils;
+import com.xiaoheizi.utils.PasswordUtils;
 
 public class UtilTest {
     @Test

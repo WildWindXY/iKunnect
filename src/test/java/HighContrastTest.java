@@ -1,8 +1,8 @@
-import client.data_access.high_contrast.HighContrastDataAccess;
-import client.use_case.high_contrast.HighContrastDataAccessInterface;
-import client.use_case.high_contrast.HighContrastInteractor;
-import client.use_case.high_contrast.HighContrastOutputBoundary;
-import client.use_case.high_contrast.HighContrastOutputData;
+import com.xiaoheizi.client.data_access.high_contrast.HighContrastDataAccess;
+import com.xiaoheizi.client.use_case.high_contrast.HighContrastDataAccessInterface;
+import com.xiaoheizi.client.use_case.high_contrast.HighContrastInteractor;
+import com.xiaoheizi.client.use_case.high_contrast.HighContrastOutputBoundary;
+import com.xiaoheizi.client.use_case.high_contrast.HighContrastOutputData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

@@ -25,7 +25,7 @@ jar {
     from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     from sourceSets.main.resources
     manifest {
-        attributes 'Main-Class': 'IKunnect'
+        attributes 'Main-Class': 'com.xiaoheizi.IKunnect'
     }
     archiveBaseName = 'IKunnect'
     duplicatesStrategy = 'exclude'
@@ -37,7 +37,7 @@ task createJarServer(type: Jar, dependsOn: classes) {
     from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 
     manifest {
-        attributes 'Main-Class': 'IKunnectServer'
+        attributes 'Main-Class': 'com.xiaoheizi.IKunnectServer'
     }
     archiveBaseName = 'IKunnectServer'
     duplicatesStrategy = 'exclude'
@@ -49,7 +49,7 @@ task createJarClient(type: Jar, dependsOn: classes) {
     from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 
     manifest {
-        attributes 'Main-Class': 'TempClient'
+        attributes 'Main-Class': 'com.xiaoheizi.TestClient'
     }
     archiveBaseName = 'TempClient'
     duplicatesStrategy = 'exclude'

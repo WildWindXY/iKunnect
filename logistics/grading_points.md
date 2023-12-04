@@ -6,7 +6,7 @@
 - Only Java code 
   
   Note: The program your team is developing must be a Java program with a Java Swing GUI (similar to the grade-api and Login CA examples).
-- Clean Architecture (under both server folder and client folder); please refer to the CA engine diagram as well as Week5 Lab code.
+- Clean Architecture (under both com.xiaoheizi.server folder and com.xiaoheizi.client folder); please refer to the CA engine diagram as well as Week5 Lab code.
 
     Note: The program must attempt to adhere to Clean Architecture and the SOLID principles.
 - Make sure everyone has their history (git log) so that we can count for contributions.
