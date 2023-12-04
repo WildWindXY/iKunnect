@@ -18,6 +18,18 @@ public class LoginState {
         this.username = username;
     }
 
+    public String getAndClearUsername() {
+        String username = this.username;
+        this.username = null;
+        return username;
+    }
+
+    public String getAndClearPassword() {
+        String password = this.password;
+        this.password = null;
+        return password;
+    }
+
     public String getUsernameError() {
         return usernameError;
     }
