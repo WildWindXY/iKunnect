@@ -38,15 +38,12 @@ public class FileManager {
     });
 
     public FileManager(DataAccess dataAccess) {
-        System.out.println(3);
         File dir = new File(TEST_PATH);
         System.out.println(TEST_PATH);
         if (!dir.exists() && !dir.mkdir()) {
-            System.out.println(4);
             dataAccess.addTerminalMessage(TextUtils.error("Warning: Unable to create dir at: " + TEST_PATH + ", system closing..."));
             System.exit(0x2304);
         }
-        System.out.println(3);
         this.dataAccess = dataAccess;
         serverUsers = loadServerUsers();
         serverChats = loadServerChats();

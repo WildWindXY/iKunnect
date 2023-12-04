@@ -14,6 +14,25 @@ public class SignupState {
         this.username = username;
     }
 
+    public String getUsernameAndClear() {
+        String username = this.username;
+        this.username = null;
+        return username;
+    }
+
+    public String getPasswordAndClear() {
+        String password = this.password;
+        this.password = null;
+        return password;
+    }
+
+    public String getRepeatPasswordAndClear() {
+        String repeatPassword = this.repeatPassword;
+        this.repeatPassword = null;
+        return repeatPassword;
+    }
+
+
     public String getUsernameError() {
         return usernameError;
     }
@@ -28,10 +47,6 @@ public class SignupState {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRepeatPassword() {
-        return repeatPassword;
     }
 
     public void setRepeatPassword(String repeatPassword) {

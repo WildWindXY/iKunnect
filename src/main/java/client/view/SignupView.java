@@ -201,16 +201,12 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
             String password = signupViewModel.getState().getPassword();
             // Check if the password is valid
-            boolean isValidPassword = controller.checkPassword(password);
-            String message = isValidPassword ? "Password is valid." : "Password is invalid.";
+            boolean isValidPassword = !password.isEmpty() && controller.checkPassword(password);
+            String message = isValidPassword ? "Password is valid and strong." : "Password is invalid or too weak.";
             // Show the dialog
             JOptionPane.showMessageDialog(null, message, "Password Validation", JOptionPane.INFORMATION_MESSAGE);
             if (isValidPassword) {
-                controller.execute(
-                        currentState.getUsername(),
-                        currentState.getPassword(),
-                        currentState.getRepeatPassword()
-                );
+                controller.execute(currentState.getUsernameAndClear(), currentState.getPasswordAndClear(), currentState.getRepeatPasswordAndClear());
                 passwordBuilder.delete(0, passwordBuilder.length());
                 passwordField.setText("");
             }
@@ -224,8 +220,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         });
 
         exitButton.addActionListener(e -> {
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?",
-                    "Confirmation", JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Confirmation", JOptionPane.YES_NO_OPTION);
 
             // Process the user's choice
             if (result == JOptionPane.YES_OPTION) {

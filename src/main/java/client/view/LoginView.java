@@ -49,11 +49,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     SignupController signupController;
 
-    LoginViewModel loginViewModel = new LoginViewModel();
-
     private LoginState loginState;
 
-    private boolean HC = false;
+    private boolean HC;
 
     public LoginView(LoginController controller, SignupController signupController, LoginViewModel loginViewModel, HighContrastOutputData outputData) {
 
@@ -166,7 +164,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         loginButton.addActionListener(e -> {
             loginState = loginViewModel.getState();
-            controller.execute(loginState.getUsername(), loginState.getPassword());
+            controller.execute(loginState.getAndClearUsername(), loginState.getAndClearPassword());
             System.out.println("Log in");
         });
 
