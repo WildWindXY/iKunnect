@@ -46,13 +46,15 @@ public class TestClient {
             }
         }
         Random random = new Random();
-        for (int i = 0; i < 50000; i++) {
+        for (int i = 0; i < 1000; i++) {
             users.get(random.nextInt(users.size())).send(new PacketClientTextMessage(i, random.nextInt(10), getRandomString()));
         }
     }
 
     private static String getRandomString() {
-        String[] strings = {
+        String[] strings = {"The quick brown fox jumps over the lazy dog.", "A journey of a thousand miles begins with a single step.", "Life is like a bicycle, to keep your balance, you must keep moving.", "The sun sets in the west, painting the sky with vibrant hues.", "In the midst of winter, I found there was, within me, an invincible summer.", "Coding is the closest thing we have to a superpower.", "The best way to predict the future is to create it.", "Raindrops on roses and whiskers on kittens, bright copper kettles and warm woolen mittens.", "Every child is an artist. The problem is how to remain an artist once we grow up.", "Do not dwell in the past; do not dream of the future, concentrate the mind on the present moment."};
+
+        /*String[] strings = {
                 "Clean Architecture sucks.",
                 "Clean Architecture cumbersome and overrated.",
                 "Clean Architecture, destroy!",
@@ -61,7 +63,7 @@ public class TestClient {
                 "Everything is better than Clean Architecture.",
                 "You're right, but Clean Architecture...",
                 "Imo, rather use Genshin Impact."
-        };
+        };*/
         Random random = new Random();
         int randomIndex = random.nextInt(strings.length);
         return strings[randomIndex];

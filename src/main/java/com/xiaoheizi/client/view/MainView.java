@@ -185,6 +185,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         initOptionsButton();
         addOptionsButtonToPanel();
 
+        setCurrentChannelLabel();
         initChannelsScrollPane();
 //        addTestChannels();
         initChatPanel();
@@ -865,7 +866,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         channels.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         channelsScrollPane.setViewportView(channels);
 
-        setCurrentChannelLabel(); //TODO: Probably due to my lack of understanding, the current chat name label went to the bottom somehow
+        channelLabel.setText("Add some friends!");
         if (!mainViewModel.getFriends().isEmpty()) {
             channels.setSelectedIndex(0);
             updateCurrentChat();

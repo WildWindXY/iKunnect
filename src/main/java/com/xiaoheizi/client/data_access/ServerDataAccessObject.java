@@ -38,7 +38,7 @@ public class ServerDataAccessObject implements SignupDataAccessInterface, LoginD
 
             receivePacket();
             packetClassification();
-        } catch (IOException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error: Cannot connect to server, please try again later", "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0x2304);
         }
