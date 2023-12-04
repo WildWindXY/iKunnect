@@ -77,6 +77,13 @@ public class MainController {
 
     }
 
+    public void addFriend(String s){
+        addFriendInteractor.execute(s);
+        JOptionPane.showMessageDialog(null,  // Parent component (null for centering on screen)
+                "Friend Request Sent",  // Message to display
+                "Success",  // Title of the dialog
+                JOptionPane.INFORMATION_MESSAGE);
+    }
     private JButton initAddFriendButton() {
         JButton b = new JButton("Add Friend");
         Font highContrastUIButtonFont = new Font("Helvetica", Font.BOLD, 24);

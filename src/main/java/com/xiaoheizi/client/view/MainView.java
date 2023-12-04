@@ -871,11 +871,10 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
         channelsScrollPane.setViewportView(channels);
 
         //initChannelLabel();
-        setCurrentChannelLabel("Add some friends!");
         if (!mainViewModel.getFriends().isEmpty()) {
             channels.setSelectedIndex(0);
             updateCurrentChat();
-        }
+        } else{setCurrentChannelLabel("Add some friends!");}
         addChannelSelectListener();
         addChannelRightClickListener();
     }
@@ -926,12 +925,13 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
 
             //User Icon
             userIcon = renderUserIcon(username);
+            String effectivelyFinalUsername = username;
             userIcon.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getButton() == MouseEvent.BUTTON3) {
                         System.out.println("right click");
-                        UserIconPopup iconPopup = new UserIconPopup(HC);
+                        UserIconPopup iconPopup = new UserIconPopup(HC, effectivelyFinalUsername);
                         iconPopup.show(userIcon, e.getX(), e.getY());
                     }
                 }
@@ -1182,7 +1182,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
     }
 
     class UserIconPopup extends JPopupMenu {
-        public UserIconPopup(boolean HC) {
+        public UserIconPopup(boolean HC, String username) {
             super();
 
             JMenuItem viewProfile = new JMenuItem("View Profile");
@@ -1192,6 +1192,7 @@ public class MainView extends JPanel implements ActionListener, PropertyChangeLi
             viewProfile.setFont(jMenuItemFont);
             sendMessage.setFont(jMenuItemFont);
             addFriend.setFont(jMenuItemFont);
+            addFriend.addActionListener(e -> mainController.addFriend(username));
             setBackground(null);
             viewProfile.setUI(new CustomMenuItemUI());
             sendMessage.setUI(new CustomMenuItemUI());
