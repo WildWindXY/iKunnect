@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class FileManager {
     private static final ConcurrentLinkedQueue<IFile<?>> modifiedFiles = new ConcurrentLinkedQueue<>();
-    private static final String TEST_PATH = '/'+ FileUtils.getJarPath();
+    private static final String TEST_PATH = '/' + FileUtils.getJarPath();
     private final DataAccess dataAccess;
     private final ServerUsers serverUsers;
 

@@ -5,5 +5,6 @@ public interface HighContrastInputBoundary {
     int TOGGLE_HIGH_CONTRAST = 0;
 
     int ADD_FRIEND = 1;
+
     int execute(int action);
 }

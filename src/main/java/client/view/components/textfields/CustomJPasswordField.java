@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class CustomJPasswordField extends JPasswordField {
 
-    public CustomJPasswordField(){
+    public CustomJPasswordField() {
         super();
         Dimension prefSize = new Dimension(200, 30);
         setPreferredSize(prefSize);

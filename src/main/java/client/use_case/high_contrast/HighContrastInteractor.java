@@ -9,22 +9,22 @@ public class HighContrastInteractor implements HighContrastInputBoundary {
     private final HighContrastOutputBoundary optionsOutputBoundary;
 
 
-    public HighContrastInteractor(HighContrastDataAccessInterface optionsDataAccessObject, HighContrastOutputBoundary optionsOutputBoundary){
+    public HighContrastInteractor(HighContrastDataAccessInterface optionsDataAccessObject, HighContrastOutputBoundary optionsOutputBoundary) {
         this.optionsDataAccessObject = optionsDataAccessObject;
         this.optionsOutputBoundary = optionsOutputBoundary;
     }
 
     @Override
     public int execute(int action) {
-        switch(action){
-            case TOGGLE_HIGH_CONTRAST ->{
+        switch (action) {
+            case TOGGLE_HIGH_CONTRAST -> {
                 System.out.println("Interactor Toggle High Contrast");
                 optionsDataAccessObject.toggle(optionsDataAccessObject.HIGH_CONTRAST);
                 HighContrastOutputData outputData = optionsDataAccessObject.get(optionsDataAccessObject.HIGH_CONTRAST);
                 optionsOutputBoundary.setHighContrast(outputData);
-                return outputData.getHighContrast()? 1 : 0;
+                return outputData.getHighContrast() ? 1 : 0;
             }
-                //TODO return void after feature complete
+            //TODO return void after feature complete
             //case ADD_FRIEND:
             //    System.out.println("Interactor Add Friend");
 

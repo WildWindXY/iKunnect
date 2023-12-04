@@ -5,18 +5,19 @@ import java.awt.*;
 
 public class SmallJFrame extends JFrame {
 
-    public SmallJFrame(String title){
+    public SmallJFrame(String title) {
         super(title);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    public SmallJFrame(String title, JPanel view){
+
+    public SmallJFrame(String title, JPanel view) {
         new SmallJFrame(title);
         getContentPane().add(view);
     }
 
-    public void init(){
+    public void init() {
         pack();
         setVisible(true);
         Dimension windowSize = new Dimension();

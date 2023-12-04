@@ -1,5 +1,3 @@
-import static org.mockito.Mockito.*;
-
 import client.data_access.ServerDataAccessObject;
 import client.data_access.add_friend.AddFriendDataAccess;
 import client.use_case.add_friend.AddFriendDataAccessInterface;
@@ -7,6 +5,9 @@ import client.use_case.add_friend.AddFriendInteractor;
 import client.use_case.add_friend.AddFriendOutputBoundary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class AddFriendInteractorTest {
     private AddFriendDataAccessInterface dataAccess;

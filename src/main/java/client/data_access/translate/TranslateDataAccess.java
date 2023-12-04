@@ -1,8 +1,8 @@
 package client.data_access.translate;
 
-import client.use_case.translate.TranslateDataAccessInterface;
 import client.entity.TranslationRequest;
 import client.entity.TranslationResponse;
+import client.use_case.translate.TranslateDataAccessInterface;
 import client.use_case.translate.TranslationOutputData;
 import com.google.gson.Gson;
 
@@ -18,9 +18,11 @@ import java.util.List;
 
 public class TranslateDataAccess implements TranslateDataAccessInterface {
     private final DeeplAPI deeplAPI;
+
     public TranslateDataAccess() {
         this.deeplAPI = new DeeplAPI("EN"); //TODO: initialize with different language
     }
+
     @Override
     public TranslationOutputData translate(String text) {
         TranslationRequest request = new TranslationRequest(text);
@@ -28,7 +30,7 @@ public class TranslateDataAccess implements TranslateDataAccessInterface {
         return new TranslationOutputData(response.getTranslatedText(), response.getDetectedLanguage());
     }
 
-    class DeeplAPI  {
+    class DeeplAPI {
 
         private static final String API_URL = "https://api-free.deepl.com/v2/translate";
         private static final String AUTH_KEY = "DeepL-Auth-Key ce7a4edb-7949-68cb-4f80-49104d53fe70:fx";

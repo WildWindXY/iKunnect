@@ -21,12 +21,15 @@ public class ServerThreadPool {
      * @throws IllegalStateException if the thread pool is already shutdown.
      */
     public static void submit(Runnable task, String name) {
-        if (shutdown) {throw new IllegalStateException("Thread pool is shutdown");
+        if (shutdown) {
+            throw new IllegalStateException("Thread pool is shutdown");
         }
         Thread thread = new Thread(() -> {
             try {
                 task.run();
-            } finally {threads.remove(Thread.currentThread());}
+            } finally {
+                threads.remove(Thread.currentThread());
+            }
         }, name);
         thread.start();
         threads.addLast(thread);
@@ -36,9 +39,26 @@ public class ServerThreadPool {
      * Initiates a graceful shutdown of the thread pool.
      * This method interrupts all active threads and prevents new tasks from being submitted.
      */
-    public static void shutdown() {shutdown = true;for (Thread thread : threads) {thread.interrupt();}for (Thread thread : threads) {try {thread.join();} catch (InterruptedException e) {Thread.currentThread().interrupt();}}
+    public static void shutdown() {
+        shutdown = true;
+        for (Thread thread : threads) {
+            thread.interrupt();
+        }
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
-    public static String getString() {StringBuilder stringBuilder = new StringBuilder();stringBuilder.append("List of active threads:\n");for (Thread thread : threads) {stringBuilder.append(thread.getName()).append("\n");}return stringBuilder.toString();
+    public static String getString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("List of active threads:\n");
+        for (Thread thread : threads) {
+            stringBuilder.append(thread.getName()).append("\n");
+        }
+        return stringBuilder.toString();
     }
 }

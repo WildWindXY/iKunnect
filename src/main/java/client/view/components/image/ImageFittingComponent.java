@@ -1,11 +1,11 @@
 package client.view.components.image;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class ImageFittingComponent extends JComponent {
 
@@ -14,6 +14,24 @@ public class ImageFittingComponent extends JComponent {
     public ImageFittingComponent(String imagePath) throws IOException {
         // Load the image from the file
         image = ImageIO.read(new File(imagePath));
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Image Fitting Example");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(400, 300);
+
+            try {
+                ImageFittingComponent imageComponent = new ImageFittingComponent("src/main/resources/userIcon.jpg");
+                frame.add(imageComponent);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            frame.setVisible(true);
+        });
     }
 
     @Override
@@ -40,23 +58,5 @@ public class ImageFittingComponent extends JComponent {
 
             g.drawImage(image, x, y, scaledWidth, scaledHeight, this);
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Image Fitting Example");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 300);
-
-            try {
-                ImageFittingComponent imageComponent = new ImageFittingComponent("src/main/resources/userIcon.jpg");
-                frame.add(imageComponent);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            frame.setVisible(true);
-        });
     }
 }

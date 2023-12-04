@@ -9,13 +9,13 @@ public class SendMessageState {
         return message;
     }
 
-    public void setMessage(long timestamp, int senderId, String message){
-        this.timestamp = timestamp;
-        this.senderId = senderId;
+    public void setMessage(String message) {
         this.message = message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(long timestamp, int senderId, String message) {
+        this.timestamp = timestamp;
+        this.senderId = senderId;
         this.message = message;
     }
 

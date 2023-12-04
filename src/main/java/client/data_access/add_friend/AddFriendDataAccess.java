@@ -6,6 +6,7 @@ import common.packet.PacketServerGetFriendListResponse;
 
 public class AddFriendDataAccess implements AddFriendDataAccessInterface {
     private final ServerDataAccessObject serverDataAccessObject;
+
     public AddFriendDataAccess(ServerDataAccessObject serverDataAccessObject) {
         this.serverDataAccessObject = serverDataAccessObject;
     }

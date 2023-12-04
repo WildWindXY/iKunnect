@@ -1,15 +1,15 @@
 package utils;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
+
 public class MessageEncryptionUtils {
     private static SecretKeySpec aesKey = null;
+
     public static String md5Java(String message) {
         String digest = null;
         try {
@@ -48,7 +48,6 @@ public class MessageEncryptionUtils {
         byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
         return new String(decryptedBytes);
     }
-
 
 
 }

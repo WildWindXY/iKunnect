@@ -1,6 +1,3 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 import client.data_access.ServerDataAccessObject;
 import client.data_access.receive_message.ReceiveMessageDataAccess;
 import client.use_case.receive_message.ReceiveMessageDataAccessInterface;
@@ -10,6 +7,9 @@ import client.use_case.receive_message.ReceiveMessageOutputData;
 import common.packet.PacketServerTextMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 class ReceiveMessageInteractorTest {
     private ReceiveMessageDataAccessInterface dataAccess;

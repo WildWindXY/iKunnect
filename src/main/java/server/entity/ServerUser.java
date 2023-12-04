@@ -1,7 +1,5 @@
 package server.entity;
 
-import utils.Tuple;
-
 import java.util.HashMap;
 
 /**

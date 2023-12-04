@@ -1,14 +1,10 @@
 package client.view.components.jlist;
 
 import client.view.components.image.ImageFittingComponent;
-import client.view.components.popupMenu.ChannelPopup;
-import client.view.components.popupMenu.UserIconPopup;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class ChannelsListCellRenderer extends DefaultListCellRenderer {
